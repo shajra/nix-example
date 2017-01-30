@@ -1,0 +1,11 @@
+resolver: lts-7.16
+
+packages:
+    - ./modules/lib
+    - ./modules/app
+
+nix:
+    shell-file: modules/stack/stack.nix
+
+flags: {}
+extra-package-dbs: []
