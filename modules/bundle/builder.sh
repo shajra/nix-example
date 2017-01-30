@@ -2,7 +2,6 @@ source "$stdenv/setup"
 
 
 mkdir -p "$out/bin"
-mkdir -p "$out/etc"
 cp "$service/bin/example-app" "$out/bin"
 echo "prepatched GBN: $service/bin/example-app"
 echo "   patched GBN: $out/bin/example-app"
