@@ -38,24 +38,30 @@ let
         filterDrv
             (lib.nix.callPackageWith
                 (haskellPackages // nixpkgs // pkgs) (import p) {});
+    haskellFilterSrc = drv: lib.haskell.overrideCabal drv (attrs:
+        { src = builtins.filterSource srcFilter attrs.src; });
     drvHaskell = p:
-        nixpkgs.stdenv.mkDerivation {
-            name = "cabal2nix-autogen";
-            buildInputs = [ nixpkgs.cabal2nix ];
-            phases = [ "installPhase" ];
-            src = builtins.filterSource srcFilter p;
-            installPhase =
-                ''
-                mkdir "$out"
-                cabal2nix "$src" > "$out/default.nix"
-                '';
-        };
+        if builtins.pathExists (builtins.toPath (p + "/default.nix"))
+        then p
+        else
+            nixpkgs.stdenv.mkDerivation {
+                name = "cabal2nix-autogen";
+                buildInputs = [ nixpkgs.cabal2nix ];
+                phases = [ "installPhase" ];
+                src = builtins.filterSource srcFilter p;
+                installPhase =
+                    ''
+                    mkdir "$out"
+                    cabal2nix "$src" > "$out/default.nix"
+                    '';
+            };
     callHaskell = p:
         lib.haskell.dontHaddock
-            (lib.nix.callPackageWith
-                (nixpkgs // haskellPackages // pkgs)
-                (import (drvHaskell p))
-                    {});
+            (haskellFilterSrc
+                (lib.nix.callPackageWith
+                    (nixpkgs // haskellPackages // pkgs)
+                    (import (drvHaskell p))
+                        {}));
     callHaskellApp = p:
         lib.haskell.disableSharedExecutables (callHaskell p);
     generatorArgs = {

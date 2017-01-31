@@ -216,34 +216,11 @@ Most of the important Nix code is in `modules/nix/call/default.nix`.
 
 # Hacks
 
-There are two hacks in this project that would be wonderful to improve:
+There are three hacks in this project that would be wonderful to improve:
 
-- `strings-replace`
 - environment merging for `nix-shell`
-
-## strings-replace
-
-This project intentionally uses `ekg` because it introduces an interesting
-problem.  To prune references into `/nix/store`, We're statically compiling
-our application and copying it into the "bundle" module.
-
-But `ekg` uses Cabal's "data-files" feature, which means that upon
-compilation, the binary ends up with hard-codes references back into
-`/nix/store`, specifically to point to web assets like HTML and Javascript
-files.  These references contain the exact share libraries that we were trying
-to avoid referencing by statically compiling in the first place, which means
-the transitive closure of required derivations in `/nix/store` grows
-substantially.
-
-The "strings-replace" hack is to pluck out the web assets from `ekg` into a
-separate Nix derivation called `ekg-assets`, and to then _carefully_ replace
-the reference in the statically compiled `example-app` binary.
-
-As mentioned in
-[Gabriel439/haskell-nix#12](https://github.com/Gabriel439/haskell-nix/issues/12)
-and [NixOS/nixpkgs#4504](https://github.com/NixOS/nixpkgs/issues/4504), there
-may be a better long-term solution (yet unimplemented).  This is a stopgap
-solution we can use now.
+- automation of cabal2nix is fragile
+- `strings-replace`
 
 ## environment merging
 
@@ -260,3 +237,40 @@ dependencies in `build.nix`), but not in a disciplined way.  The function was
 reverse engineered and is likely fragile.  Please submit improvements if you
 know of any.
 
+
+## fragile cabal2nix automation
+
+Because we use cabal2nix to build a derivation, which we then import in the
+same run of `nix-build`, we're essentially bolting on a macroing system into
+Nix, which can cause [some problems](https://github.com/NixOS/nix/issues/1148).
+Most of these problems relate to caching in /nix/store.
+
+However, for the simple case of just getting a build to work, the technique
+works as you would expect.
+
+If you really want to manually create `default.nix` files in your Haskell
+projects with `cabal2nix`, you can.  If a `default.nix` is found, it will be
+used instead by this project.
+
+## strings-replace
+
+This project intentionally uses `ekg` because it introduces an interesting
+problem.  To prune references into `/nix/store`, we're statically compiling
+our application and copying it into the "bundle" module.
+
+But `ekg` uses Cabal's "data-files" feature, which means that upon compilation,
+the binary ends up with hard-coded references back into `/nix/store`,
+specifically to point to web assets like HTML and Javascript files.  These
+references contain the exact shared objects that we were trying to avoid
+referencing by statically compiling in the first place, which means the
+transitive closure of required derivations in `/nix/store` grows substantially.
+
+The "strings-replace" hack is to pluck out the web assets from `ekg` into a
+separate Nix derivation called `ekg-assets`, and to then _carefully_ replace
+the reference in the statically compiled `example-app` binary.
+
+As mentioned in
+[Gabriel439/haskell-nix#12](https://github.com/Gabriel439/haskell-nix/issues/12)
+and [NixOS/nixpkgs#4504](https://github.com/NixOS/nixpkgs/issues/4504), there
+may be a better long-term solution (yet unimplemented).  This is a stopgap
+solution we can use now.
