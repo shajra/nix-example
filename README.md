@@ -25,7 +25,7 @@ Here's some language-agnostic features of this project:
 - supports mixed platform build (C, Haskell, almost anything else) via Nix
 - managed through a "call-package"-style Nix DSL in `build.nix`
     - concise
-    - allows overriding of `nixpkgs````
+    - allows overriding of `nixpkgs`
     - comes with some baked-in overrides (just for illustration, you can
       change them)
     - pins [NixOS/nixpkgs](https://github.com/NixOS/nixpkgs) to a specified
