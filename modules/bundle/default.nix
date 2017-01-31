@@ -1,7 +1,8 @@
 { stdenv
+, ekg
 , ekg-assets
-, strings-replace
 , example-app
+, replace
 }:
 
 let
@@ -11,7 +12,7 @@ in
 
 stdenv.mkDerivation {
     name = "example-bundle";
-    buildInputs = [ strings-replace ];
-    inherit service assets;
+    buildInputs = [ replace ];
+    inherit service ekg assets;
     builder = ./builder.sh;
 }

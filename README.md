@@ -25,7 +25,7 @@ Here's some language-agnostic features of this project:
 - supports mixed platform build (C, Haskell, almost anything else) via Nix
 - managed through a "call-package"-style Nix DSL in `build.nix`
     - concise
-    - allows overriding of nixpkgs
+    - allows overriding of `nixpkgs````
     - comes with some baked-in overrides (just for illustration, you can
       change them)
     - pins [NixOS/nixpkgs](https://github.com/NixOS/nixpkgs) to a specified
@@ -42,7 +42,7 @@ Here's some features specific to Haskell:
 - automatically calls `cabal2nix` for you (Haskell projects are Nix-free)
 - supports compact Haskell statically linked binaries
 - has workaround to keep compact even if dependencies use Cabal "data-files"
-  (`strings-replace`)
+  (`replace-literal`)
 - supports simple invocations of `stack`
 - supports `cabal` "new-*" builds (using `nix-shell`)
 - supports `ghcid` (using `nix-shell`)
@@ -201,7 +201,6 @@ Here's a roadmap:
 | cabal.project                | `cabal` "new-*" multi-project configuration |
 | default.nix                  | `nix-build` default configuration           |
 | modules/app                  | Haskell "example-app" application using "example-lib" library |
-| modules/nix/strings-replace  | needed tool for minimization                |
 | modules/nix/call/overrides   | default overrides for `nixpkgs`             |
 | modules/nix/call/default.nix | main Nix library for project                |
 | modules/lib                  | Haskell "example-lib" library               |
@@ -220,7 +219,7 @@ There are three hacks in this project that would be wonderful to improve:
 
 - environment merging for `nix-shell`
 - automation of cabal2nix is fragile
-- `strings-replace`
+- `replace-literal` /nix/store reference replacement (for minimization)
 
 ## environment merging
 
@@ -252,7 +251,7 @@ If you really want to manually create `default.nix` files in your Haskell
 projects with `cabal2nix`, you can.  If a `default.nix` is found, it will be
 used instead by this project.
 
-## strings-replace
+## replace-literal
 
 This project intentionally uses `ekg` because it introduces an interesting
 problem.  To prune references into `/nix/store`, we're statically compiling
@@ -265,9 +264,10 @@ references contain the exact shared objects that we were trying to avoid
 referencing by statically compiling in the first place, which means the
 transitive closure of required derivations in `/nix/store` grows substantially.
 
-The "strings-replace" hack is to pluck out the web assets from `ekg` into a
-separate Nix derivation called `ekg-assets`, and to then _carefully_ replace
-the reference in the statically compiled `example-app` binary.
+Our hack is to pluck out the web assets from `ekg` into a separate Nix
+derivation called `ekg-assets`, and to then _carefully_ replace the reference
+in the statically compiled `example-app` binary.  This is done in the "bundle"
+module's builder script using the  `replace-literal` tool from `nixpkgs`.
 
 As mentioned in
 [Gabriel439/haskell-nix#12](https://github.com/Gabriel439/haskell-nix/issues/12)

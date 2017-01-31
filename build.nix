@@ -9,7 +9,6 @@ let
     pkgs = call ({ call, ... }: {
         stack = call.package modules/stack;
         ekg-assets = call.package modules/ekg-assets;
-        strings-replace = call.package modules/nix/strings-replace;
         example-lib = call.haskell.lib modules/lib;
         example-app = call.haskell.app modules/app;
         example-bundle = call.package modules/bundle;
