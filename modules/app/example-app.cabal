@@ -1,6 +1,7 @@
 name: example-app
 version: 0.1.0.0
 build-type: Simple
+license: BSD3
 cabal-version: >=1.10
 
 executable example-app

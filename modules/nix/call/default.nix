@@ -92,7 +92,7 @@ let
                         (if foundKeys ? nativeBuildInputs
                         then foundKeys.nativeBuildInputs
                         else []);
-                license = nixpkgs.stdenv.lib.licenses.unfree;
+                license = nixpkgs.stdenv.lib.licenses.bsd3;
             };
 
 in
