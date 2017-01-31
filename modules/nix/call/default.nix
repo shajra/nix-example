@@ -2,6 +2,7 @@ let overrides = import ./overrides; in
 
 { rev
 , sha256
+, bootPkgs ? import <nixpkgs> {}
 , nixpkgsOverride ? overrides.nixpkgs
 , haskellPackagesOverride ? overrides.haskell
 , srcFilter ? p: t:
@@ -13,7 +14,6 @@ generator:
 
 let
 
-    bootPkgs = import <nixpkgs> {};
     nixpkgsPath =
         bootPkgs.fetchFromGitHub {
             owner = "NixOS";
