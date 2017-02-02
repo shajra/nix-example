@@ -64,7 +64,7 @@ let
                         {}));
     callHaskellApp = p:
         lib.haskell.disableSharedExecutables (callHaskell p);
-    generatorArgs = {
+    makePkgs = {
         lib = lib;
         call = {
             package = callPackage;
@@ -74,33 +74,37 @@ let
             };
         };
     };
-    pkgs = generator generatorArgs;
-    envDrv =
+    pkgs = generator makePkgs;
+    envKeys =
+        [ "nativeBuildInputs"
+            "propagatedNativeBuildInputs"
+            "buildInputs"
+            "propagatedBuildInputs" ];
+    env =
         with lib.nix;
         let
-            envKeys = [ "nativeBuildInputs" "propagatedNativeBuildInputs" ];
-            isEnvKey = a: v: any (b: a == b) envKeys;
-            notInPkgs = d: ! elem d (attrValues pkgs);
-            foundKeys =
-                foldAttrs (a: acc: unique ((filter notInPkgs a) ++ acc)) []
-                    (attrValues (mapAttrs (n: filterAttrs isEnvKey) pkgs));
+            isLeaf = s: isDerivation s && ! s ? env;
+            isDepKey = a: v: any (b: a == b) envKeys;
+            getDeps = s: flatten (attrValues (filterAttrs isDepKey s));
+            pruneAttrs = s:
+                if isDerivation s
+                then { env = s.env; }
+                else filterAttrs (n: v: isAttrs v && ! v ? __functor) s;
+            foldBranch = s:
+                unique
+                    (flatten
+                        (attrValues (mapAttrs (n: foldSet) (pruneAttrs s))));
+            foldSet = s:
+                if isAttrs s
+                then if isLeaf s then getDeps s else foldBranch s
+                else [];
+            deps = foldSet pkgs;
         in
-            ghc.mkDerivation {
-                pname = "env-haskell";
-                version = "0.1.0.0";
-                src = ./.;
-                libraryHaskellDepends =
-                    if foundKeys ? propagatedNativeBuildInputs
-                    then foundKeys.propagatedNativeBuildInputs
-                    else [];
-                libraryToolDepends =
-                    [ haskellPackages.cabal-install haskellPackages.ghcid ] ++
-                        (if foundKeys ? nativeBuildInputs
-                        then foundKeys.nativeBuildInputs
-                        else []);
-                license = nixpkgs.stdenv.lib.licenses.bsd3;
+            nixpkgs.stdenv.mkDerivation {
+                name = "env-interactive";
+                nativeBuildInputs = deps;
             };
 
 in
 
-    pkgs // { env = envDrv.env; }
+    pkgs // { env = env; }

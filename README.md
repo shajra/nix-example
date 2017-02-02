@@ -232,10 +232,8 @@ multiple Haskell projects with one "new-build" command.  So for `nix-shell`
 we'd want an environment merged from all the environments we want to build.
 
 This project does this (makes a `nix-shell` environment for all the
-dependencies in `build.nix`), but not in a disciplined way.  The function was
-reverse engineered and is likely fragile.  Please submit improvements if you
-know of any.
-
+dependencies in `build.nix`), but the function was reverse engineered and may
+be fragile.  Please submit improvements if you know of any.
 
 ## fragile cabal2nix automation
 
