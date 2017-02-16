@@ -3,6 +3,7 @@
 
 main()
 (
+    echo run_once | run_cabal_per_line "$@"
     wait_for_change \
         | filter_unrelated_out \
         | run_cabal_per_line "$@"
