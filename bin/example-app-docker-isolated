@@ -7,8 +7,8 @@ NIX_CACHE_CONTAINER="nix-cache"
 PORT="8081"
 
 PROJECT_ROOT="$(dirname "$0")/.."
-UID="$(id -u)"
-GID="$(id -g)"
+UID_SENSED="$(id -u)"
+GID_SENSED="$(id -g)"
 
 
 main()
@@ -47,13 +47,19 @@ nix_build_in_docker_run()
         --volume "$(abspath "$PROJECT_ROOT")":/mnt \
         --volumes-from "$NIX_CACHE_CONTAINER" \
         nixos/nix \
-        sh -c "
+        sh -c \
+            "
             nix-build \
                 --attr example-tarball \
                 /mnt/build.nix
             cp result /mnt/example-app.tar.gz
             rm result
-            chown $UID:$GID /mnt/example-app.tar.gz"
+            chown \
+                    --quiet \
+                    $UID_SENSED:$GID_SENSED \
+                    /mnt/example-app.tar.gz \
+                || true
+            "
 )
 
 
