@@ -16,7 +16,7 @@ main()
 
     nix_result="$(
         nix-build \
-            -attr example-tarball \
+            --attr example-tarball \
             --no-out-link \
             "$PROJECT_ROOT/build.nix")"
     cp "$nix_result" "$PROJECT_ROOT/$TARBALL"
