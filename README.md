@@ -67,9 +67,9 @@ Also, this project is no substitute for official documentation for Nix:
 - [Nix Manual](http://nixos.org/nix/manual/)
 - [Nixpkgs Manual](http://nixos.org/nixpkgs/manual/)
 
-There's also good tutorials:
+There are also good tutorials:
 
-- [Gabriel Gonzalez's nix-haskell][nix-haskell]
+- [Gabriel Gonzalez's haskell-nix][haskell-nix]
 - [Luca Bruno's "pill" series][nix-pills]
 
 You can definitely explore this project without diving into these resources
