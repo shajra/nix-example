@@ -2,6 +2,9 @@
 result
 result-*
 
+# Docker building
+*.tar.gz
+
 # Haskell Stack
 .stack-work/
 
@@ -13,3 +16,7 @@ dist/
 # Haskell Cabal (newtyle)
 cabal.project.local
 dist-newstyle/
+
+# Tags
+/tags
+/TAGS

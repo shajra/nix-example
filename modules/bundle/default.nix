@@ -1,18 +1,20 @@
 { stdenv
-, ekg
 , ekg-assets
 , example-app
+, haskellPackages
 , replace
 }:
 
-let
+stdenv.mkDerivation {
+
+    name = "example-bundle";
+
+    buildInputs = [ replace ];
+
     service = example-app;
     assets = ekg-assets;
-in
+    ekg = haskellPackages.ekg;
 
-stdenv.mkDerivation {
-    name = "example-bundle";
-    buildInputs = [ replace ];
-    inherit service ekg assets;
     builder = ./builder.sh;
+
 }

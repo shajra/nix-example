@@ -1,0 +1,45 @@
+#!/bin/sh
+
+
+main()
+(
+    wait_for_change \
+        | filter_unrelated_out \
+        | run_cabal_per_line "$@"
+)
+
+
+wait_for_change()
+(
+    inotifywait -m -r -e create,delete,modify . 2>/dev/null
+)
+
+
+filter_unrelated_out()
+(
+    grep -E ' [^.#][^ ]*\.(hs|cabal)$' --line-buffered
+)
+
+
+run_cabal_per_line()
+(
+    while read line_ignored
+    do
+        if output="$(run_cabal "$@")"
+        then 
+            echo "\033[34m"$(date)": SUCCESS\033[m"
+        else 
+            echo "\n\033[31m$output\033[m"
+            echo "\n\033[1;31m"$(date)": ERROR\033[m"
+        fi
+    done
+)
+
+
+run_cabal()
+(
+    cabal new-build "$@" 2>&1
+)
+
+
+main "$@"

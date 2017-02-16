@@ -1,3 +1,7 @@
+# Haskell Stack configuration
+#
+# See https://docs.haskellstack.org/en/stable/yaml_configuration/
+
 resolver: lts-7.16
 
 packages:
@@ -5,6 +9,9 @@ packages:
     - ./modules/app
 
 nix:
+    enable: true
+    pure: true
+    packages: []
     shell-file: modules/stack/stack.nix
 
 flags: {}

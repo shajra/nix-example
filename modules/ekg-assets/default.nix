@@ -1,11 +1,11 @@
 { stdenv
 , findutils
-, ekg
+, haskellPackages
 }:
 
 stdenv.mkDerivation {
     name = "ekg-assets";
     buildInputs = [ findutils ];
-    inherit ekg;
+    ekg = haskellPackages.ekg;
     builder = ./builder.sh;
 }
