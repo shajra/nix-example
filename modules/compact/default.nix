@@ -1,17 +1,17 @@
 { stdenv
 , ekg-assets
-, example-app
+, example-app-static
 , haskellPackages
 , replace
 }:
 
 stdenv.mkDerivation {
 
-    name = "example-bundle";
+    name = "example-compact";
 
     buildInputs = [ replace ];
 
-    service = example-app;
+    service = example-app-static;
     assets = ekg-assets;
     ekg = haskellPackages.ekg;
 

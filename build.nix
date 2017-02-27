@@ -62,10 +62,11 @@ pkgsMake pkgsMakeArgs ({ call, lib }:
 
         ekg-assets = call.package modules/ekg-assets;
         example-lib = haskellLib modules/lib;
-        example-app = haskellApp modules/app;
-        example-app-dynamic = lib.haskell.enableSharedExecutables example-app;
-        example-bundle = call.package modules/bundle;
-        example-tarball = lib.nix.tarball example-bundle;
+        example-app-static = haskellApp modules/app;
+        example-app-dynamic =
+            lib.haskell.enableSharedExecutables example-app-static;
+        example-app-compact = call.package modules/compact;
+        example-tarball = lib.nix.tarball example-app-compact;
 
         # Values in sub-sets are excluded as dependencies (prevents triggering
         # unnecessary builds when entering into nix-shell).  Be careful not to
@@ -74,6 +75,6 @@ pkgsMake pkgsMakeArgs ({ call, lib }:
         example-extra.stack = call.package modules/stack;
         example-extra.licenses =
             lib.nix.license.json
-                { inherit example-bundle example-app-dynamic; };
+                { inherit example-app-compact example-app-dynamic; };
 
     })
