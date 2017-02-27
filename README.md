@@ -603,8 +603,8 @@ Emacs configured with tags and Dante provides an extremely rich "IDE"-like
 developer experience for Haskell.
 
 Note, Dante like Ghcid uses a REPL for faster compilation than a normal Cabal
-or Stack build.  So like Ghcid, its errors can fall out of sync with the
-truth, and you'll need to restart the session with `M-x dante-restart`.
+or Stack build.  So like Ghcid, its errors can fall out of sync with a true
+build, and you'll need to restart the session with `M-x dante-restart`.
 
 
 #### Haskell Stack
