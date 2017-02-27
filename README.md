@@ -1,7 +1,7 @@
 # Example Nix Project
 
 This project illustrates using [Nix][nix] for programming heterogeneous,
-multi-module projects.  It's currently illustrates only [Haskell][haskell]
+multi-module projects.  It currently illustrates only [Haskell][haskell]
 development, but can be extended for other language platforms.
 
 Use this project to learn and explore what's possible.  It's set up more for
