@@ -609,7 +609,7 @@ build, and you'll need to restart the session with `M-x dante-restart`.
 
 #### Haskell Stack
 
-Finally, if you have Stack installed, you can run it from the root project:
+If you have Stack installed, you can run it from the root project:
 
 ```
 example-nix$ stack build --file-watch
@@ -725,7 +725,7 @@ is the common case for most inquiries).  Compile-time dependencies explodes to
 a much larger set, and offers more challenges due to how some Nix expressions
 use string-interpolation.
 
-Finally, the accuracy of the report is only as good as the information in
+Note, the accuracy of the report is only as good as the information in
 `nixpkgs`.  For instance, `gmp` is currently listed as GPL-licensed, when it's
 actually dual-licensed with both GPL and LGPL.
 
