@@ -248,13 +248,13 @@ application).  Fortunately, this project
 illustrates [a technique](#replace-literal) to address this problem.
 
 If you look at [./default.nix](./default.nix), you'll see that it references
-the "example-app" attribute in a set defined
+the "example-app-static" attribute in a set defined
 in [./build.nix](./build.nix#L61-L71).
 
 We could have built this explicitly with `nix-build`:
 
 ```
-example-nix$ nix-build --attr example-app ./build.nix
+example-nix$ nix-build --attr example-app-static ./build.nix
 /nix/store/sadnnm26mfddpdip7z75a33fg7k202xp-example-app-0.1.0.0
 ```
 
@@ -402,7 +402,7 @@ as a convenience runs it through the `jq` tool for formatting, and then through
 ```
 example-nix$ bin/licenses
 {
-  "example-app": [
+  "example-app-dynamic": [
     {
       "homepage": "https://github.com/basvandijk/monad-control",
       "license": {
