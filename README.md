@@ -30,9 +30,9 @@ applications developed in languages like C/C++, R, or Python.
 To maintain reproducibility while integrating such heterogeneous builds, we
 could use something like Docker.  But most of these solutions involve opaque
 artifacts that are hard to trust.  For instance, when we use a "debian:8.7"
-image from DockerHub, it's not clear how to reproduce it if we have to.  We
+image from Docker Hub, it's not clear how to reproduce it if we have to.  We
 just trust the community to have created a reasonable image which is then
-frozen with a version identifier "8.7" and published on Dockerhub.
+frozen with a version identifier "8.7" and published on Docker Hub.
 
 Nix provides a better architecture for reproducible builds by treating the
 build process as a mathematical function.  In Nix, these functions are written
@@ -54,8 +54,8 @@ support [an entire operating system][nixos]).
 
 As [Gabriel Gonzalez points out][gonzalez-critique], Nix is not without its
 problems.  Nix could use more documentation and tools to ease adoption.  Also
-it takes a lot of work to curate all of `nixpkgs`, so you often find yourself
-writing your own, or contributing back to the project.
+it takes a lot of work to curate all of `nixpkgs`, so you may occasionally
+find yourself writing your own, or contributing back to the project.
 
 For many of us the benefits of Nix clearly outweigh the inconveniences.
 Hopefully, projects and tutorials like this can help tip the balance further.
@@ -545,7 +545,7 @@ example-nix$ nix-shell --run nix-tags-haskell
 Success
 ```
 
-By default the ctags-formated file (used by Vim) is put in `./tags` and the
+By default the ctags-formatted file (used by Vim) is put in `./tags` and the
 etags file (used by Emacs) is put in `./TAGS`.  `nix-tags-haskell` provides
 some additional configuration you can see with the "--help" switch:
 
@@ -639,7 +639,7 @@ sure the versions used by Stack are congruent to those used by Nix.
 Use Dante if you want to avoid this problem with Stack entirely.
 
 
-#### Stackless change-triggered builds
+#### Stack-less change-triggered builds
 
 The `nix-shell` environment offered by this project provides a
 `cabal-new-watch` script that emulates `stack build --file-watch` but only
@@ -735,9 +735,9 @@ Hopefully this report is still useful, provided you understand the caveats.
 ### Fragile cabal2nix automation
 
 Because we use cabal2nix to build a derivation, which we then import in the
-same run of `nix-build`, we're essentially bolting on a macroing system into
-Nix, which can cause [some problems][cabal2nix-issue] Most of these problems
-relate to caching in /nix/store.
+same run of `nix-build`, we're essentially bolting on a macro system into Nix,
+which can cause [some problems][cabal2nix-issue] Most of these problems relate
+to caching in /nix/store.
 
 However, for the simple case of just getting a build to work, the technique
 works as you would expect.
