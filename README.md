@@ -314,7 +314,8 @@ fetching path ‘/nix/store/8b8cf0blrjnchnckfh6alfi795pfrw6n-stdenv’...
 /nix/store/9g4h69wama4agd9wgqx4s7sam382nx78-example-bundle.tar.gz
 ```
 
-As before, the "result" symlink now points to the tarball we've built.
+Again, the "result" symlink has changed, and now it points to the tarball we've
+built.
 
 We can use Docker to unpack this tarball into a "scratch" Docker image, and
 then run it.  If you're running Linux, this works fine.  But if you built the
