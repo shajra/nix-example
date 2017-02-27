@@ -50,7 +50,10 @@ your C, R, Haskell, or whatever.
 Central to Nix is a special Git repository called [`nixpkgs`][nixpkgs], which
 is a large tree of Nix expressions for all kinds of tools and libraries built
 from a variety of source languages/platforms (enough to
-support [an entire operating system][nixos]).
+support [an entire operating system][nixos]).  These tools and libraries are
+defined in `nixpkgs` with expressions that evaluate to a type of value called a
+"derivation."  When instantiated, each derivation is stored into a directory
+called '/nix/store'
 
 As [Gabriel Gonzalez points out][gonzalez-critique], Nix is not without its
 problems.  Nix could use more documentation and tools to ease adoption.  Also
@@ -95,7 +98,7 @@ script:
 $ curl https://nixos.org/nix/install | sh
 ```
 
-Also, be aware that his project is actively tested on a GNU/Linux OS, and only
+Also, be aware that this project is actively tested on a GNU/Linux OS, and only
 loosely tested on Macs.  Nix support for Macs is always improving, but is known
 to be idiosyncratic.
 
@@ -467,6 +470,16 @@ the libraries and tools declared as dependencies in the various Cabal
 project itself (like `example-lib` or `example-app`).  This way versions of
 dependencies are explicitly pinned to the versions coming from `nixpkgs`, and
 not resolved dynamically by Cabal.
+
+One consequence of this is that once you enter into a Nix shell for a
+derivation, you can disable your computer's networking.  Entering the shell
+should download all the dependencies you need from the internet, and check
+their hashes to assure a deterministic build.  From there, you should only need
+your source code, which should should be able to compile/package offline.
+
+In Nix, we do this by convention.  Nix doesn't prevent us from cheating, but it
+provides us the tools to make builds deterministic, and a community that takes
+deterministic builds seriously.
 
 
 #### Cabal
