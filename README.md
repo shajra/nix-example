@@ -5,20 +5,22 @@ multi-module projects.  It's currently illustrates only [Haskell][haskell]
 development, but can be extended for other language platforms.
 
 Use this project to learn and explore what's possible.  It's set up more for
-pedagogy, but you should be able to use this code in real projects.  There are
-many ways to factor code, and the beauty of Nix is that it's very flexible.
-So use this project if you can.  I tried to make the code in this repository
-clean and self-documenting.  If you have a way to improve its clarity, please
-submit an issue or pull request.  Otherwise, feel free to fork/modify it.
+pedagogy, but you should be able to use this code in real projects (I do).
+There are many ways to organize code, and the beauty of Nix is that it's very
+flexible.  So use this project if you can.  I tried to make the code in this
+repository clean and self-documenting.  If you have a way to improve its
+clarity, please submit an issue or pull request.  Otherwise, feel free to
+fork/modify it.
 
-[nix]: https://nixos.org
-[haskell]: https://haskell.org
+If you're extremely eager to get started, you can skip to the
+[Quick Start](#quick-start) section.
 
 
 ## Motivation
 
-Every language ecosystem has its particular set of tools for building and
-managing libraries.  Reaching for a tool like Nix may at first seem redundant.
+Every programming language ecosystem has its particular set of tools for
+building and managing libraries.  Reaching for a tool like Nix may at first
+seem redundant.
 
 However many platforms have FFI wrapper libraries over native C libraries.  Or
 they require external dependencies for compilation or runtime.  Furthermore,
@@ -37,21 +39,26 @@ build process as a mathematical function.  In Nix, these functions are written
 in a language called Nix expressions.  And as in math, Nix expressions yield
 the same result, even when called at different times.
 
-This allows us to cache results with far more precision and resolution than we
-can with Docker's Dockerfiles (which have little guarantee of building the same
-image if called twice on separate machines).  The Nix ecosystem even goes
-further by patching compilers to make compiled artifacts bit-for-bit
-reproducible.  And because Nix is based on mathematic functions, there's lots
-of composition (as in f°g), which you can use to mix your C, R, Haskell, or
-whatever.
+This allows us to reference and cache results with far more precision and
+resolution than we can with Docker's Dockerfiles (which have little guarantee
+of building the same Docker image if called twice on separate machines).  The
+Nix ecosystem even goes further by patching compilers to make compiled
+artifacts bit-for-bit reproducible.  And because Nix is based on mathematic
+functions, there's lots of composition (as in f°g), which you can use to mix
+your C, R, Haskell, or whatever.
+
+Central to Nix is a special Git repository called [`nixpkgs`][nixpkgs], which
+is a large tree of Nix expressions for all kinds of tools and libraries built
+from a variety of source languages/platforms (enough to
+support [an entire operating system][nixos]).
 
 As [Gabriel Gonzalez points out][gonzalez-critique], Nix is not without its
-problems.  Nix could use more documentation and tools to ease adoption.
-However, for some of us, the benefits of Nix clearly outweigh the
-inconveniences.  Hopefully, projects and tutorials like this can help tip the
-balance further.
+problems.  Nix could use more documentation and tools to ease adoption.  Also
+it takes a lot of work to curate all of `nixpkgs`, so you often find yourself
+writing your own, or contributing back to the project.
 
-[gonzalez-critique]: https://github.com/Gabriel439/haskell-nix#background
+For many of us the benefits of Nix clearly outweigh the inconveniences.
+Hopefully, projects and tutorials like this can help tip the balance further.
 
 
 ## Prerequisites
@@ -60,7 +67,8 @@ balance further.
 ### Knowledge
 
 Because this project is specialized for Haskell currently, it may help to have
-some familiarity with Haskell development.
+some familiarity with Haskell development (for instance, know
+what [Cabal][cabal] is).
 
 Also, this project is no substitute for official documentation for Nix:
 
@@ -75,17 +83,21 @@ There are also good tutorials:
 You can definitely explore this project without diving into these resources
 first, but if you have questions, it's good to have them as references.
 
-[haskell-nix]: https://github.com/Gabriel439/haskell-nix
-[nix-pills]: http://lethalman.blogspot.com/2014/07/nix-pill-1-why-you-should-give-it-try.html
-
 
 ### Technology
 
-At a minimum, you should have [Nix installed][nix].
+At a minimum, you should have [Nix installed][nix].  Unless you're running
+NixOS as your operating system (which provides Nix intrinsically) the official
+way to install Nix on another operating system is by running their install
+script:
 
-Also, though this project may work on Macs, it's only been tested within a
-Linux OS.  Nix support for Macs is always improving, but is known to be
-idiosyncratic.
+```
+$ curl https://nixos.org/nix/install | sh
+```
+
+Also, be aware that his project is actively tested on a GNU/Linux OS, and only
+loosely tested on Macs.  Nix support for Macs is always improving, but is known
+to be idiosyncratic.
 
 You don't need to install the following tools because they are provided through
 Nix:
@@ -95,13 +107,12 @@ Nix:
 - [Ghcid][ghcid].
 
 However, external to this project, you may optionally use (discussed in this
-document):
+writeup):
 
+- [Docker][docker]
 - [the Emacs text editor][emacs]
-- [Dante (for Emacs)][dante]
+- [Dante (for Emacs and Haskell)][dante]
 - [Haskell Stack][stack].
-
-[ghc]: https://www.haskell.org/ghc/
 
 
 ## Features
@@ -109,14 +120,13 @@ document):
 Here's some language-agnostic features of this project:
 
 - supports mixed platform build (C, Haskell, almost anything else) via Nix
-- managed concisely in a ["call-package"][callpackage]-style
-  in [./build.nix](./build.nix)
+- managed concisely in a ["call-package"][callpackage]-style in
+  [one file](./build.nix)
     - pins [nixpkgs][nixpkgs] to a specified version for deterministic builds
-      (`<nixpkgs>`/`NIX_PATH` only used for bootstrapping)
-    - allows overriding of the pinned `nixpkgs`
-    - comes with some baked-in overrides (just for illustration, you can
-      change them)
-- factored into modules (Nix expressions get twisted easily)
+    - shows how to override individual packages in the pinned set
+- organized into modules (Nix expressions get twisted easily)
+- shows how to integrate into Docker
+- can generate a license report for many runtime dependencies
 - supports typical Nix `nix-build`, `nix-env`, and `nix-shell` calls
 - supports ignoring files
     - avoids needless rebuilds
@@ -128,8 +138,8 @@ Here's some features specific to Haskell:
   Nix-free)
 - supports statically linked binaries with a compact dependency set
 - illustrates workaround to keep dependencies compact even if they use Cabal
-  "data-files" (using `replace-literal`)
-- provides recursive [ctags/etags](https://ctags.io) generation (using
+  "data-files" (using [`replace-literal`](#replace-literal))
+- provides recursive [ctags/etags][ctags] generation (using
   `nix-shell`)
 - supports [Cabal][cabal] ["new-\*" builds][cabal-new] (using `nix-shell`)
 - supports [Ghcid][ghcid] (using `nix-shell`)
@@ -137,28 +147,16 @@ Here's some features specific to Haskell:
 - supports [Dante](https://github.com/jyp/dante) (an [Intero][intero] fork)
   for [Emacs][emacs] integration without Stack.
 
-[callpackage]: http://lethalman.blogspot.com/2014/09/nix-pill-13-callpackage-design-pattern.html
-[cabal2nix]: https://github.com/NixOS/cabal2nix
-[nixpkgs]: https://github.com/NixOS/nixpkgs
-[cabal]: https://haskell.org/cabal
-[ghcid]: https://github.com/ndmitchell/ghcid
-[stack]: http://haskellstack.org
-[cabal-new]: http://blog.ezyang.com/2016/05/announcing-cabal-new-build-nix-style-local-builds/
-[dante]: https://github.com/jyp/dante
-[intero]: https://github.com/commercialhaskell/intero
-[emacs]: https://www.gnu.org/software/emacs/
-
 
 ## Quick Start
 
-To avoid over-explaining everything in this project, let's first see it in
-action.
-
-If you have this repository cloned and Nix installed, you should be able to
-build it with a simple call to `nix-build` from the project's root:
+To avoid over-explaining everything in this project, let's see it in action.
 
 
 ### Build, run, and install
+
+If you have this repository cloned and Nix installed, you should be able to
+build it with a simple call to `nix-build` from the project's root:
 
 ```
 example-nix$ nix-build
@@ -167,18 +165,11 @@ fetching path ‘/nix/store/xlap4dwqfgjm581j07ww0ygavfmzixqi-curl-7.52.1-man’.
 fetching path ‘/nix/store/nqg4ngyawb9w02r06f4n6nbqwfbrd7cg-gawk-4.1.3’...
 fetching path ‘/nix/store/mypmpnb3m5bcg1q70gynpz05sr8czi16-gcc-5.4.0-man’...
 ...
-building path(s) ‘/nix/store/rwagjvq6mxv6a0rcxzfkavmrx3bxwgxb-example-bundle’
-prepatched GBN: /nix/store/l8wjk7mi2h4wlqbqmrf2gnmwz6rbc5rx-example-app-0.1.0.0/bin/example-app
-   patched GBN: /nix/store/rwagjvq6mxv6a0rcxzfkavmrx3bxwgxb-example-bundle/bin/example-app
-Scanning binary file
-    /nix/store/rwagjvq6mxv6a0rcxzfkavmrx3bxwgxb-example-bundle/bin/example-app
-    (2748880 bytes)...
-"/nix/store/3ha5x9502a93j0n3a015bz0xz7rjnym6-ekg-0.4.0.12"
-    -> "/nix/store/crn26c4canjpjbm6cxq2kb1z4i1q8y60-ekg-assets\0" (offset: 2324272)
-The binary file
-    /nix/store/rwagjvq6mxv6a0rcxzfkavmrx3bxwgxb-example-bundle/bin/example-app
-    would have had one string replaced
-/nix/store/rwagjvq6mxv6a0rcxzfkavmrx3bxwgxb-example-bundle
+shrinking RPATHs of ELF executables and libraries in /nix/store/sadnnm26mfddpdip7z75a33fg7k202xp-example-app-0.1.0.0
+shrinking /nix/store/sadnnm26mfddpdip7z75a33fg7k202xp-example-app-0.1.0.0/bin/example-app
+stripping (with flags -S) in /nix/store/sadnnm26mfddpdip7z75a33fg7k202xp-example-app-0.1.0.0/bin
+patching script interpreter paths in /nix/store/sadnnm26mfddpdip7z75a33fg7k202xp-example-app-0.1.0.0
+/nix/store/sadnnm26mfddpdip7z75a33fg7k202xp-example-app-0.1.0.0
 ```
 
 The `nix-build` invocation without any arguments uses the Nix expression in
@@ -187,7 +178,7 @@ The `nix-build` invocation without any arguments uses the Nix expression in
 directory for our convenience:
 
 ```
-result
+result -> /nix/store/sadnnm26mfddpdip7z75a33fg7k202xp-example-app-0.1.0.0
 └── bin
     └── example-app
 ```
@@ -200,30 +191,16 @@ EKG running on http://localhost:8081
 hit any key to quit
 ```
 
-The example application runs EKG, a Haskell monitoring service, which you can
-see running using the URL reported.  When you hit a key, it stops.
-
-The application is statically linked, and the transitively closed set of
-references back into `/nix/store` are minimal:
-
-```
-example-nix$ nix-store --query --requisites result | xargs du -sh
-23M 	/nix/store/kk71vkqipf30qc165718jmp0s8cggn2y-glibc-2.24
-4.7M	/nix/store/jar52969wyf10sh2wj62ipfjiw7xaq2j-gcc-5.4.0-lib
-684K	/nix/store/a9wlwd8cfzyprwwkib5ibi3cn56v165y-gmp-6.1.1
-220K	/nix/store/crn26c4canjpjbm6cxq2kb1z4i1q8y60-ekg-assets
-124K	/nix/store/gdw5qz99ihbv3l3nc91jdynfm3va46qq-zlib-1.2.10
-3.4M	/nix/store/nxcny3iwkq6bn0y16l2m6jbrblwnwmrl-openssl-1.0.2j
-2.7M	/nix/store/8p8k06039cya3rylh8swx2jwk5146psh-example-bundle
-```
+The example application is written in Haskell and runs EKG, a monitoring
+service, which you can see running using the URL reported.  When you hit a key,
+it stops.
 
 If you like, you can install the application into your Nix profile, so it's on
-your shell's path (rather than having to call it through the "result"
-symlink):
+your shell's path (rather than having to call it through the "result" symlink):
 
 ```
 example-nix$ nix-env --install --file .
-installing ‘example-bundle’
+installing ‘example-app’
 
 example-nix$ which example-app
 ~/.nix-profile/bin/example-app
@@ -233,12 +210,213 @@ And if you no longer want it in your profile, you can uninstall it with
 `nix-env` as well:
 
 ```
-example-nix$ nix-env --uninstall example-bundle
-uninstalling ‘example-bundle’
+example-nix$ nix-env --uninstall example-app
+uninstalling ‘example-app’
 
 example-nix$ which example-app
 example-app not found
 ```
+
+
+### Compacting build dependencies
+
+The version of `example-app` that we've compiled has a mixture of
+dynamic and static linking.  When dynamically linking, Nix by nature hardcodes
+paths back into `/nix/store`.  This is very important, because it allows for
+different compilations to rely on different versions of dependencies without
+conflicts.
+
+We can see the transitive closure of all these dependencies with `nix-store`:
+
+```
+example-nix$ nix-store --query --requisites result | xargs du -sh | sort -n
+900K    /nix/store/qmv9i11bwcqvj8cll14amnia2b2a97dj-zlib-bindings-0.1.1.5
+816K    /nix/store/xj9q1wifby39xcz2805s55k8gharf44z-io-streams-haproxy-1.0.0.1
+764K    /nix/store/bhxacgb69myscr3yh4v4q0mszcj26wik-case-insensitive-1.2.0.7
+...
+1.1M    /nix/store/3ha5x9502a93j0n3a015bz0xz7rjnym6-ekg-0.4.0.12
+1.1G    /nix/store/mjcifpjgihsqibwsmlimz40h08y1lv9v-ghc-8.0.1
+```
+
+As you can see, `example-app` as compiled pulls dependencies that require a lot
+of space.  This can be a serious impedance if we want to package/distribute a
+runnable version of our application.
+
+It turns out, even when statically linking, `ekg` has a quirk that pulls in
+lots of dependencies (which is why it was intentionally chosen for our example
+application).  Fortunately, this project
+illustrates [a technique](#replace-literal) to address this problem.
+
+If you look at [./default.nix](./default.nix), you'll see that it references
+the "example-app" attribute in a set defined
+in [./build.nix](./build.nix#L61-L71).
+
+We could have built this explicitly with `nix-build`:
+
+```
+example-nix$ nix-build --attr example-app ./build.nix
+/nix/store/sadnnm26mfddpdip7z75a33fg7k202xp-example-app-0.1.0.0
+```
+
+Notice it didn't build anything, because it used the cached result from
+earlier.
+
+The "example-bundle" attribute references a dependency-compacted version of our
+application, which we can build and run similarly:
+
+```
+example-nix$ nix-build --attr example-bundle ./build.nix
+these derivations will be built:
+  /nix/store/6x3wj4imxl5vzymyks4arp3259f1fhl9-ekg-assets.drv
+  /nix/store/gw55rz5fj4q1x4c8khf5jn8dcxjss2qc-example-bundle.drv
+these paths will be fetched (0.02 MiB download, 0.04 MiB unpacked):
+  /nix/store/lph984c2kz24ldp53cnffscj5f358hxk-replace-2.24
+...
+building path(s) ‘/nix/store/106cgv71403fsrpmvky3046i1rvw7lrb-example-bundle’
+prepatched GBN: /nix/store/sadnnm26mfddpdip7z75a33fg7k202xp-example-app-0.1.0.0/bin/example-app
+   patched GBN: /nix/store/106cgv71403fsrpmvky3046i1rvw7lrb-example-bundle/bin/example-app
+Scanning binary file /nix/store/106cgv71403fsrpmvky3046i1rvw7lrb-example-bundle/bin/example-app (2748880 bytes)...
+"/nix/store/3ha5x9502a93j0n3a015bz0xz7rjnym6-ekg-0.4.0.12" ->  "/nix/store/crn26c4canjpjbm6cxq2kb1z4i1q8y60-ekg-assets\0" (offset: 2324272)
+The binary file /nix/store/106cgv71403fsrpmvky3046i1rvw7lrb-example-bundle/bin/example-app would have had one string replaced
+/nix/store/106cgv71403fsrpmvky3046i1rvw7lrb-example-bundle
+```
+
+This replaced our "result" symlink with another one.  This time, when we look
+at the transitive closure of our dependencies, we see a much smaller and
+compact set:
+
+```
+example-nix$ nix-store --query --requisites result | xargs du -sh
+23M	/nix/store/kk71vkqipf30qc165718jmp0s8cggn2y-glibc-2.24
+4.7M	/nix/store/jar52969wyf10sh2wj62ipfjiw7xaq2j-gcc-5.4.0-lib
+684K	/nix/store/a9wlwd8cfzyprwwkib5ibi3cn56v165y-gmp-6.1.1
+220K	/nix/store/crn26c4canjpjbm6cxq2kb1z4i1q8y60-ekg-assets
+124K	/nix/store/gdw5qz99ihbv3l3nc91jdynfm3va46qq-zlib-1.2.10
+3.4M	/nix/store/nxcny3iwkq6bn0y16l2m6jbrblwnwmrl-openssl-1.0.2j
+2.7M	/nix/store/106cgv71403fsrpmvky3046i1rvw7lrb-example-bundle
+```
+
+### Putting the app in a Docker container
+
+The "example-tarball" attribute of the Nix expression
+in [./build.nix](./build.nix) has an expression that takes the transitive
+closure of `example-bundle` and puts it into a tarball:
+
+```
+example-nix$ nix-build --attr example-tarball ./build.nix
+these derivations will be built:
+  /nix/store/4wa2mwgzlbxqw3h6f7qbc5jvkirw2a2p-runtime-deps.drv
+  /nix/store/nik5hjask7dji8h7vqx9ngb7q16gykyd-example-bundle.tar.gz.drv
+these paths will be fetched (0.01 MiB download, 0.02 MiB unpacked):
+  /nix/store/8b8cf0blrjnchnckfh6alfi795pfrw6n-stdenv
+fetching path ‘/nix/store/8b8cf0blrjnchnckfh6alfi795pfrw6n-stdenv’...
+...
+/nix/store/9g4h69wama4agd9wgqx4s7sam382nx78-example-bundle.tar.gz
+```
+
+As before, the "result" symlink now points to the tarball we've built.
+
+We can use Docker to unpack this tarball into a "scratch" Docker image, and
+then run it.  If you're running Linux, this works fine.  But if you built the
+example application on a Mac, the built binary will be incompatible with
+Docker.
+
+In [./bin](./bin) there's two scripts:
+
+- [build\_native-package\_docker](./bin/build_native-package_docker) (for
+  Linux)
+- [build\_docker-package\_docker](./bin/build_docker-package_docker) (for
+  Macs and Linux)
+
+If you have Docker installed, these scripts can be run from a fresh checkout,
+and illustrate everything from building `example-tarball` to putting it in a
+Docker image, and finally running it:
+
+```
+example-nix$ ./bin/build-docker_package-docker
+/nix/store/9g4h69wama4agd9wgqx4s7sam382nx78-example-bundle.tar.gz
+...
+Sending build context to Docker daemon 20.56 MB
+Step 1/4 : FROM scratch
+ --->
+Step 2/4 : ADD example-app.tar.gz /
+ ---> 318bc5812246
+Removing intermediate container 50fbb7ca93fa
+Step 3/4 : EXPOSE 8081
+ ---> Running in 17c665e292c1
+ ---> 37b28d0bd444
+Removing intermediate container 17c665e292c1
+Step 4/4 : ENTRYPOINT /bin/example-app
+ ---> Running in ff24c938190b
+ ---> 4c9100d48426
+Removing intermediate container ff24c938190b
+Successfully built 4c9100d48426
+EKG running on http://localhost:8081
+hit any key to quit
+```
+
+What the Mac-friendly script does differently is run `nix-build` from within a
+Docker container, so the artifact is built for Linux instead of a Mac.
+
+Notice the Docker image produced is remarkably small (under 35MB):
+
+```
+example-nix$ docker images nix-example-app
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+nix-example-app     latest              a40ab024f5c1        16 seconds ago      32.5 MB
+```
+
+
+### Making a runtime license report
+
+Figuring out whether an application is properly licensed requires going through
+all the licenses of all the dependencies used.
+
+Unfortunately, Nix doesn't offer a complete solution for this, but can help a
+little.
+
+The "example-extra.licenses" attribute of the Nix expression
+in [./build.nix](./build.nix) has an expression that generates a JSON file with
+license information for many of the dependencies required in the /nix/store.
+
+There are two important omissions in this report:
+
+- no mention of statically compiled libraries
+- some dependencies have missing license information
+
+When a library is statically compiled, Nix loses track of the dependency.  To
+get a more accurate license report, create it from a dynamically-generated
+variant instead.  The report generated by this project includes results for a
+dynamically linked version of `example-app` and `example-bundle` (statically
+linked and compacted) so you can see the difference.
+
+Additionally, you may notice a project listed as a dependency with no license
+information.  This is
+a [limitation of current state of the art in Nix](#incomplete-license-report).
+
+The [bin/licenses](./bin/licenses) script builds this JSON license report, and
+as a convenience runs it through the `jq` tool for formatting, and then through
+`less` for paging:
+
+```
+example-nix$ bin/licenses
+{
+  "example-app": [
+    {
+      "homepage": "https://github.com/basvandijk/monad-control",
+      "license": {
+        "fullName": "BSD 3-clause \"New\" or \"Revised\" License",
+        "shortName": "bsd3",
+        "spdxId": "BSD-3-Clause",
+        "url": "http://spdx.org/licenses/BSD-3-Clause"
+      },
+      "path": "/nix/store/1kjpiqgbs7sgj4ay0cvqylvjk3vid5ad-monad-control-1.0.1.0"
+    },
+    ...
+```
+
+
+## Developing Haskell
 
 
 ### Development tools in a Nix shell
@@ -250,10 +428,11 @@ developer environment containing:
 - `cabal-install`
 - `ghcid`
 - `nix-tags-haskell`
+- `cabal-new-watch`
 
-We can either enter this environment by calling `nix-shell` with no arguments
-(which by default reads [./shell.nix](./shell.nix).  Notice how the environment
-gives us a PATH including binaries in `/nix/store`:
+We can enter this environment by calling `nix-shell` with no arguments (which
+by default reads [./shell.nix](./shell.nix).  Notice how the environment gives
+us a PATH including binaries in `/nix/store`:
 
 ```
 example-nix$ nix-shell
@@ -271,7 +450,10 @@ example-nix$ nix-shell
 /nix/store/nkx20y8vfjragx4iljv36linnkjyvbj5-ghc-8.0.1-with-packages/bin/cabal
 
 [nix-shell:example-nix]$ which nix-tags-haskell
-/nix/store/956m7wcp0lqwgcrzz2h718fyz2ly76sx-nix-tags-haskell/bin/nix-tags-haskell
+/nix/store/46zfy10dy0jhqyj8lf51faiz78w43vgh-nix-tags-haskell/bin/nix-tags-haskell
+
+[nix-shell:example-nix]$ which cabal-new-watch
+/nix/store/nydb2j7bybff4445ifphnbl2j40jz1iy-cabal-new-watch/bin/cabal-new-watch
 
 [nix-shell:example-nix]$ exit
 
@@ -288,18 +470,18 @@ not resolved dynamically by Cabal.
 
 #### Cabal
 
-When we built our project with `nix-build` before it used Cabal internally, but
+When we built our project before with `nix-build` it used Cabal internally, but
 we can use `nix-shell` to call Cabal explicitly.
 
-The provided version of Cabal is new enough, we can use its latest "new-\*"
-support for multiple projects.
+The provided version of Cabal is new enough, we can use its
+latest ["new-\*" support for multiple projects][cabal-new].
 
 Also, we can use the "--run" switch of `nix-shell` to save us the hassle of
 entering and exiting the environment:
 
 ```
 example-nix$ nix-shell \
-    --run 'cabal update; cabal new-configure; cabal new-build'
+    --run 'cabal update; cabal new-configure; cabal new-build example-app'
 ...
 Downloading the latest package list from hackage.haskell.org
 Resolving dependencies...
@@ -313,7 +495,20 @@ Linking dist-newstyle/build/example-app-0.1.0.0/build/example-app/example-app ..
 ```
 
 The last line shows where your Cabal-built binary can be found.  It's linked
-and ready to run.
+and ready to run:
+
+```
+example-nix$ ./dist-newstyle/build/example-app-0.1.0.0/build/example-app/example-app
+EKG running on http://localhost:8081
+hit any key to quit
+```
+
+Note, these "new-\*" commands have been released as such for testing.  Once
+they've been deemed stable, the normal "configure/build/repl" will be replaced
+with their "new-" counterparts, which will go away.
+
+In an effort to help to contribute towards these commands' success, this
+project does not shy from using them, and encourages people to try them out.
 
 
 #### Ghcid
@@ -331,12 +526,17 @@ Ghcid will sense changes in source files, and automatically recompile them.
 Later, we'll show how we can get a similar benefit from within Emacs using
 Dante.
 
+Note, the reason Ghcid is faster than a normal build with Cabal or Stack is
+because, it's using a REPL session, which it uses to reload modules.  This
+provides a faster compilation, but sometimes error messages get out of sync,
+and you have to restart Ghcid.
+
 
 #### Editor tags files
 
 If you use a text editor like Emacs of Vim, you can navigate multiple projects
-fluidly using ctags/etags.  For Haskell, we can generate tags from within the
-Nix shell using a provided `nix-tags-haskell` script:
+fluidly using [ctags/etags][ctags].  For Haskell, this project's Nix shell
+environment provides a `nix-tags-haskell` script to create a tags file:
 
 ```
 example-nix$ nix-shell --run nix-tags-haskell
@@ -401,7 +601,9 @@ are so Dante will continue to work with other types of Haskell projects.
 Emacs configured with tags and Dante provides an extremely rich "IDE"-like
 developer experience for Haskell.
 
-[projectile]: http://projectile.readthedocs.io
+Note, Dante like Ghcid uses a REPL for faster compilation than a normal Cabal
+or Stack build.  So like Ghcid, its errors can fall out of sync with the
+truth, and you'll need to restart the session with `M-x dante-restart`.
 
 
 #### Haskell Stack
@@ -409,7 +611,7 @@ developer experience for Haskell.
 Finally, if you have Stack installed, you can run it from the root project:
 
 ```
-example-nix$ stack build
+example-nix$ stack build --file-watch
 ...
 example-lib-0.1.0.0: configure (lib)
 example-lib-0.1.0.0: build (lib)
@@ -419,64 +621,114 @@ example-app-0.1.0.0: build (exe)
 example-app-0.1.0.0: copy/register
 Completed 2 action(s).
 Log files have been written to: example-nix/.stack-work/logs/
+ExitSuccess
+Type help for available commands. Press enter to force a rebuild.
 ```
 
-**WARNING**: System dependencies for Stack come from the Nix configuration,
-but be aware that Stack manages Haskell dependencies independently using
+Because we used the "--file-watch" switch, Stack will rebuild the project when
+files change, similarly to Ghcid and Dante.
+
+**WARNING**: This project uses
+Stack's [built-in support for Nix integration][stack-nix].  System dependencies
+for Stack come from the Nix configuration.  But be aware that Stack manages
+Haskell dependencies independently using the "resolver" specified in
 `./stack.yaml`.  When developing with Nix and Stack, it's up to you to make
 sure the versions used by Stack are congruent to those used by Nix.
 
 Use Dante if you want to avoid this problem with Stack entirely.
 
 
+#### Stackless change-triggered builds
+
+The `nix-shell` environment offered by this project provides a
+`cabal-new-watch` script that emulates `stack build --file-watch` but only
+using dependencies managed by Nix.
+
+```
+$ nix-shell --run 'cabal-new-watch example-app'
+TRIGGER: first run
+Up to date
+Sun Feb 26 18:44:17 CST 2017: SUCCESS
+```
+
+This is a true Cabal build, so it won't be as fast as Ghcid or Dante, but
+should be about as fast as a normal Stack build.
+
+Cabal "new-\*" builds are a nice way to manage multi-module projects.
+Unfortunately, there's
+a [race-condition when concurrent builds are running][cabal-new-issue].  If you
+run `cabal-new-watch` and Dante together, you may find your build gets
+corrupted.  This is easy to fix by deleting the `./dist-newstyle` directory.
+
+The Cabal team is aware of this issue, so hopefully this inconvenience will be
+addressed sooner than later.
+
+
 ## Exploring the code
 
-The best way to explore this project is to jump into the source code.
+The best way to explore this project further is to jump into the source code.
 Here's a roadmap:
 
 | File/Directory               | Description                                  |
 | -----------------------------| -------------------------------------------- |
+| bin/                         | scripts to illustrate this project           |
 | build.nix                    | root-level project configuration             |
 | cabal.project                | `cabal` "new-\*" multi-project configuration |
 | default.nix                  | `nix-build` configuration                    |
 | modules/app                  | Haskell "example-app" application using "example-lib" library |
-| modules/nix/default.nix      | main Nix library for project                 |
-| modules/nix/overrides        | default overrides for `nixpkgs`              |
-| modules/nix/ctags            | nix-tags-haskell script                      |
-| modules/lib                  | Haskell "example-lib" library                |
-| modules/stack                | Nix expressions for Stack integration        |
-| modules/ekg-assets           | Assets stripped from `ekg` Nix derivation    |
 | modules/bundle               | Minimization of "example-app"                |
+| modules/ekg-assets           | Assets stripped from `ekg` Nix derivation    |
+| modules/lib                  | Haskell "example-lib" library                |
+| modules/pkgs-make/           | the Nix expression driving this project      |
+| modules/stack                | Nix expressions for Stack integration        |
 | shell.nix                    | `nix-shell` configuration                    |
 | stack.yaml                   | `stack` configuration                        |
 
-Most of the implementation Nix code is in
-[./modules/nix/default.nix](./modules/nix/default.nix).
+Most of the supporting Nix code is
+in [./modules/pkgs-make/](./modules/pkgs-make), which is organized as follow:
+
+| File/Directory               | Description                                  |
+| -----------------------------| -------------------------------------------- |
+| default.nix                  | entry point for pkg-make Nix expression      |
+| haskell.nix                  | Haskell-specific Nix expressions             |
+| extn/                        | more derivations to extend `nixpkgs`         |
+| lib/                         | more Nix expressions to extend `nixpkgs`     |
+| overrides/                   | default overrides for `nixpkgs` derivations  |
 
 
 ## Hacks
 
-There are three hacks in this project that would be wonderful to improve, but
+There are a few hacks in this project that would be wonderful to improve, but
 are probably fine for most contexts:
 
-- environment merging for `nix-shell`
+- license report may often be incomplete
 - automation of cabal2nix is fragile
 - `replace-literal` /nix/store reference replacement (for minimization)
 
+The following discussion assumes some deeper knowledge of Nix and `nixpkgs`.
 
-### Environment merging
 
-The Haskell-specific `mkDerivation` function provided by `nixpkgs` has an
-"env" attribute intended for use with `nix-shell`.  This works fine with older
-usage of `cabal`, which historically builds projects one-at-a-time.
+### Incomplete license report
 
-However, with the recent "new-\*" functionality in `cabal`, we can build
-multiple Haskell projects with one "new-build" command.  So for `nix-shell`
-we'd want an environment merged from all the environments we want to build.
+We find runtime dependencies by looking through the generated artifact in
+`/nix/store`, and finding all further references within `/nix/store`.  This
+doesn't tell us anything about compile-time dependencies.  Also, `/nix/store`
+doesn't contain license information.
 
-This project does this (makes a `nix-shell` environment for all the
-dependencies in `build.nix`), but the function was reverse engineered and may
-be fragile.  Please submit improvements if you know of any.
+To match the detected dependencies with license information, we do a heuristic
+crawl through `nixpkgs` tree, starting with the derivation for our built
+artifact.  Sometimes we don't find what we want.
+
+Also, this license report is currently limited to runtime dependencies (which
+is the common case for most inquiries).  Compile-time dependencies explodes to
+a much larger set, and offers more challenges due to how some Nix expressions
+use string-interpolation.
+
+Finally, the accuracy of the report is only as good as the information in
+`nixpkgs`.  For instance, `gmp` is currently listed as GPL-licensed, when it's
+actually dual-licensed with both GPL and LGPL.
+
+Hopefully this report is still useful, provided you understand the caveats.
 
 
 ### Fragile cabal2nix automation
@@ -492,8 +744,6 @@ works as you would expect.
 If you really want to manually create `default.nix` files in your Haskell
 projects with `cabal2nix`, you can.  If a `default.nix` is found, it will be
 used instead by this project.
-
-[cabal2nix-issue]: https://github.com/NixOS/nix/issues/1148
 
 
 ### Replace-literal
@@ -519,6 +769,30 @@ As mentioned in [Gabriel439/haskell-nix#12][haskell-nix-issue] and
 [NixOS/nixpkgs#4504][nixpkgs-issue], there may be a better long-term solution
 (yet unimplemented).  This is a stopgap solution we can use now.
 
-[replace-call]: ./modules/bundle/builder.sh#L9-L10
+
+[cabal2nix]: https://github.com/NixOS/cabal2nix
+[cabal2nix-issue]: https://github.com/NixOS/nix/issues/1148
+[cabal]: https://haskell.org/cabal
+[cabal-new]: http://blog.ezyang.com/2016/05/announcing-cabal-new-build-nix-style-local-builds/
+[cabal-new-issue]: https://github.com/haskell/cabal/issues/3741
+[callpackage]: http://lethalman.blogspot.com/2014/09/nix-pill-13-callpackage-design-pattern.html
+[ctags]: http://ctags.io
+[dante]: https://github.com/jyp/dante
+[docker]: https://www.docker.com/products/overview
+[emacs]: https://www.gnu.org/software/emacs/
+[ghc]: https://www.haskell.org/ghc/
+[ghcid]: https://github.com/ndmitchell/ghcid
+[gonzalez-critique]: https://github.com/Gabriel439/haskell-nix#background
+[haskell]: https://haskell.org
+[haskell-nix]: https://github.com/Gabriel439/haskell-nix
 [haskell-nix-issue]: https://github.com/Gabriel439/haskell-nix/issues/12
+[intero]: https://github.com/commercialhaskell/intero
+[nix]: https://nixos.org/nix
+[nixos]: https://nixos.org/nixos
+[nix-pills]: http://lethalman.blogspot.com/2014/07/nix-pill-1-why-you-should-give-it-try.html
+[nixpkgs]: https://github.com/NixOS/nixpkgs
 [nixpkgs-issue]: https://github.com/NixOS/nixpkgs/issues/4504
+[projectile]: http://projectile.readthedocs.io
+[replace-call]: ./modules/bundle/builder.sh#L9-L10
+[stack]: http://haskellstack.org
+[stack-nix]: https://docs.haskellstack.org/en/stable/nix_integration/

@@ -115,7 +115,6 @@ let
             haskellPackages.cabal2nix
             haskellPackages.cabal-install
             haskellPackages.ghcid
-            nixpkgs.which
         ];
 
     env =

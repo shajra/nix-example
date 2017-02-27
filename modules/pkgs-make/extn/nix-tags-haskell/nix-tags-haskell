@@ -26,7 +26,7 @@ Options:
     -a, --append
         append tags files (sorting lost)
 
-    --ignore-close-implementation 
+    --ignore-close-implementation
         ignores implementation closer than 7 lines
 
     -R, --tags-absolute

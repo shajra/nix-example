@@ -78,7 +78,7 @@ docker_run()
 cleanup()
 (
     rm -rf "$PROJECT_ROOT/$TARBALL"
-    docker rmi "$IMAGE_NAME" 2> /dev/null || true
+    # docker rmi "$IMAGE_NAME" 2> /dev/null || true
 )
 
 

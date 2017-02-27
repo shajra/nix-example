@@ -3,7 +3,7 @@
 
 main()
 (
-    echo run_once | run_cabal_per_line "$@"
+    echo "first run" | run_cabal_per_line "$@"
     wait_for_change \
         | filter_unrelated_out \
         | run_cabal_per_line "$@"
@@ -18,18 +18,20 @@ wait_for_change()
 
 filter_unrelated_out()
 (
-    grep -E ' [^.#][^ ]*\.(hs|cabal)$' --line-buffered
+    grep -E ' [^.#][^ ]*\.(hs|cabal)$' --line-buffered \
+        | grep -v --line-buffered '/dist-newstyle/'
 )
 
 
 run_cabal_per_line()
 (
-    while read line_ignored
+    while read file_changed
     do
+        echo "TRIGGER: $file_changed"
         if output="$(run_cabal "$@")"
-        then 
+        then
             echo "\033[34m"$(date)": SUCCESS\033[m"
-        else 
+        else
             echo "\n\033[31m$output\033[m"
             echo "\n\033[1;31m"$(date)": ERROR\033[m"
         fi
@@ -39,7 +41,7 @@ run_cabal_per_line()
 
 run_cabal()
 (
-    cabal new-build "$@" 2>&1
+    cabal new-build "$@" 3>&2 2>&1 1>&3
 )
 
 

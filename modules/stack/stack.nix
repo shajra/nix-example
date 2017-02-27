@@ -1,1 +1,1 @@
-(import ../../build.nix).stack
+(import ../../build.nix).example-extra.stack

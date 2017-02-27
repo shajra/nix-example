@@ -44,27 +44,36 @@ let
     # [NIX] http://nixos.org/nix/manual
     # [NIXPKGS] http://nixos.org/nixpkgs/manual
     # [CALLPKG] http://lethalman.blogspot.com/2014/09/nix-pill-13-callpackage-design-pattern.html
-    #
-    pkgs = pkgsMake pkgsMakeArgs ({ call, lib }:
-        let
-            modifiedHaskellCall = f:
-                lib.nix.composed [
-                    lib.haskell.enableLibraryProfiling
-                    lib.haskell.doHaddock
-                    f
-                ];
-            haskellLib = modifiedHaskellCall call.haskell.lib;
-            haskellApp = modifiedHaskellCall call.haskell.app;
-        in
-        {
-            ekg-assets = call.package modules/ekg-assets;
-            example-lib = haskellLib modules/lib;
-            example-app = haskellApp modules/app;
-            example-bundle = call.package modules/bundle;
-            example-tarball = lib.nix.tarball pkgs.example-bundle;
-            stack = call.package modules/stack;
-        });
 
 in
 
-pkgs
+pkgsMake pkgsMakeArgs ({ call, lib }:
+    let
+        modifiedHaskellCall = f:
+            lib.nix.composed [
+                lib.haskell.enableLibraryProfiling
+                lib.haskell.doHaddock
+                f
+            ];
+        haskellLib = modifiedHaskellCall call.haskell.lib;
+        haskellApp = modifiedHaskellCall call.haskell.app;
+    in
+    rec {
+
+        ekg-assets = call.package modules/ekg-assets;
+        example-lib = haskellLib modules/lib;
+        example-app = haskellApp modules/app;
+        example-app-dynamic = lib.haskell.enableSharedExecutables example-app;
+        example-bundle = call.package modules/bundle;
+        example-tarball = lib.nix.tarball example-bundle;
+
+        # Values in sub-sets are excluded as dependencies (prevents triggering
+        # unnecessary builds when entering into nix-shell).  Be careful not to
+        # chose a name that conflicts with a package name in `nixpkgs`.
+        #
+        example-extra.stack = call.package modules/stack;
+        example-extra.licenses =
+            lib.nix.license.json
+                { inherit example-bundle example-app-dynamic; };
+
+    })
