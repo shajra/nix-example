@@ -1,5 +1,6 @@
 { stdenv
 , makeWrapper
+, haskell
 , haskellPackages
 , which
 }:
@@ -12,7 +13,7 @@ stdenv.mkDerivation {
 
     buildInputs = [ makeWrapper ];
 
-    hasktags = haskellPackages.hasktags;
+    hasktags = haskell.packages.ghc801.hasktags;
     haskdogs = haskellPackages.haskdogs;
     inherit which;
 

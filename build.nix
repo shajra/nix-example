@@ -5,9 +5,9 @@ let
     # Version of Nixpkgs to lock down to for our build
     #
     pkgsMakeArgs = {
-        # git describe: 16.09-beta-8886-g92b1e39e1c
-        rev = "92b1e39e1c43a55a1460571782e3c7444556814b";
-        sha256 = "1y62n4h70kh9a0pyigssfwfrdc1kfx9i4743722f2c6kf67j1v20";
+        # git describe: 16.09-beta-11812-gfa03b8279f
+        rev = "fa03b8279fa9b544c29c97eaa5263163b6716046";
+        sha256 = "1n8mwwg14xhm4arxafzfmf0wbr8smkgdvaagirxpni77jci81ar3";
     };
 
     # Library for making our packages (local copy)

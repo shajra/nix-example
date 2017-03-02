@@ -2,7 +2,7 @@ let
 
     default =
         {
-            ghcVersion = "ghc801";
+            ghcVersion = "ghc802";
             overrides = import ./overrides/haskell;
             srcFilter = p: t:
                 baseNameOf p != "result"
