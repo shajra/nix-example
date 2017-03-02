@@ -14,5 +14,5 @@ in
 
     {
         nix = nixpkgs.lib // libExtn;
-        haskell = import ./haskell.nix nixpkgs;
+        haskell = import ./haskell.nix nixpkgs.haskell.lib;
     }
