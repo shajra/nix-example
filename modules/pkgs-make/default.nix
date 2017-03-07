@@ -34,12 +34,11 @@ let
 
     origNixpkgs = import nixpkgsPath {};
 
-
     morePkgs = self: super:
         let
             hArgs = { nixpkgs = self; inherit pkgs; } // haskellArgs;
             h = import ./haskell.nix hArgs;
-            extnPkgs = import ./extn self.callPackage;
+            extnPkgs = import ./tools self.callPackage;
         in
         {
             haskellPackages = h.haskellPackages;

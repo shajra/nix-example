@@ -61,11 +61,11 @@ pkgsMake pkgsMakeArgs ({ call, lib }:
     rec {
 
         ekg-assets = call.package modules/ekg-assets;
-        example-lib = haskellLib modules/lib;
-        example-app-static = haskellApp modules/app;
+        example-lib = haskellLib modules/example-lib;
+        example-app-static = haskellApp modules/example-app;
         example-app-dynamic =
             lib.haskell.enableSharedExecutables example-app-static;
-        example-app-compact = call.package modules/compact;
+        example-app-compact = call.package modules/example-app-compact;
         example-tarball = lib.nix.tarball example-app-compact;
 
         # Values in sub-sets are excluded as dependencies (prevents triggering

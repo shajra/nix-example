@@ -2,11 +2,11 @@
 #
 # See https://docs.haskellstack.org/en/stable/yaml_configuration/
 
-resolver: lts-7.16
+resolver: lts-8.2
 
 packages:
-    - ./modules/lib
-    - ./modules/app
+    - ./modules/example-lib
+    - ./modules/example-app
 
 nix:
     enable: true

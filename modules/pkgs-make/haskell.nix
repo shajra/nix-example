@@ -10,8 +10,8 @@ let
                     && baseNameOf p != ".stack-work";
             envMoreTools = nixpkgs:
                 [
-                    (nixpkgs.callPackage (import ./extn/nix-tags-haskell) {})
-                    (nixpkgs.callPackage (import ./extn/cabal-new-watch) {})
+                    (nixpkgs.callPackage (import ./tools/nix-tags-haskell) {})
+                    (nixpkgs.callPackage (import ./tools/cabal-new-watch) {})
                     nixpkgs.haskellPackages.cabal2nix
                     nixpkgs.haskellPackages.cabal-install
                     nixpkgs.haskellPackages.ghcid
@@ -107,15 +107,6 @@ let
                         else acc)
                     []
                     envPkgs));
-
-    envMoreTools =
-        [
-            (nixpkgs.callPackage (import ./extn/nix-tags-haskell) {})
-            (nixpkgs.callPackage (import ./extn/cabal-new-watch) {})
-            haskellPackages.cabal2nix
-            haskellPackages.cabal-install
-            haskellPackages.ghcid
-        ];
 
     env =
         (haskellPackages.mkDerivation {

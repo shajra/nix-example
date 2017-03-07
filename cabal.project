@@ -5,5 +5,5 @@
 -- [1] http://blog.ezyang.com/2016/05/announcing-cabal-new-build-nix-style-local-builds/
 --
 packages:
-    modules/lib
-    modules/app
+    modules/example-lib
+    modules/example-app
