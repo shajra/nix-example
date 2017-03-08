@@ -21,17 +21,17 @@ let
     #
     # [FETCH] https://github.com/NixOS/nixpkgs/tree/master/pkgs/build-support
     #
-    #pkgs-make =
+    #pkgsMake =
     #    let
     #        pkgs-make-path =
     #            (import <nixpkgs> {}).fetchFromGitHub {
     #                owner = "shajra";
     #                repo = "example-nix";
-    #                rev = "88d97891cba18f17770d7009c571bdf2ac58e39b";
-    #                sha256 = "05zxagiagb0icr3f6l7y1camwjxj4w3kxhss06bwkinj8b4kq2k6";
+    #                rev = "67affc85332894bb8892c9fe98bc9f378d663b90";
+    #                sha256 = "1aps3bppzwg9vs9nq3brmxvn6dccwlrwbwq0i37m8k0a1g4446j6";
     #            };
     #    in
-    #    import (pkgs-make-path + "/modules/nix/call");
+    #    import (pkgs-make-path + "/modules/pkgs-make");
 
     # `pkgs-make` doesn't have a lot of code, but it does hide away enough
     # complexity to make this usage site simple and compact.
