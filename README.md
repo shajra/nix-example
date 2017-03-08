@@ -39,8 +39,8 @@ frozen with a version identifier "8.7" and published on Docker Hub.
 
 The Nix package manager provides a better architecture for reproducible builds
 by treating the build process as a mathematical function.  In Nix, these
-functions are written in a language called also called Nix.  And as in math,
-Nix expressions yield the same result, even when called at different times.
+functions are written in a language also called Nix.  And as in math, Nix
+expressions yield the same result, even when called at different times.
 
 This allows us to reference and cache results with far more precision and
 resolution than we can with Docker's Dockerfiles (which have little guarantee
