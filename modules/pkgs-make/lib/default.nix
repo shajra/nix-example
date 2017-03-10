@@ -7,7 +7,7 @@ let
     libExtn = {
         inherit composed applying;
         tarball = nixpkgs.callPackage ./tarball {};
-        licenses = nixpkgs.callPackage ./licenses {} nixpkgs;
+        license-report = nixpkgs.callPackage ./license-report {} nixpkgs;
     };
 
 in

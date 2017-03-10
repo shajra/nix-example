@@ -74,7 +74,7 @@ pkgsMake pkgsMakeArgs ({ call, lib }:
         #
         example-extra.stack = call.package modules/stack;
         example-extra.licenses =
-            lib.nix.licenses.json
+            lib.nix.license-report.json
                 { inherit example-app-compact example-app-dynamic; };
 
     })
