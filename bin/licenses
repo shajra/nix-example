@@ -9,7 +9,7 @@ main()
     jq="$(from_nix jq)"
     less="$(from_nix less)"
     report="$(build_report)"
-    "$jq" --color-output --unbuffered . < "$report" | "$less"
+    "$jq" --color-output --unbuffered . < "$report" | TERM=ansi "$less"
 )
 
 
