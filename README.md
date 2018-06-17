@@ -648,7 +648,7 @@ project's root directory (Projectile provides much more, though):
                 ,(lambda (root)
                     (dante-repl-by-file
                         (projectile-project-root)
-                        "shell.nix"
+                        '("shell.nix")
                         `("nix-shell" "--run" "cabal new-repl"
                             ,(concat (projectile-project-root) "/shell.nix")))))
             (stack .
