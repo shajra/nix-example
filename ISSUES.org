@@ -1,0 +1,49 @@
+#+TITLE: Known Issues
+#+SETUPFILE: ./internal/setup.org
+
+*TODO*: These items will probably be moved to GitHub Issues.
+
+There are a few issues in this project that would be wonderful to improve, but
+are probably fine for most contexts:
+
+- he license report may often be incomplete.
+- For Haskell, automation of Cabal2nix is fragile.
+
+The following discussion assumes some deeper knowledge of using Nix and
+Nixpkgs.
+
+* Incomplete license report
+
+  We find runtime dependencies by looking through the generated artifact in
+  =/nix/store=, and finding all further references within =/nix/store=. This
+  doesn't tell us anything about compile-time dependencies. Also, =/nix/store=
+  doesn't contain license information.
+
+  To match the detected dependencies with license information, we do a
+  heuristic crawl through Nixpkgs tree, starting with the derivation for our
+  built artifact. Sometimes we don't find what we want.
+
+  Also, this license report is currently limited to runtime dependencies (which
+  is the common case for most inquiries). Compile-time dependencies explodes to
+  a much larger set, and offers more challenges due to how some Nix expressions
+  use string-interpolation.
+
+  Note, the accuracy of the report is only as good as the information in
+  Nixpkgs. For instance, =gmp= is currently listed as GPL-licensed, when it's
+  actually dual-licensed with both GPL and LGPL.
+
+  Hopefully this report is still useful, provided you understand the caveats.
+
+* Fragile Cabal2nix automation
+
+  Because we use Cabal2nix to build a Haskell derivation, which we then import
+  in the same run of =nix-build=, we're essentially bolting on a macro system
+  into Nix, which can cause [[cabal2nix-issue][some problems]] Most of these problems relate to
+  caching in =/nix/store=.
+
+  However, for the simple case of just getting a build to work, the technique
+  works as you would expect.
+
+  If you really want to manually create =default.nix= files in your Haskell
+  projects with the =cabal2nix= command, you can. If a =default.nix= is found,
+  it will be used instead by this project.

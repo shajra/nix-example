@@ -1,0 +1,28 @@
+#! /usr/bin/env nix-shell
+#! nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/14a9ca27e69e33ac8ffb708de08883f8079f954a.tar.gz
+#! nix-shell -i bash -p docker -p gnused
+set -eu
+
+
+. "$(dirname "$0")/common.sh"
+
+
+
+docker_run()
+(
+    project="$1"
+    attr="example-$project-docker"
+    image="example-$project"
+    build_expr="$(project_root "$project")/build.nix"
+    do_with_header nix build --no-link --file "$build_expr" "$attr"
+    do_with_header \
+        docker load --input "$(nix path-info --file "$build_expr" "$attr")"
+    do_with_header \
+        docker run --rm -it \
+        --publish 8080:8080 \
+        --publish 8081:8081 \
+        "$image"
+)
+
+
+run docker_run "${1:-}"

@@ -1,0 +1,90 @@
+#+TITLE: Direnv Oh-My-ZSH Customizations
+#+SETUPFILE: ../../internal/setup.org
+
+* Introduction
+
+  This provides integration of [[direnv][Direnv]] and [[zsh][Z Shell (Zsh)]] via an [[ohmyzsh][Oh-My-ZSH]] plugin
+  and theme.
+
+  Direnv provides a nice way to manage environment variables by project
+  directory. By just changing into a directory in a terminal, your environment
+  variables can automatically change, including things like ~PATH~ and language
+  specific paths like ~PYTHONPATH~ (Direnv is very flexible and can be scripted
+  for almost anything).
+
+  Zsh is a shell replacement that some people prefer for its richer built-in
+  and community-curated scripts and themes. Oh-My-ZSH is a popular and example
+  of this curation. Oh-My-ZSH is also modular. This integration is just a
+  plugin and theme for it.
+
+  The provided plugin also works well with Nix's =nix-shell= tool, turning off
+  Direnv management before entering nix-shell to avoid a circular problem if
+  Direnv is pulling its environment variables from =nix-shell=.
+
+* Installation
+
+** Dependencies
+
+   As you may have guessed, for this integration to work you must perform the
+   following steps first:
+
+   1. [[zsh-install][install Zsh as your shell]]
+   2. [[ohmyzsh-install][install Oh-My-ZSH]]
+   3. [[direnv-install][install Direnv]].
+
+** Installing the plugin
+
+   Copy or link the provided =direnv.plugin.zsh= file to the =custom/plugins=
+   directory of your Oh-My-ZSH installation, which by default is
+   =~/.oh-my-zsh/custom/plugins=.
+
+   Then activate the plugin in your =~/.zshrc= file:
+
+   #+BEGIN_SRC zsh :eval no
+     # must set before sourcing oh-my-zsh.sh
+     plugins=(
+         # ... other plugins ...
+         direnv)
+
+     source "$ZSH/oh-my-zsh.sh"  # ZSH is typically ~/.oh-my-zsh
+   #+END_SRC
+
+** Installing a Direnv-aware theme
+
+   It's easy to forget if you're in a directory with environment variables
+   altered by this plugin, so it's nice to install a theme that gives some
+   indication with an altered prompt. An example of one using the ~DIRENV_DIR~
+   variable is provided. You can look at how it's designed to make your own or
+   use it directly.
+
+   To use it, copy or link the provided =tnks.zsh-theme= file to the
+   =custom/themes= directory of your Oh-My-ZSH installation (normally
+   =~/.oh-my-zsh/custom/themes=).
+
+   Then activate the theme in your =~/.zshrc= file:
+
+   #+BEGIN_SRC zsh :eval no
+     ZSH_THEME=tnks  # set before sourcing oh-my-zsh.sh
+
+     # ... other oh-my-zsh configuration like plugins ...
+
+     source "$ZSH/oh-my-zsh.sh"  # ZSH is typically ~/.oh-my-zsh
+   #+END_SRC
+
+* Usage
+
+  The plugin provides some functions and sets up your Zsh prompt with a hook to
+  integrate with these commands. Here are the following functions available:
+
+  | Command           | Description                                             |
+  |-------------------+---------------------------------------------------------|
+  | direnv-enable     | turns on environment auto-changing for PWD              |
+  | direnv-disable    | turns off environment auto-changing for PWD             |
+  | direnv-toggle     | toggles between direnv-enable and direnv-disable        |
+  | direnv-freeze DIR | sets environment for DIR and disables PWD auto-changing |
+  | direnv-thaw       | alias of direnv-enable (mnemonic opposite for freezing) |
+
+  None of these commands do anything until you configure directories for use
+  with Direnv by putting a =.envrc= file in them, and then enabling the
+  directory for use with a ~direnv allow~ call. See the [[direnv][Direnv documentation]]
+  for details.

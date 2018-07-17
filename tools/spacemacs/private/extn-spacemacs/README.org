@@ -1,0 +1,75 @@
+#+TITLE: Extn-Spacemacs Spacemacs Layer
+#+SETUPFILE: ../../../../internal/setup.org
+
+* Introduction
+
+  This layer extends what's already in Emacs and Spacemacs without bringing in
+  any new packages.
+
+  The following features are provided
+
+  - A global fill-column-indicator mode that skips special Emacs buffers
+  - A small function to abbreviate titles slightly
+  - A hack for enabling multiple Xref backends simultaneously.
+
+* Installation
+
+  To use this configuration layer, copy or link this layer's =extn-spacemacs=
+  directory to the private layers directory of your Spacemacs installation
+  keeping the name (=~/.emacs.d/private/extn-spacemacs=).
+
+  Then enable it in your =~/.spacemacs=:
+
+  #+BEGIN_SRC emacs-lisp :eval no
+    (defun dotspacemacs/layers ()
+      (setq-default
+         ;; ... other configuration ...
+       dotspacemacs-configuration-layers
+         '( ; ... other layers
+           (extn-spacemacs :variables
+            ;; layer settings in pairs; for example...
+            extn-spacemacs/xref-backends-fallingback t))))
+  #+END_SRC
+
+* Features/Configuration
+
+** Global fill-column indicator mode
+
+   The ~fill-column-indicator~ package is already pulled in by Spacemacs, and
+   provides ~fci-mode~, which gives a thin margin at your ~fill-column~
+   setting. That mode can be turned on per-hooks. This layer offers a global
+   mode that turns on this margin for all buffers execpt for special Emacs
+   buffers with names bracketed by the ‘*’ character.
+
+   You can enable this global mode with the following configuration in
+   =~/.spacemacs=:
+
+   #+BEGIN_SRC emacs-lisp :eval no
+     (defun dotspacemacs/user-config ()
+       ;; ... other configuration ...
+       (global-fci-mode))
+   #+END_SRC
+
+** Title abbreviation
+
+   The window titles of buffers can get long, and it's nice to abbrevate things
+   like “/home/$USER/” to just “~”. You can do that with the following
+   configuration in =~/.spacemacs=:
+
+   #+BEGIN_SRC emacs-lisp :eval no
+     (defun dotspacemacs/user-config ()
+       ;; ... other configuration ...
+       (extn-spacemacs/setq-default-frame-title-format-enhanced))
+   #+END_SRC
+
+** Multiple Xref backend simultaneously
+
+   Emacs' Xref support allows multiple backends to be queried, but only one is
+   selected. This layer provides an experimental hack for allowing multiple
+   backends to be used in a cascade.
+
+   See the Emacs docstring for ~extn-spacemacs/xref-backends-fallingback~ for
+   more information.
+
+   Enable this feature with the ~extn-spacemacs/xref-backends-fallingback~
+   layer configuration in =~/.spacemacs= (after the ~:variables~ keyword).

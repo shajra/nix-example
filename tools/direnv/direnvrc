@@ -1,0 +1,90 @@
+use_nix_gcrooted()
+{
+    local use_cache="false"
+    local cache_files=".envrc"
+
+    for f in ":$HOME/.direnvrc" "$XDG_CONFIG_DIR/direnv/direnvrc"
+    do
+        if [ -f "$f" ]
+        then cache_files="$cache_files:$f"
+        fi
+    done
+
+    while getopts cC: opt
+    do
+        case $opt in
+        c)  use_cache=true;;
+        C)  cache_files="${cache_files}:${OPTARG}";;
+        \?) fail "illegal switch: $opt";;
+        esac
+    done
+    shift "$((OPTIND - 1))"
+
+    local default_shell_file=shell.nix
+    if ! [ -f "$default_shell_file" ]
+    then default_shell_file=default.nix
+    fi
+    local shell_file="${1:-${default_shell_file}}"
+
+    cache_files="$cache_files:$shell_file"
+
+    local wd="$PWD/.direnv/nix"
+    mkdir -p "$wd"
+    local derivation="$wd/shell.drv"
+    local cache="$PWD/.direnv/env.cache"
+
+    if ! [ -f "$shell_file" ]
+    then fail "not found: $shell_file"
+    fi
+
+    if echo "$cache_files" | tr ':' '\n' | {
+            while read -r f
+            do
+                if test "$f" -nt "$cache"
+                then exit 0
+                fi
+            done
+            exit 1
+        }
+    then
+        log_status "rebuilding with nix-shell"
+        rm -f "$derivation"
+        rm -f "$cache"
+    fi
+
+    if [ "$use_cache" = "false" ]
+    then rm -f "$cache"
+    fi
+
+    if ! [ -f "$derivation" ]
+    then
+        IN_NIX_SHELL=1 nix-instantiate \
+            --add-root "$derivation" --indirect \
+            "$shell_file" >/dev/null || exit $?
+        nix-store \
+            -r $(nix-store --query --references "$derivation") \
+            --add-root "$wd/dep" --indirect >/dev/null || exit $?
+    fi
+
+    if ! [ -f "$cache" ]
+    then
+        local tmp="$(mktemp "${cache}.tmp-XXXXXXXX")"
+        trap "rm -rf '$tmp'" EXIT
+        log_status "DEBUG: shell"
+        nix-shell "$shell_file" \
+                --run "env -u shellHook -u TERM direnv dump" \
+            > "$tmp" \
+            && mv "$tmp" "$cache" \
+            || exit $?
+    fi
+
+    local old_term="$TERM"
+    direnv_load cat "$cache"
+    export TERM="$old_term"
+    unset old_term
+    while read -r f
+    do
+        log_status "watching $f"
+        watch_file "$f"
+    done < <(echo "$cache_files" | tr ':' '\n')
+}

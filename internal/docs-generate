@@ -1,0 +1,46 @@
+#!/bin/sh -eu
+
+
+main()
+{
+    if [ "$#" -gt 0 ]
+    then generate_gfm_args "$@"
+    else generate_gfm_found
+    fi
+}
+
+generate_gfm_args()
+{
+    for f in "$@"
+    do generate_gfm "$f"
+    done
+}
+
+generate_gfm_found()
+{
+    find . \
+        -name README.org \
+        \! -path '*doc*' | \
+    {
+        while read -r f
+        do generate_gfm "$f"
+        done
+    }
+}
+
+generate_gfm()
+(
+    filepath="$1"
+    emacs \
+        --batch \
+        --kill \
+        --eval "(package-initialize)" \
+        --file "$filepath" \
+        --eval "(princ buffer-file-name 'external-debugging-output)" \
+        --eval "(princ \"\\n\" 'external-debugging-output)" \
+        --funcall org-gfm-export-to-markdown
+)
+
+
+main "$@"
+

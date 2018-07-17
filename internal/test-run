@@ -1,0 +1,20 @@
+#!/bin/sh -eu
+
+
+PROJECT_ROOT="$(dirname "$0")/.."
+
+
+main()
+{
+   for project in shell haskell python
+   do
+       for run in licenses docker-image docker-tarball native
+       do
+           "$PROJECT_ROOT/run/run-$run" "$project"
+           "$PROJECT_ROOT/run/docker-nix" "run-$run" "$project"
+       done
+   done
+}
+
+
+main "$@"

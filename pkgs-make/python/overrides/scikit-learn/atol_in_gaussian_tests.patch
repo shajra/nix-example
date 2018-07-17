@@ -1,0 +1,33 @@
+From 3b230279c36d061e746976e087178c3371754c16 Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Thu, 14 Sep 2017 21:23:38 +0100
+Subject: [PATCH] Add a few atols
+
+---
+ sklearn/utils/estimator_checks.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/sklearn/utils/estimator_checks.py b/sklearn/utils/estimator_checks.py
+index ba83535..82bfe03 100644
+--- a/sklearn/utils/estimator_checks.py
++++ b/sklearn/utils/estimator_checks.py
+@@ -1223,7 +1223,7 @@ def check_supervised_y_2d(name, estimator_orig):
+         assert_greater(len(w), 0, msg)
+         assert_true("DataConversionWarning('A column-vector y"
+                     " was passed when a 1d array was expected" in msg)
+-    assert_allclose(y_pred.ravel(), y_pred_2d.ravel())
++    assert_allclose(y_pred.ravel(), y_pred_2d.ravel(), atol=1e-9)
+
+
+ @ignore_warnings(category=(DeprecationWarning, FutureWarning))
+@@ -1437,7 +1437,7 @@ def check_class_weight_balanced_linear_classifier(name, Classifier):
+     classifier.set_params(class_weight=class_weight)
+     coef_manual = classifier.fit(X, y).coef_.copy()
+
+-    assert_allclose(coef_balanced, coef_manual)
++    assert_allclose(coef_balanced, coef_manual, atol=1e-9)
+
+
+ @ignore_warnings(category=(DeprecationWarning, FutureWarning))
+--
+2.10.1

@@ -1,0 +1,42 @@
+#+TITLE: To Do Before Release
+
+* Ideas (not critical)
+
+- [ ] C tutorial to explain stdenv.mkDerivation?
+- [ ] Haskell
+  - [ ] native dependencies?
+
+* TODO Things to do
+
+- [ ] new writing
+  - [ ] patch up Pkgs-make
+  - [ ] Haskell
+    - [ ] Spacemacs
+  - [ ] Python
+    - [ ] using Pkgs-make
+    - [ ] developer environments
+      - [ ] envMoreTools
+      - [ ] withEnvTools
+    - [ ] Spacemacs
+- [ ] uniform narratives
+  - [ ] break up long tutorials?
+  - [ ] title "Introduction to…" in light of no title
+  - [ ] "by tutorial's end" in intros
+  - [ ] "Next steps" sections at end
+  - [ ] figure out best form for "Prerequisites"
+- [ ] technical improvements
+  - [ ] review spacemacs.static.el for settings to return to layer
+  - [ ] option for Python env to persist to non-/run/user
+- [ ] double check
+  - [ ] use “…” instead of “...” to help disambiguate
+  - [ ] consistency of syntax
+    - ‘~’ code
+      - variable names
+    - ‘/’ italics
+      - new concepts
+    - ‘=’ verbatim
+      - layers
+      - filepaths
+      - command line tool names
+    - plain
+      - official program names

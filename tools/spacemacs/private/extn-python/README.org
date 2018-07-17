@@ -1,0 +1,63 @@
+#+TITLE: Extn-Python Spacemacs Layer
+#+SETUPFILE: ../../../../internal/setup.org
+
+* Introduction
+
+  This layer extends the Spacemacs-provided =python= layer with just an extra
+  keystroke and command to restart the Anaconda server. That's all it does for
+  now. Otherwise, it just turns on the =python= layer for you, see [[spacemacs-python][that layer's
+  official documentation]] for more information.
+
+* Installation
+
+** Dependencies
+
+   Spacemacs's =python= layer naturally requires an installation of Python, but
+   also provides support for a variety of Python static analysis tools and test
+   runners.
+
+   This layer provides a small amount of support for [[direnv][Direnv]] and [[emacs-direnv][emacs-direnv]] if
+   you choose to use these.
+
+** Enabling the layer
+
+   To use this configuration layer, copy or link this layer's =extn-python=
+   directory to the private layers directory of your Spacemacs installation
+   keeping the name (=~/.emacs.d/private/extn-python=).
+
+   Then enable it in your =~/.spacemacs=:
+
+   #+BEGIN_SRC emacs-lisp :eval no
+     (defun dotspacemacs/layers ()
+       (setq-default
+          ;; ... other configuration ...
+        dotspacemacs-configuration-layers
+          '( ; ... other layers
+            extn-python)))
+   #+END_SRC
+
+* Features/Configuration
+
+** Key bindings
+
+*** From the =python= Spacemacs layer
+
+    Many key binds come from the =python= layer. Rather than redocument those
+    bindings here, see the [[spacemacs-python-bindings][documentation for that layer]].
+
+*** From this layer
+
+    There's just one command/keybinding we provide:
+
+    | Key Binding | Description                                             |
+    |-------------+---------------------------------------------------------|
+    | ~SPC m , a~ | restart anaconda-server, updating direnv if appropriate |
+
+    We could kill the =*anaconda-mode*= buffer to restart the background
+    process, but that's a bit annoying to do without a key binding.
+    =anaconda-mode= tries to intelligently restart itself, which is why they
+    probably don't offer a keybinding for manually restarting.
+
+    Additionally, =anaconda-mode= is not aware of when environment variables
+    change from packages like =emacs-direnv=. So our new command also update
+    the Direnv environment variable before restarting the server.

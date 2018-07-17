@@ -4,6 +4,7 @@ result-*
 
 # Docker building
 *.tar.gz
+*.tar
 
 # Haskell Stack
 .stack-work/
@@ -14,9 +15,25 @@ cabal.sandbox.config
 dist/
 
 # Haskell Cabal (newtyle)
+.ghc.environment.*
 cabal.project.local
 dist-newstyle/
 
+# Python
+*.egg-info/
+__pycache__/
+*.pyc
+
 # Tags
-/tags
-/TAGS
+cscope.out
+GPATH
+GRTAGS
+GTAGS
+tags
+TAGS
+
+# Direnv
+.direnv/
+
+# Emacs Org-mode Export
+*~

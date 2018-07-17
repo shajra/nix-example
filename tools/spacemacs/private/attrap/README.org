@@ -1,0 +1,37 @@
+#+TITLE: Attrap Spacemacs Layer
+#+SETUPFILE: ../../../../internal/setup.org
+
+* Introduction
+
+  This layer provides [[attrap][Attrap]] integration for fixing error at the active point.
+
+  This layer doesn't do much. It mostly just pulls in the package and sets up a
+  keybinding to the ~attrap-attrap~ command.
+
+* Installation
+
+  To use this configuration layer, copy or link this layer's =attrap= directory
+  to the private layers directory of your Spacemacs installation keeping the
+  name (=~/.emacs.d/private/attrap=).
+
+  Then enable it in your =~/.spacemacs=:
+
+  #+BEGIN_SRC emacs-lisp :eval no
+    (defun dotspacemacs/layers ()
+      (setq-default
+         ;; ... other configuration ...
+       dotspacemacs-configuration-layers
+         '( ; ... other layers
+           attrap)))
+  #+END_SRC
+
+* Features/Configuration
+
+  All the important direnv Emacs commands have key bindings under the major
+  mode prefix ~SPC m~:
+
+  | Key Binding | Description                                        |
+  |-------------+----------------------------------------------------|
+  | ~SPC m /~   | attempt to repair a Emacs Lisp defect at the point |
+
+  See the [[attrap][Attrap documentation]] for more information.
