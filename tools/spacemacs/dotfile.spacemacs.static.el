@@ -31,7 +31,6 @@
 
      ;; other
      auto-completion
-     floobits
      git
      github
      gtags
