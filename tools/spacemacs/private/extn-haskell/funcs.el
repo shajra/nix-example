@@ -43,8 +43,9 @@ This is useful for defining functions for a custom function for
   ;;; private
 
   (defun extn-haskell//setq-default-dante-repl (list)
-    (setq-default dante-repl-command-line-methods-alist
-                  (extn-haskell//dante-repl-alist list)))
+    (setq-default
+     dante-repl-command-line-methods-alist (extn-haskell//dante-repl-alist list)
+     dante-repl-command-line-methods list))
 
   (defun extn-haskell//dante-repl-alist (list)
     (let*
