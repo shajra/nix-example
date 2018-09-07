@@ -171,16 +171,16 @@
      nix eval "(''
          line 1
            line 2
-         line 3
+        line 3
      '')"
    #+END_SRC
 
    #+RESULTS:
-   : "line 1\n  line 2\nline 3\n"
+   : " line 1\n   line 2\nline 3\n"
 
-   Notice how the first token after the “''” establishes a left-margin for the
-   multi-line string.  Beyond strings, Nix does not have syntactically
-   significant whitespace.
+   The left-most token in any line establishes a left margin. In the example
+   above, this is “line 3”. Beyond these strings, Nix does not have
+   syntactically significant whitespace.
 
    We concatenate strings with the ~+~ operator:
 

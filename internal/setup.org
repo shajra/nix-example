@@ -51,6 +51,7 @@
 #+LINK: nix-tutorials https://www.google.com/search?q=nix+tutorial
 #+LINK: ohmyzsh https://ohmyz.sh
 #+LINK: ohmyzsh-install https://github.com/robbyrussell/oh-my-zsh#manual-installation
+#+LINK: pip-editable https://pip.pypa.io/en/stable/reference/pip_install/#editable-installs
 #+LINK: projectile http://projectile.readthedocs.io
 #+LINK: python https://www.python.org/
 #+LINK: spacemacs http://spacemacs.org

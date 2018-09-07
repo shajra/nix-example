@@ -1,22 +1,23 @@
-- [Introduction](#orgab3a165)
-- [Prerequisites](#org12d9491)
-- [Following along with code](#orgcecac21)
-- [Walk-through](#org383c53a)
-  - [Basic build](#org517eaae)
-  - [Modifying the Haskell build](#orga80e003)
-- [Developing Haskell](#org3c12cee)
-  - [Development tools in a Nix shell](#org1e125fe)
-  - [Cabal](#org37a01c2)
-  - [Accidentally building outside a Nix shell](#org66f1e64)
-  - [Ghcid](#orgfb91a0e)
-  - [Editor tags files](#org031ddef)
-  - [Dante](#orgb683f55)
-  - [Haskell Stack](#orgc1b9c4f)
-  - [Stack-less change-triggered builds](#org9b37987)
+- [Introduction](#org99e0482)
+- [Prerequisites](#orge8dea36)
+- [Following along with code](#orgabac47b)
+- [Walk-through](#org1f68560)
+  - [Basic build](#org84beafb)
+  - [Modifying the Haskell build](#org5dbcd82)
+- [Developing Haskell](#org4f70728)
+  - [Development tools in a Nix shell](#org83817d3)
+  - [Cabal](#org89ebead)
+  - [Accidentally building outside a Nix shell](#org0db737b)
+  - [Ghcid](#orgf40e51c)
+  - [Editor tags files](#org7b834fe)
+  - [Haskell Stack](#org903c272)
+    - [Using Stack](#org3b02ec0)
+    - [Build files for Stack](#orga722160)
+  - [Stack-less change-triggered builds](#orgaf77a7d)
 
 
 
-<a id="orgab3a165"></a>
+<a id="org99e0482"></a>
 
 # Introduction
 
@@ -39,7 +40,7 @@ Ideally, we want a way to
 This tutorial shows how to obtain the first of our goals with Nix. The second two are always a work in process, but we feel we have something workable.
 
 
-<a id="org12d9491"></a>
+<a id="orge8dea36"></a>
 
 # Prerequisites
 
@@ -48,7 +49,7 @@ We'll presume you're familiar with Haskell and the tooling ecosystem.
 We'll assume that you know what's covered in the previous two tutorials [introducing Nix](../0-nix-intro/README.md) and [introducing Pkgs-make](../1-pkgs-make/README.md).
 
 
-<a id="orgcecac21"></a>
+<a id="orgabac47b"></a>
 
 # Following along with code
 
@@ -70,18 +71,18 @@ nix run -f build.nix example-haskell-app -c example-haskell
 This is a trivial application. The complexity we're introducing is just enough to showcase usage of Nix.
 
 
-<a id="org383c53a"></a>
+<a id="org1f68560"></a>
 
 # Walk-through
 
 
-<a id="org517eaae"></a>
+<a id="org84beafb"></a>
 
 ## Basic build
 
 The library and application code should be familiar to most Haskell developers.
 
-Notice how there's no Nix files in these projects at all. All we have is our source code, and a normal Cabal file. Pkgs-make uses a tool called `cabal2nix` to generate a Nix expression from a Cabal file on our behalf. We'll discuss this more later.
+Notice how there's no Nix files in these projects at all. All we have is our source code, and a normal Cabal file. Pkgs-make uses a tool called [`cabal2nix`](https://github.com/NixOS/cabal2nix) to generate a Nix expression from a Cabal file on our behalf. We'll discuss this more later.
 
 Notice how similar the [`build.nix` usage for this tutorial](./build.nix) is to the previous tutorial introducing Pkgs-make. The first difference to note is that because we're building a Haskell application we're using the `call.haskell.lib` and `call.haskell.app` attributes rather than `call.package`:
 
@@ -106,7 +107,7 @@ Also, similarly to the previous tutorial, there are three attributes to illustra
 Since they work the same way as shown in the previous tutorial, we don't discuss them more there, but the [top-level `run` directory](../../run/README.md) has scripts that illustrate their use.
 
 
-<a id="orga80e003"></a>
+<a id="org5dbcd82"></a>
 
 ## Modifying the Haskell build
 
@@ -116,7 +117,7 @@ Nixpkgs offers [some functions useful for modifying the build of a Haskell appli
 
 In this tutorial we'll focus on `lib.haskell.dontHaddock` as an example. Haskell libraries built by Nixpkgs by default also generate Haddock documentation. But sometimes, this breaks or takes a long time. We can use `dontHaddock` to suppress this part of the build.
 
-Some derivations have multiple outputs, and whose derivations can be accessed by attributes on the derivation. For instance, to get to the generated Haddocks for our `example-haskell-lib` library, we can reference the `example-haskell-lib.doc` attribute:
+Some derivations have multiple outputs. These are made available as subderivations available as attributes on the original derivation. For instance, to get to the generated Haddocks for our `example-haskell-lib` library, we can reference the `example-haskell-lib.doc` attribute:
 
 ```shell
 tree "$(nix path-info --file build.nix example-haskell-lib.doc)"
@@ -193,14 +194,14 @@ Unfortunately, the design of `changePkgs` only works for functions in `lib.haske
 With three methods to modify packages with Pkgs-make, hopefully you can find one that works well for your needs.
 
 
-<a id="org3c12cee"></a>
+<a id="org4f70728"></a>
 
 # Developing Haskell
 
 We introduced `nix-shell` at the end of the [first tutorial](../0-nix-intro/README.md). We'll now see how we can use Pkgs-make with `nix-shell` to get a rich programming environment for a Haskell project built with Nix.
 
 
-<a id="org1e125fe"></a>
+<a id="org83817d3"></a>
 
 ## Development tools in a Nix shell
 
@@ -249,7 +250,7 @@ The instance of GHC provided is a “-with-packages” version preloaded with al
 One consequence of this is that once you enter into a Nix shell for a derivation, you can disable your computer's networking. Entering the shell should download all the dependencies you need from the internet, and check their hashes to assure a deterministic build. From there, you should only need your source code, which should should be able to compile and work with offline.
 
 
-<a id="org37a01c2"></a>
+<a id="org89ebead"></a>
 
 ## Cabal
 
@@ -315,7 +316,7 @@ Regarding the “new-\*” commands, they've been released for testing by the Ca
 If you're familiar with Cabal sandboxes, you can use those too instead of the “new-\*” commands, but you will deviate from the integration of tools shown by these tutorials. Some things may break and require a different approach, so sandboxes are beyond the scope of this project. Also, sandboxes seem likely to go away with once the “new-\*” commands are officially released.
 
 
-<a id="org66f1e64"></a>
+<a id="org0db737b"></a>
 
 ## Accidentally building outside a Nix shell
 
@@ -356,7 +357,7 @@ If you get confused about whether you've compiled with or without Nix, you can a
 These last `.ghc.environment.*` files are [a controversial file](https://github.com/haskell/cabal/issues/4542) generated by Cabal that saves state from build to build. Fortunately, Pkgs-make filters out this file for all Haskell builds so we don't have to think about it.
 
 
-<a id="orgfb91a0e"></a>
+<a id="orgf40e51c"></a>
 
 ## Ghcid
 
@@ -371,11 +372,11 @@ Ghcid will sense changes in source files, and automatically recompile them. Howe
 Note, the reason Ghcid is faster than a normal build with Cabal or Stack is because, it's using a REPL session, which it uses to reload modules. This provides a faster compilation, but sometimes error messages get out of sync, and you have to restart Ghcid.
 
 
-<a id="org031ddef"></a>
+<a id="org7b834fe"></a>
 
 ## Editor tags files
 
-If you use a text editor like Emacs or Vim, you can navigate multiple projects fluidly using [Ctags/Etags](https://en.wikipedia.org/wiki/Ctags). For Haskell, this tutorial's Nix shell environment provides a `nix-tags-haskell` script to create a tags file:
+If you use a text editor like Emacs or Vim, you can navigate multiple projects fluidly using [Ctags/Etags](https://en.wikipedia.org/wiki/Ctags). For Haskell, Pkgs-make's Nix shell environment provides a `nix-tags-haskell` script to create a tags file:
 
 ```shell
 nix-shell --run 'nix-tags-haskell --ctags --etags' 2>&1
@@ -402,24 +403,16 @@ In Emacs, you can use the `find-tag` command, which is by default bound to `Meta
 There are also a myriad of ways to configure various editors to run the tags-generation command on demand and/or as necessary.
 
 
-<a id="orgb683f55"></a>
-
-## Dante
-
-If you're using Emacs, you can use [Dante][dante] as an alternative to Ghcid and Stack. Follow the official directions to install Dante in Emacs. To make Dante work with this project, you need to include a new entry in the \`dante-repl-command-line-methods-alist\`. Here's an illustration of how to do this using the popular [Projectile][projectile] Emacs package to determine the project's root directory (Projectile provides much more, though):
-
-\`\`\`lisp (setq-default dante-repl-command-line-methods-alist \`( (styx . ,(lambda (root) (dante-repl-by-file root "styx.yaml" '("styx" "repl")))) (nix-new . ,(lambda (root) (dante-repl-by-file (projectile-project-root) "shell.nix" \`("nix-shell" "&#x2013;run" "cabal new-repl" ,(concat (projectile-project-root) "/shell.nix"))))) (stack . ,(lambda (root) (dante-repl-by-file root "stack.yaml" '("stack" "repl")))) (bare . ,(lambda (\_) '("cabal" "repl"))))) \`\`\`
-
-The important part for this project is the "nix-new" entry. The other entries are so Dante will continue to work with other types of Haskell projects.
-
-Emacs configured with tags and Dante provides an extremely rich "IDE"-like developer experience for Haskell.
-
-Note that Dante (like Ghcid) uses a REPL for faster compilation than a normal Cabal or Stack build. So like Ghcid, its errors can fall out of sync with a true build, and you'll need to restart the session with \`M-x dante-restart\`.
-
-
-<a id="orgc1b9c4f"></a>
+<a id="org903c272"></a>
 
 ## Haskell Stack
+
+Although with Nix, you don't need Stack at all, we show how to build this Pkgs-make Haskell project with Stack if you like.
+
+
+<a id="org3b02ec0"></a>
+
+### Using Stack
 
 If you have Stack installed, you can run it from the root project:
 
@@ -440,15 +433,51 @@ stack build 2>&1
 
 With Stack's `--file-watch` switch, Stack will rebuild the project when files change, similarly to Ghcid.
 
-****WARNING****: This project uses Stack's [built-in support for Nix integration](https://docs.haskellstack.org/en/stable/nix_integration/). System dependencies for Stack come from the Nix configuration. But be aware that Stack manages Haskell dependencies (including GHC) independently using the *resolver* specified in the tutorial's [`stack.yaml`](./stack.yaml). When developing with Nix and Stack, it's up to you to make sure the versions used by Stack are congruent to those used by Nix.
-
-****TODO****: How to mention Dante?
+****WARNING****: This project uses Stack's [built-in support for Nix integration](https://docs.haskellstack.org/en/stable/nix_integration/). System dependencies for Stack come from the Nix configuration. But be aware that Stack manages Haskell dependencies (including GHC) independently using the *resolver* specified in the tutorial's [`stack.yaml`](./stack.yaml). When developing with Nix and Stack, it's up to you to make sure the versions used by Stack are congruent (enough) to those used by Nix.
 
 
-<a id="org9b37987"></a>
+<a id="orga722160"></a>
+
+### Build files for Stack
+
+This tutorial's `build.nix` file has a `call.package` call of `./stack`:
+
+```text
+example-haskell-stack = call.package ./stack;
+```
+
+This `call.package` call imports the following [`stack/default.nix`](./stack/default.nix) file and passes in the first argument based upon reflection:
+
+```nix
+{ pkgs
+, gmp
+, zlib
+}:
+
+{ghc}:
+
+pkgs.haskell.lib.buildStackProject {
+    inherit ghc;
+    name = "env-stack";
+    buildInputs = [ gmp zlib ];
+}
+```
+
+The attributes we get values for from `call.package` include
+
+-   **`pkgs`:** our overlayed/overridden Nixpkgs for the Pkgs-make call
+-   **`gmp`:** GNU Multiple Precision arithmetic library
+-   **`zlib`:** compression library
+
+`pkgs` allows us to get the `buildStackProject` function from Nixpkgs we need for integrating Stack with Nix. The `gmp` and `zlib` libraries are passed into the Stack build function as OS-level dependencies. Stack figures out all the Haskell dependencies from the `stack.yaml` file and Cabal files.
+
+Otherwise, the [`stack.yaml`](./stack.yaml) and [`stack/stack.nix`](./stack/stack.nix) files tie everything together as one would expect from the [official Stack documentation for Nix integration](https://docs.haskellstack.org/en/stable/nix_integration/).
+
+
+<a id="orgaf77a7d"></a>
 
 ## Stack-less change-triggered builds
 
 This tutorial's `nix-shell` environment provides a `cabal-new-watch` script that emulates `stack build --file-watch` but only using dependencies managed by Nix.
 
-This is a true Cabal build, so it won't be as fast as Ghcid or Dante, but should be about as fast as a normal Stack build.
+This is a non-incremental Cabal build, so it won't be as fast as Ghcid, but should be about as fast as a normal Stack build.

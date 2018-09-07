@@ -97,7 +97,7 @@
 
    Notice how there's no Nix files in these projects at all. All we have is our
    source code, and a normal Cabal file. Pkgs-make uses a tool called
-   =cabal2nix= to generate a Nix expression from a Cabal file on our behalf.
+   [[cabal2nix][=cabal2nix=]] to generate a Nix expression from a Cabal file on our behalf.
    We'll discuss this more later.
 
    Notice how similar the [[./build.nix][=build.nix= usage for this tutorial]] is to the previous
@@ -150,10 +150,10 @@
    documentation. But sometimes, this breaks or takes a long time. We can use
    ~dontHaddock~ to suppress this part of the build.
 
-   Some derivations have multiple outputs, and whose derivations can be
-   accessed by attributes on the derivation. For instance, to get to the
-   generated Haddocks for our ~example-haskell-lib~ library, we can reference
-   the ~example-haskell-lib.doc~ attribute:
+   Some derivations have multiple outputs. These are made available as
+   subderivations available as attributes on the original derivation. For
+   instance, to get to the generated Haddocks for our ~example-haskell-lib~
+   library, we can reference the ~example-haskell-lib.doc~ attribute:
 
    #+BEGIN_SRC shell :results output :exports both
      tree "$(nix path-info --file build.nix example-haskell-lib.doc)"
@@ -460,7 +460,7 @@
 ** Editor tags files
 
    If you use a text editor like Emacs or Vim, you can navigate multiple
-   projects fluidly using [[ctags][Ctags/Etags]]. For Haskell, this tutorial's Nix shell
+   projects fluidly using [[ctags][Ctags/Etags]]. For Haskell, Pkgs-make's Nix shell
    environment provides a =nix-tags-haskell= script to create a tags file:
 
    #+BEGIN_SRC shell :results output :exports both :post crop(text=*this*)
@@ -496,80 +496,71 @@
    There are also a myriad of ways to configure various editors to run the
    tags-generation command on demand and/or as necessary.
 
-** Dante
-
-   If you're using Emacs, you can use [Dante][dante] as an alternative to Ghcid
-   and Stack.  Follow the official directions to install Dante in Emacs.  To make
-   Dante work with this project, you need to include a new entry in the
-   `dante-repl-command-line-methods-alist`.  Here's an illustration of how to do
-   this using the popular [Projectile][projectile] Emacs package to determine the
-   project's root directory (Projectile provides much more, though):
-
-   ```lisp
-   (setq-default
-   dante-repl-command-line-methods-alist
-   `(
-   (styx .
-   ,(lambda (root)
-   (dante-repl-by-file root "styx.yaml"
-   '("styx" "repl"))))
-   (nix-new .
-   ,(lambda (root)
-   (dante-repl-by-file
-   (projectile-project-root)
-   "shell.nix"
-   `("nix-shell" "--run" "cabal new-repl"
-   ,(concat (projectile-project-root) "/shell.nix")))))
-   (stack .
-   ,(lambda (root)
-   (dante-repl-by-file root "stack.yaml"
-   '("stack" "repl"))))
-   (bare  . ,(lambda (_) '("cabal" "repl")))))
-   ```
-
-   The important part for this project is the "nix-new" entry.  The other entries
-   are so Dante will continue to work with other types of Haskell projects.
-
-   Emacs configured with tags and Dante provides an extremely rich "IDE"-like
-   developer experience for Haskell.
-
-   Note that Dante (like Ghcid) uses a REPL for faster compilation than a normal
-   Cabal or Stack build.  So like Ghcid, its errors can fall out of sync with a
-   true build, and you'll need to restart the session with `M-x dante-restart`.
-
 ** Haskell Stack
 
-   If you have Stack installed, you can run it from the root project:
+   Although with Nix, you don't need Stack at all, we show how to build this
+   Pkgs-make Haskell project with Stack if you like.
 
-   #+BEGIN_SRC shell :results output :exports both
+*** Using Stack
+
+    If you have Stack installed, you can run it from the root project:
+
+    #+BEGIN_SRC shell :results output :exports both
      stack build 2>&1
-   #+END_SRC
+    #+END_SRC
 
-   #+RESULTS:
-   #+begin_example
-   example-haskell-lib-0.1.0.0: unregistering (local file changes: example-haskell-lib.cabal src/FortyOne.lhs src/Lib.hs)
-   example-haskell-lib-0.1.0.0: configure (lib)
-   example-haskell-lib-0.1.0.0: build (lib)
-   example-haskell-lib-0.1.0.0: copy/register
-   Building all executables for `example-haskell-app' once. After a successful build of all of them, only specified executables will be rebuilt.
-   example-haskell-app-0.1.0.0: configure (exe)
-   example-haskell-app-0.1.0.0: build (exe)
-   example-haskell-app-0.1.0.0: copy/register
-   Completed 2 action(s).
-   Log files have been written to: /home/shajra/src/shajra/example-nix/tutorials/2-haskell/.stack-work/logs/
-   #+end_example
+    #+RESULTS:
+    #+begin_example
+    example-haskell-lib-0.1.0.0: unregistering (local file changes: example-haskell-lib.cabal src/FortyOne.lhs src/Lib.hs)
+    example-haskell-lib-0.1.0.0: configure (lib)
+    example-haskell-lib-0.1.0.0: build (lib)
+    example-haskell-lib-0.1.0.0: copy/register
+    Building all executables for `example-haskell-app' once. After a successful build of all of them, only specified executables will be rebuilt.
+    example-haskell-app-0.1.0.0: configure (exe)
+    example-haskell-app-0.1.0.0: build (exe)
+    example-haskell-app-0.1.0.0: copy/register
+    Completed 2 action(s).
+    Log files have been written to: /home/shajra/src/shajra/example-nix/tutorials/2-haskell/.stack-work/logs/
+    #+end_example
 
-   With Stack's ~--file-watch~ switch, Stack will rebuild the project when
-   files change, similarly to Ghcid.
+    With Stack's ~--file-watch~ switch, Stack will rebuild the project when
+    files change, similarly to Ghcid.
 
-   **WARNING**: This project uses Stack's [[stack-nix][built-in support for Nix integration]].
-   System dependencies for Stack come from the Nix configuration. But be aware
-   that Stack manages Haskell dependencies (including GHC) independently using
-   the /resolver/ specified in the tutorial's [[./stack.yaml][=stack.yaml=]]. When developing
-   with Nix and Stack, it's up to you to make sure the versions used by Stack
-   are congruent to those used by Nix.
+    **WARNING**: This project uses Stack's [[stack-nix][built-in support for Nix integration]].
+    System dependencies for Stack come from the Nix configuration. But be aware
+    that Stack manages Haskell dependencies (including GHC) independently using
+    the /resolver/ specified in the tutorial's [[./stack.yaml][=stack.yaml=]]. When developing
+    with Nix and Stack, it's up to you to make sure the versions used by Stack
+    are congruent (enough) to those used by Nix.
 
-   **TODO**: How to mention Dante?
+*** Build files for Stack
+
+    This tutorial's =build.nix= file has a ~call.package~ call of =./stack=:
+
+    #+BEGIN_SRC text :eval no
+      example-haskell-stack = call.package ./stack;
+    #+END_SRC
+
+    This ~call.package~ call imports the following [[./stack/default.nix][=stack/default.nix=]] file and
+    passes in the first argument based upon reflection:
+
+    #+INCLUDE: ./stack/default.nix src nix
+
+    The attributes we get values for from ~call.package~ include
+
+    - ~pkgs~ :: our overlayed/overridden Nixpkgs for the Pkgs-make call
+    - ~gmp~ :: GNU Multiple Precision arithmetic library
+    - ~zlib~ :: compression library
+
+    ~pkgs~ allows us to get the ~buildStackProject~ function from Nixpkgs we
+    need for integrating Stack with Nix. The ~gmp~ and ~zlib~ libraries are
+    passed into the Stack build function as OS-level dependencies. Stack
+    figures out all the Haskell dependencies from the =stack.yaml= file and
+    Cabal files.
+
+    Otherwise, the [[./stack.yaml][=stack.yaml=]] and [[./stack/stack.nix][=stack/stack.nix=]] files tie everything
+    together as one would expect from the [[stack-nix][official Stack documentation for Nix
+    integration]].
 
 ** Stack-less change-triggered builds
 
@@ -577,7 +568,7 @@
    that emulates ~stack build --file-watch~ but only using dependencies managed
    by Nix.
 
-   This is a true Cabal build, so it won't be as fast as Ghcid or Dante, but
+   This is a non-incremental Cabal build, so it won't be as fast as Ghcid, but
    should be about as fast as a normal Stack build.
 
 * Org-mode Cleanup                                                 :noexport:
@@ -589,4 +580,4 @@
   # Local Variables:
   # org-confirm-babel-evaluate: nil
   # End:
-.
+  .
