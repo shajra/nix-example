@@ -257,9 +257,14 @@
 
    By default, Pkgs-make's Haskell environment has the following tools:
 
-   - =ghc=
+   - =apply-refact=
    - =cabal=
+   - =cabal2nix=
+   - =ghc=
    - =ghcid=
+   - =hlint=
+   - =hoogle=
+   - =stylish-haskell=
    - =nix-tags-haskell=
    - =cabal-new-watch=
 
@@ -486,8 +491,13 @@
    Etags file (used by Emacs) is put in =TAGS=. =nix-tags-haskell= provides
    some additional configuration you can see with the ~--help~ switch.
 
-   In Vim, you can now use ~Ctrl-]~ and ~Ctrl-t~ to jump to declarations, even
-   in the source code for third-party projects and the standard/base libraries.
+   These tags files include an index not only for files under local
+   development, but also locally cached source for all third-party
+   dependencies.
+
+   With these files, in Vim you can now use ~Ctrl-]~ and ~Ctrl-t~ to jump to
+   declarations, even in the source code for third-party projects and the
+   standard/base libraries.
 
    In Emacs, you can use the ~find-tag~ command, which is by default bound to
    ~Meta-.~, and you can go back with ~pop-tag-mark~, bound by default to
@@ -570,6 +580,44 @@
 
    This is a non-incremental Cabal build, so it won't be as fast as Ghcid, but
    should be about as fast as a normal Stack build.
+
+* Integrated developer environment with Emacs
+
+  This repository's [[../../tools/README.org][=tools=]] directory has configuration for a few tools
+  including Emacs (Spacemacs), Direnv, and Zsh (Oh-my-ZSH). If you set these
+  tools up as recommended, this tutorial has two hidden files designed for use
+  with that configuration:
+
+  - =.envrc= :: configures Direnv to pick up environment variables from =nix-shell=
+
+  - =.dir-locals.el= :: makes Emacs' ~projectile-regenerate-tags~ call =nix-tags-haskell=.
+
+  Note that as a security measure you'll have to call ~direnv allow~ in this
+  directory for Direnv to recognize the =.envrc= file (since it can technically
+  run arbitrary code and change your environment variables).
+
+  After that, with all tools configured as documented, you should be able to
+  open up any Haskell file in this tutorial and have a reasonably modern
+  experience based on Nix including:
+
+  - code navigation of source code including downloaded dependencies
+  - on-the-fly compilation based on a ~cabal new-repl~ session
+  - on-the-fly checking with =hlint=
+  - =stylish-haskell= formatting upon saving
+  - at-point type information
+
+  Here's some commands to explore:
+
+  - ~attrap-attrap~
+  - ~dante-eval-block~
+  - ~dante-info~
+  - ~dante-type-at~
+  - ~evil-jump-to-tag~
+  - ~extn-haskell/dante-restart~
+  - ~hlint-refactor-refactor-at-point~
+  - ~hlint-refactor-refactor-buffer~
+  - ~pop-tag-mark~
+  - ~projectile-regenerate-tags~
 
 * Org-mode Cleanup                                                 :noexport:
 
