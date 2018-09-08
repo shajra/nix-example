@@ -1,7 +1,7 @@
 #+TITLE: Pkgs-make Library for Nix
 #+SETUPFILE: ../internal/setup.org
 
-* Introduction
+* About Pkgs-make
 
   Pkgs-make is a library that factors away boilerplate we often end up when
   writing Nix expressions based solely on [[nixpkgs][Nixpkgs]].
@@ -54,7 +54,7 @@
   would be even better if the work from curation within Pkgs-make could work
   back into Nixpkgs. Any help is much appreciated.
 
-* Specification of functions and types
+* Specification of Functions and Types
 
 ** Notation and ~PkgsMake~
 
@@ -371,7 +371,7 @@
    directory to save time entering the Nix shell after the first time. This
    persistence can be disabled with ~envPersists~.
 
-* Navigating the code
+* Navigating the Code
 
   If you'd like to follow the implementation, this project is organized as
   follows:

@@ -1,12 +1,14 @@
 #+TITLE: Extn-Python Spacemacs Layer
 #+SETUPFILE: ../../../../internal/setup.org
 
-* Introduction
+* About Extn-Python Spacemacs Layer
 
   This layer extends the Spacemacs-provided =python= layer with just an extra
-  keystroke and command to restart the Anaconda server. That's all it does for
-  now. Otherwise, it just turns on the =python= layer for you, see [[spacemacs-python][that layer's
-  official documentation]] for more information.
+  keystroke and command to restart the Anaconda server. This restart also picks
+  up Direnv environment changes via the [[emacs-direnv][emacs-direnv]] Emacs package if enabled.
+
+  That's all it does for now. Otherwise, it just turns on the =python= layer
+  for you, see [[spacemacs-python][that layer's official documentation]] for more information.
 
 * Installation
 
@@ -16,8 +18,16 @@
    also provides support for a variety of Python static analysis tools and test
    runners.
 
-   This layer provides a small amount of support for [[direnv][Direnv]] and [[emacs-direnv][emacs-direnv]] if
-   you choose to use these.
+   We want our development experiences to be stable and portable from machine
+   to machine, so it's nice to have project-level Nix expressions provide
+   project-level dependencies. [[../../../../pkgs-make/README.org][Pkgs-make]] can do this by providing our Python
+   interpretter and development tools for a =nix-shell= session. Nix shell
+   environment variables can be integrated into Direnv with the [[../../../direnv/README.org][Direnv support
+   provided]] as well as [[../../../oh-my-zsh/README.org][Oh-My-ZSH integration]]. To tie this back to Spacemacs,
+   you can use the [[../direnv/README.org][provided =direnv= Spacemacs layer]].
+
+   Otherwise, you can install any dependencies using an OS package manager like
+   Nix.
 
 ** Enabling the layer
 
@@ -49,9 +59,9 @@
 
     There's just one command/keybinding we provide:
 
-    | Key Binding | Description                                             |
-    |-------------+---------------------------------------------------------|
-    | ~SPC m , a~ | restart anaconda-server, updating direnv if appropriate |
+    | Key Binding | Command                             | Description                                             |
+    |-------------+-------------------------------------+---------------------------------------------------------|
+    | ~SPC m , a~ | ~extn-python/anaconda-mode-restart~ | restart anaconda-server, updating direnv if appropriate |
 
     We could kill the =*anaconda-mode*= buffer to restart the background
     process, but that's a bit annoying to do without a key binding.

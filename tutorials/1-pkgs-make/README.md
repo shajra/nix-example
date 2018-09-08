@@ -1,22 +1,22 @@
 - [Introduction to Pkgs-make](#sec-1)
 - [Prerequisites](#sec-2)
-- [Following along with code](#sec-3)
-- [Setting up a minimal build](#sec-4)
+- [Following Along With Code](#sec-3)
+- [Setting Up a Minimal Build](#sec-4)
   - [Referencing Pkgs-make](#sec-4-1)
   - [Calling Pkgs-make](#sec-4-2)
   - [Call-package calls](#sec-4-3)
     - [Example library code](#sec-4-3-1)
     - [Example application code](#sec-4-3-2)
-- [Alternative to hardcoding `/nix/store` references](#sec-5)
+- [Alternative to Hardcoding `/nix/store` References](#sec-5)
 - [Pinning Nixpkgs](#sec-6)
-- [Overriding dependencies](#sec-7)
+- [Overriding Dependencies](#sec-7)
   - [Overriding globally](#sec-7-1)
   - [Overriding locally](#sec-7-2)
-- [Curated overlays](#sec-8)
+- [Curated Overlays](#sec-8)
 - [Build Docker](#sec-9)
   - [Nix-built Docker image](#sec-9-1)
   - [Nix-built self-contained tarball](#sec-9-2)
-- [License report (experimental)](#sec-10)
+- [License Report (experimental)](#sec-10)
   - [Usage](#sec-10-1)
   - [Caveats](#sec-10-2)
 
@@ -39,7 +39,7 @@ Additionally, we're going to overview using Pkgs-make, but won't dive into every
 
 And since you'll see not only calls to Pkgs-make, but also calls to Nixpkgs, you may want to have the [Nixpkgs manual](https://github.com/NixOS/nixpkgs) handy as well.
 
-# Following along with code<a id="sec-3"></a>
+# Following Along With Code<a id="sec-3"></a>
 
 This tutorial introduces Pkgs-make using a small shell script program as an example. To illustrate a little complexity, the program is split into two packages, a library and an executable application.
 
@@ -74,7 +74,7 @@ nix run --file build.nix example-shell-app --command example-shell
     
     Hello, world!
 
-# Setting up a minimal build<a id="sec-4"></a>
+# Setting Up a Minimal Build<a id="sec-4"></a>
 
 Stepping away from our example shell script application for a moment (we'll get back to it soon), here's a small example of a typical usage of Pkgs-make:
 
@@ -259,7 +259,7 @@ nix path-info --recursive --file build.nix example-shell-app
     /nix/store/n7qp8pffvcb5ff52l2nrc3g2wvxfrk75-coreutils-8.29
     /nix/store/rmq6gnybmxxzpssj3s63sfjivlq4inrm-attr-2.4.47
 
-# Alternative to hardcoding `/nix/store` references<a id="sec-5"></a>
+# Alternative to Hardcoding `/nix/store` References<a id="sec-5"></a>
 
 Thus far, to make the derivations for both the `example-shell-lib` and `example-shell-app` attributes, we used string interpolation to hardcode a `/nix/store` reference for every dependency in our scripts.
 
@@ -389,7 +389,7 @@ But typing that entire URL can get tedious. What many Nix users actually do is p
 
 Nix's error message tells us the calculated hash of the download which is the same as what we'd get with the `nix-prefetch-url` call. We can use it if we trust the GitHub and Nixpkgs. It may seem silly to intentionally create an error to figure out what you need, but it's undeniably convenient and used broadly within the Nix community.
 
-# Overriding dependencies<a id="sec-7"></a>
+# Overriding Dependencies<a id="sec-7"></a>
 
 Continuing with our shell application for dicussion, notice that when run it indicates we're running version 2.10 of GNU Hello:
 
@@ -520,7 +520,7 @@ nix run --file build.override_local.nix example-shell-app \
 
 But if any other application in Nixpkgs depended on Hello, it would pull in the later 2.10 version.
 
-# Curated overlays<a id="sec-8"></a>
+# Curated Overlays<a id="sec-8"></a>
 
 Sometimes changes haven't gotten into Nixpkgs. As an experiment, the Pkgs-make contributors curate a set of overrides for Nixpkgs. In particular, many of these overrides help keep some machine learning libraries more up-to-date.
 
@@ -664,7 +664,7 @@ docker run --rm -i example-shell-tarball
     
     Hello, world!
 
-# License report (experimental)<a id="sec-10"></a>
+# License Report (experimental)<a id="sec-10"></a>
 
 ## Usage<a id="sec-10-1"></a>
 

@@ -1,15 +1,12 @@
-- [Introduction](#orga8666d5)
-- [Installation](#org2e797a1)
-  - [Dependencies](#orgf635467)
-  - [Installing the plugin](#orgee57615)
-  - [Installing a Direnv-aware theme](#org9904a28)
-- [Usage](#org3a5f65a)
+- [About Direnv Oh-My-ZSH Integration](#sec-1)
+- [Installation](#sec-2)
+  - [Dependencies](#sec-2-1)
+  - [Installing the plugin](#sec-2-2)
+  - [Installing a Direnv-aware theme](#sec-2-3)
+- [Usage](#sec-3)
 
 
-
-<a id="orga8666d5"></a>
-
-# Introduction
+# About Direnv Oh-My-ZSH Integration<a id="sec-1"></a>
 
 This provides integration of [Direnv](https://direnv.net/) and [Z Shell (Zsh)](https://www.zsh.org/) via an [Oh-My-ZSH](https://ohmyz.sh) plugin and theme.
 
@@ -19,15 +16,9 @@ Zsh is a shell replacement that some people prefer for its richer built-in and c
 
 The provided plugin also works well with Nix's `nix-shell` tool, turning off Direnv management before entering nix-shell to avoid a circular problem if Direnv is pulling its environment variables from `nix-shell`.
 
+# Installation<a id="sec-2"></a>
 
-<a id="org2e797a1"></a>
-
-# Installation
-
-
-<a id="orgf635467"></a>
-
-## Dependencies
+## Dependencies<a id="sec-2-1"></a>
 
 As you may have guessed, for this integration to work you must perform the following steps first:
 
@@ -35,10 +26,7 @@ As you may have guessed, for this integration to work you must perform the follo
 2.  [install Oh-My-ZSH](https://github.com/robbyrussell/oh-my-zsh#manual-installation)
 3.  [install Direnv](https://github.com/direnv/direnv#install).
 
-
-<a id="orgee57615"></a>
-
-## Installing the plugin
+## Installing the plugin<a id="sec-2-2"></a>
 
 Copy or link the provided `direnv.plugin.zsh` file to the `custom/plugins` directory of your Oh-My-ZSH installation, which by default is `~/.oh-my-zsh/custom/plugins`.
 
@@ -53,10 +41,7 @@ plugins=(
 source "$ZSH/oh-my-zsh.sh"  # ZSH is typically ~/.oh-my-zsh
 ```
 
-
-<a id="org9904a28"></a>
-
-## Installing a Direnv-aware theme
+## Installing a Direnv-aware theme<a id="sec-2-3"></a>
 
 It's easy to forget if you're in a directory with environment variables altered by this plugin, so it's nice to install a theme that gives some indication with an altered prompt. An example of one using the `DIRENV_DIR` variable is provided. You can look at how it's designed to make your own or use it directly.
 
@@ -72,10 +57,7 @@ ZSH_THEME=tnks  # set before sourcing oh-my-zsh.sh
 source "$ZSH/oh-my-zsh.sh"  # ZSH is typically ~/.oh-my-zsh
 ```
 
-
-<a id="org3a5f65a"></a>
-
-# Usage
+# Usage<a id="sec-3"></a>
 
 The plugin provides some functions and sets up your Zsh prompt with a hook to integrate with these commands. Here are the following functions available:
 

@@ -1,6 +1,6 @@
-- [Introduction](#sec-1)
+- [Introduction to Haskell Development with Pkgs-make](#sec-1)
 - [Prerequisites](#sec-2)
-- [Following along with code](#sec-3)
+- [Following Along With Code](#sec-3)
 - [Walk-through](#sec-4)
   - [Basic build](#sec-4-1)
   - [Modifying the Haskell build](#sec-4-2)
@@ -14,10 +14,10 @@
     - [Using Stack](#sec-5-6-1)
     - [Build files for Stack](#sec-5-6-2)
   - [Stack-less change-triggered builds](#sec-5-7)
-- [Integrated developer environment with Emacs](#sec-6)
+- [Integrated Developer Environment with Emacs](#sec-6)
 
 
-# Introduction<a id="sec-1"></a>
+# Introduction to Haskell Development with Pkgs-make<a id="sec-1"></a>
 
 This is a tutorial using this project's [Pkgs-make](../../pkgs-make) to manage a Haskell project.
 
@@ -43,7 +43,7 @@ We'll presume you're familiar with Haskell and the tooling ecosystem.
 
 We'll assume that you know what's covered in the previous two tutorials [introducing Nix](../0-nix-intro/README.md) and [introducing Pkgs-make](../1-pkgs-make/README.md).
 
-# Following along with code<a id="sec-3"></a>
+# Following Along With Code<a id="sec-3"></a>
 
 Similar to the previous tutorial, our example Haskell project is split into two packages:
 
@@ -444,7 +444,7 @@ This tutorial's `nix-shell` environment provides a `cabal-new-watch` script that
 
 This is a non-incremental Cabal build, so it won't be as fast as Ghcid, but should be about as fast as a normal Stack build.
 
-# Integrated developer environment with Emacs<a id="sec-6"></a>
+# Integrated Developer Environment with Emacs<a id="sec-6"></a>
 
 This repository's [`tools`](../../tools/README.md) directory has configuration for a few tools including Emacs (Spacemacs), Direnv, and Zsh (Oh-my-ZSH). If you set these tools up as recommended, this tutorial has two hidden files designed for use with that configuration:
 

@@ -1,9 +1,9 @@
 #+TITLE: Direnv Nix Integration
 #+SETUPFILE: ../../internal/setup.org
 
-* Introduction
+* About Direnv Nix Integration
 
-  This provides a replacement/improvement for the built-in Nix support of
+  This provides a replacement/improvement for the Nix support built into
   [[direnv][Direnv]].
 
   Direnv provides a nice way to manage environment variables by project
@@ -33,7 +33,8 @@
    standard with Direnv:
 
    1. If we invoke =nix-collect-garbage=, the files under =/nix/store= that
-   various environment settings (like ~PATH~ or ~PYTHONPATH~) can be deleted.
+   various environment settings use (like ~PATH~ or ~PYTHONPATH~) can be
+   deleted.
 
    2. ~use_nix~ calls =nix-shell= every time we ask Direnv what the environment
    settings are for a given file. This might take a few seconds, which can be
@@ -109,9 +110,3 @@
    implications, so Direnv forces users to manually elect into giving this
    ability to Direnv per-directory. You have to rerun ~direnv allow~ if the
    =.envrc= file changes.
-
-** Next Steps
-
-   Once activated, you can configure your shell or editors to pick up
-   environment settings via Direnv. This repository provides tools for
-   integrating with [[../oh-my-zsh/README.org][Zsh via Oh-My-ZSH]] and [[../spacemacs/private/direnv/README.org][Emacs via a Spacemacs layer]].

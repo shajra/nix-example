@@ -1,7 +1,7 @@
 #+TITLE: Extn-Haskell Spacemacs Layer
 #+SETUPFILE: ../../../../internal/setup.org
 
-* Introduction
+* About Extn-Haskell Spacemacs Layer
 
   This layer extends the Spacemacs-provided =haskell= layer, but fully commits
   to integration with [[dante][Dante]] disabling competing/redundant support for [[ghc-mod][ghc-mod]],
@@ -37,7 +37,7 @@
   - [[emacs-direnv][emacs-direnv]]/[[direnv][Direnv]] integration for per-project discovery of Cabal/GHC
     binaries.
 
-  Some features come from the Spacemacs =haskell= layer this layer extends such
+  Some features come from the Spacemacs =haskell= layer this layer extends
   including:
 
   - syntax highlighting (as one would expect)
@@ -61,7 +61,7 @@
 
    Beyond the normal build tools for a Haskell project (GHC, Cabal, Stack,
    etc.) to use this layer fully you may want the following executables (all
-   are Haskell application distributed on Hackage):
+   are Haskell applications distributed on Hackage):
 
    - =apply-refact= (required by ~hlint-refactor~)
    - =hlint= (required by ~hlint-refactor~)
@@ -69,11 +69,16 @@
    - =hasktags= (optional for Xref)
    - =hoogle= (optional for ~haskell-mode~ and ~helm-hoogle~)
 
-   You can install these dependencies using Cabal, Stack, or an OS package
-   manager like Nix. Make sure they are on your ~PATH~. Consider using a tool
-   like Direnv to manage all your environment variables at the directory-level,
-   including ~PATH~. You can even use the =direnv= Spacemacs layer distributed
-   along with this layer.
+   We want our development experiences to be stable and portable from machine
+   to machine, so it's nice to have project-level Nix expressions provide
+   project-level dependencies. [[../../../../pkgs-make/README.org][Pkgs-make]] can do this by providing all the
+   dependencies listed above for a =nix-shell= session. Nix shell environment
+   variables can be integrated into Direnv with the [[../../../direnv/README.org][Direnv support provided]] as
+   well as [[../../../oh-my-zsh/README.org][Oh-My-ZSH integration]]. To tie this back to Spacemacs, you can use
+   the [[../direnv/README.org][provided =direnv= Spacemacs layer]].
+
+   Otherwise, you can install these dependencies using Cabal, Stack, or an OS
+   package manager like Nix.
 
 ** Enabling the layer
 
@@ -125,21 +130,21 @@
 
     Dante-specific commands are prefixed by ~SPC m ,~
 
-    | Key Binding | Description                                     |
-    |-------------+-------------------------------------------------|
-    | ~SPC m , "~ | evaluate comment line of the form “-- >>> expr” |
-    | ~SPC m , .~ | GHCi :info for the expression at the point      |
-    | ~SPC m , ,~ | GHCi :type for the expression at the point      |
-    | ~SPC m , r~ | restart Dante GHCi process                      |
-    | ~SPC m , d~ | diagnose Dante in =*Help*= buffer               |
+    | Key Binding | Command                      | Description                                     |
+    |-------------+------------------------------+-------------------------------------------------|
+    | ~SPC m , "~ | ~dante-eval-block~           | evaluate comment line of the form “-- >>> expr” |
+    | ~SPC m , .~ | ~dante-info~                 | GHCi :info for the expression at the point      |
+    | ~SPC m , ,~ | ~dante-type-at~              | GHCi :type for the expression at the point      |
+    | ~SPC m , r~ | ~extn-haskell/dante-restart~ | restart Dante GHCi process                      |
+    | ~SPC m , d~ | ~dante-diagnose~             | diagnose Dante in =*Help*= buffer               |
 
     See the [[dante][Dante documentation]] for more information.
 
     Additionally, since some Dante repairs are supported by the [[attrap][Attrap Emacs
-    package]] the follow key binding is made available:
+    package]] the following key binding is made available:
 
-    | Key Binding | Description |
-    |-------------+-------------------------------------------------|
-    | ~SPC m r /~ | attempt to repair a Haskell defect at the point |
+    | Key Binding | Command         | Description                                     |
+    |-------------+-----------------+-------------------------------------------------|
+    | ~SPC m r /~ | ~attrap-attrap~ | attempt to repair a Haskell defect at the point |
 
-    You can enable Attrap with the =attrap= layer provided by this project.
+    You can enable Attrap with the [[../attrap/README.org][=attrap= layer provided by this project]].

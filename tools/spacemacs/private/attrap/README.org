@@ -1,7 +1,7 @@
 #+TITLE: Attrap Spacemacs Layer
 #+SETUPFILE: ../../../../internal/setup.org
 
-* Introduction
+* About Attrap Spacemacs Layer
 
   This layer provides [[attrap][Attrap]] integration for fixing error at the active point.
 
@@ -27,11 +27,10 @@
 
 * Features/Configuration
 
-  All the important direnv Emacs commands have key bindings under the major
-  mode prefix ~SPC m~:
+  Attrap Emacs commands have key bindings under the major mode prefix ~SPC m~:
 
-  | Key Binding | Description                                        |
-  |-------------+----------------------------------------------------|
-  | ~SPC m /~   | attempt to repair a Emacs Lisp defect at the point |
+  | Key Binding | Command         | Description                                        |
+  |-------------+-----------------+----------------------------------------------------|
+  | ~SPC m /~   | ~attrap-attrap~ | attempt to repair a Emacs Lisp defect at the point |
 
   See the [[attrap][Attrap documentation]] for more information.

@@ -1,7 +1,7 @@
-- [Introduction](#sec-1)
+- [Introduction to Nix](#sec-1)
 - [Motivation For Nix](#sec-2)
-- [Exploring a fresh Nix installation](#sec-3)
-- [The Nix language](#sec-4)
+- [Exploring a Fresh Nix Installation](#sec-3)
+- [The Nix Language](#sec-4)
   - [Numeric literals](#sec-4-1)
   - [Strings](#sec-4-2)
   - [Let-expressions](#sec-4-3)
@@ -11,18 +11,18 @@
   - [Attribute sets](#sec-4-7)
   - [Paths](#sec-4-8)
   - [Importing](#sec-4-9)
-- [Nixpkgs and building](#sec-5)
+- [Nixpkgs and Building](#sec-5)
 - [Calling `nix`](#sec-6)
-- [Finding packages](#sec-7)
+- [Finding Packages](#sec-7)
 - [Running](#sec-8)
 - [Installing](#sec-9)
 - [Uninstalling](#sec-10)
-- [Inspecting dependencies](#sec-11)
-- [Cleaning up](#sec-12)
+- [Inspecting Dependencies](#sec-11)
+- [Cleaning Up](#sec-12)
 - [Developing with `nix-shell`](#sec-13)
 
 
-# Introduction<a id="sec-1"></a>
+# Introduction to Nix<a id="sec-1"></a>
 
 This tutorial illustrates some basic operation of Nix. We'll introduce some some concepts, terminology, and command-line utilities. That will provide some setup for building our own projects with Pkgs-make in later tutorials.
 
@@ -51,7 +51,7 @@ Nix is not without its problems, as [Gabriel Gonzalez points out](https://github
 
 For many of us the benefits of Nix outweigh the inconveniences. Hopefully, projects and tutorials like this can help tip the balance further.
 
-# Exploring a fresh Nix installation<a id="sec-3"></a>
+# Exploring a Fresh Nix Installation<a id="sec-3"></a>
 
 By design, Nix sequesters almost all of its installation under `/nix`. This way, Nix has extremely few dependencies on the surrounding environment.
 
@@ -71,7 +71,7 @@ There are two directories under `/nix`:
 
 Typically, you'll never manage files under `/nix` directly. Instead you'll use the Nix command-line tools. To get packages into `/nix/store` we first need a Nix expression. These expressions can either come from a third party like the central Nixpkgs GitHub repository. Or we can write our own.
 
-# The Nix language<a id="sec-4"></a>
+# The Nix Language<a id="sec-4"></a>
 
 To better discuss the Nix command-line tools and also Nixpkgs, we'll introduce the Nix language a little. This is no substitute for the [official Nix language documentation](https://nixos.org/nix/manual/#ch-expression-language), which is surprisingly not that long for a programming language; Nix does not have much syntax relative to other general-purpose programming languages.
 
@@ -326,7 +326,7 @@ nix eval '(builtins.typeOf (import <nixpkgs>))'
 
 We see here that Nixpkgs is a function. We'll talk more about the nature of the Nixpkgs function next.
 
-# Nixpkgs and building<a id="sec-5"></a>
+# Nixpkgs and Building<a id="sec-5"></a>
 
 Nixpkgs is a function that takes an attribute set as configuration and returns a nested attribute set containing thousands of packages and functions. An empty attribute set passed to the Nixpkgs function configures it with defaults:
 
@@ -438,7 +438,7 @@ nix build nixpkgs.hello
 
 Additionally, if we don't want the attribute set built implicitly from `NIX_PATH`, we can use the `--file` switch for `nix` to specify explicitly a path to be imported and select attributes from.
 
-# Finding packages<a id="sec-7"></a>
+# Finding Packages<a id="sec-7"></a>
 
 We took for granted above that Nixpkgs had a package on the `hello` attribute.
 
@@ -539,7 +539,7 @@ which hello || true
 
     hello not found
 
-# Inspecting dependencies<a id="sec-11"></a>
+# Inspecting Dependencies<a id="sec-11"></a>
 
 To find dependencies of a built package, Nix literally scans all files in a package (text and even binary) looking for textual references to “/nix/store/…”.
 
@@ -561,7 +561,7 @@ nix path-info --recursive --closure-size nixpkgs.hello \
 
 Hello doesn't rely on much, just the standard glibc library. In real-world programs the dependencies can add up.
 
-# Cleaning up<a id="sec-12"></a>
+# Cleaning Up<a id="sec-12"></a>
 
 Every time you build a new version of your code, it's stored in `/nix/store`. There is a command called `nix-collect-garbage` that purges unneeded packages. What keeps a package from being reclaimed by `nix-collect-garbage` are symlinks under `/nix/var/nix/gcroots`. These come in a few flavors including:
 

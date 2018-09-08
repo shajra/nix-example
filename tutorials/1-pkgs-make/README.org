@@ -50,7 +50,7 @@
   And since you'll see not only calls to Pkgs-make, but also calls to Nixpkgs,
   you may want to have the [[nixpkgs][Nixpkgs manual]] handy as well.
 
-* Following along with code
+* Following Along With Code
 
   This tutorial introduces Pkgs-make using a small shell script program as an
   example. To illustrate a little complexity, the program is split into two
@@ -96,7 +96,7 @@
   :
   : Hello, world!
 
-* Setting up a minimal build
+* Setting Up a Minimal Build
 
   Stepping away from our example shell script application for a moment (we'll
   get back to it soon), here's a small example of a typical usage of Pkgs-make:
@@ -328,7 +328,7 @@
     : /nix/store/n7qp8pffvcb5ff52l2nrc3g2wvxfrk75-coreutils-8.29
     : /nix/store/rmq6gnybmxxzpssj3s63sfjivlq4inrm-attr-2.4.47
 
-* Alternative to hardcoding =/nix/store= references
+* Alternative to Hardcoding =/nix/store= References
 
   Thus far, to make the derivations for both the ~example-shell-lib~ and
   ~example-shell-app~ attributes, we used string interpolation to hardcode a
@@ -462,7 +462,7 @@
   error to figure out what you need, but it's undeniably convenient and used
   broadly within the Nix community.
 
-* Overriding dependencies
+* Overriding Dependencies
 
   Continuing with our shell application for dicussion, notice that when run it
   indicates we're running version 2.10 of GNU Hello:
@@ -562,7 +562,7 @@
    But if any other application in Nixpkgs depended on Hello, it would pull in
    the later 2.10 version.
 
-* Curated overlays
+* Curated Overlays
 
   Sometimes changes haven't gotten into Nixpkgs. As an experiment, the
   Pkgs-make contributors curate a set of overrides for Nixpkgs. In particular,
@@ -735,7 +735,7 @@
    :
    : Hello, world!
 
-* License report (experimental)
+* License Report (experimental)
 
 ** Usage
 

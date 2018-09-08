@@ -1,7 +1,7 @@
 #+TITLE: Developer Tools for Nix
 #+SETUPFILE: ../internal/setup.org
 
-* Introduction
+* About Recommended Developer Tools for Nix
 
   We want all of Nix's uses and benefits, but without sacrificing the smoothness
   of our developer experiences.
@@ -12,11 +12,11 @@
   yet Vim). But these are configurations a few people have used actively. We're
   interested in your feedback if you try them out.
 
-  Provided here is Nix-sensitive configuration for
+  Subdirectories here have Nix-sensitive configuration as follows:
 
-  - [[./direnv/README.org][Direnv to pick up environment settings from nix-shell]]
-  - [[./spacemacs/README.org][Emacs configuration via Spacemacs]].
-  - [[./oh-my-zsh/README.org][Direnv integration with Zsh via Oh-My-ZSH]]
+  - [[./direnv/README.org][=direnv=]] :: to pick up environment settings from nix-shell
+  - [[./spacemacs/README.org][=spacemacs=]] :: a recommended Emacs configuration
+  - [[./oh-my-zsh/README.org][=oh-my-zsh=]] :: Direnv integration with Zsh
 
 * Quick Start with Spacemacs+Direnv
 
@@ -32,7 +32,13 @@
 
   We'll assume you don't have any conficting configuration. Please be careful.
 
-  1. [[git-install][Install Git.]]
+  1. We'll assumed you've [[git-install][installed Git]], cloned the repository, and changed
+     to this directory:
+
+     #+BEGIN_SRC shell :eval no
+     git clone https://github.com/shajra/example-nix
+     cd example-nix/tools
+     #+END_SRC
 
   2. [[emacs][Install Emacs.]]
 
@@ -66,8 +72,8 @@
   8. Go into two tutorials and enable the Direnv =.envrc= files there:
 
      #+BEGIN_SRC shell :eval no
-     ( cd ../tutorials/2-haskell; direnv allow)
-     ( cd ../tutorials/2-python; direnv allow)
+     ( cd ../tutorials/2-haskell; direnv allow )
+     ( cd ../tutorials/2-python; direnv allow )
      #+END_SRC
 
   With this configuration, you can now run Emacs. It will take a moment to

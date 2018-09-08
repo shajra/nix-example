@@ -19,7 +19,7 @@
   nix-collect-garbage -d
   #+END_SRC
 
-* Introduction
+* Introduction to Nix
 
   This tutorial illustrates some basic operation of Nix. We'll introduce some
   some concepts, terminology, and command-line utilities. That will provide
@@ -86,7 +86,7 @@
   For many of us the benefits of Nix outweigh the inconveniences. Hopefully,
   projects and tutorials like this can help tip the balance further.
 
-* Exploring a fresh Nix installation
+* Exploring a Fresh Nix Installation
 
   By design, Nix sequesters almost all of its installation under =/nix=. This
   way, Nix has extremely few dependencies on the surrounding environment.
@@ -114,7 +114,7 @@
   need a Nix expression. These expressions can either come from a third party
   like the central Nixpkgs GitHub repository. Or we can write our own.
 
-* The Nix language
+* The Nix Language
 
   To better discuss the Nix command-line tools and also Nixpkgs, we'll
   introduce the Nix language a little. This is no substitute for the [[nix-language][official
@@ -456,7 +456,7 @@
    We see here that Nixpkgs is a function. We'll talk more about the nature of
    the Nixpkgs function next.
 
-* Nixpkgs and building
+* Nixpkgs and Building
 
   Nixpkgs is a function that takes an attribute set as configuration and
   returns a nested attribute set containing thousands of packages and
@@ -612,7 +612,7 @@
   ~NIX_PATH~, we can use the ~--file~ switch for =nix= to specify explicitly a
   path to be imported and select attributes from.
 
-* Finding packages
+* Finding Packages
 
   We took for granted above that Nixpkgs had a package on the ~hello~
   attribute.
@@ -745,7 +745,7 @@
   #+RESULTS:
   : hello not found
 
-* Inspecting dependencies
+* Inspecting Dependencies
 
   To find dependencies of a built package, Nix literally scans all files in a
   package (text and even binary) looking for textual references to
@@ -778,7 +778,7 @@
   Hello doesn't rely on much, just the standard glibc library. In real-world
   programs the dependencies can add up.
 
-* Cleaning up
+* Cleaning Up
 
   Every time you build a new version of your code, it's stored in =/nix/store=.
   There is a command called =nix-collect-garbage= that purges unneeded

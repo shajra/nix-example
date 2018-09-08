@@ -18,7 +18,7 @@
     stack clean
   #+END_SRC
 
-* Introduction
+* Introduction to Haskell Development with Pkgs-make
 
   This is a tutorial using this project's [[../../pkgs-make][Pkgs-make]] to manage a Haskell
   project.
@@ -63,7 +63,7 @@
   We'll assume that you know what's covered in the previous two tutorials
   [[../0-nix-intro/README.org][introducing Nix]] and [[../1-pkgs-make/README.org][introducing Pkgs-make]].
 
-* Following along with code
+* Following Along With Code
 
   Similar to the previous tutorial, our example Haskell project is split into
   two packages:
@@ -583,7 +583,7 @@
    This is a non-incremental Cabal build, so it won't be as fast as Ghcid, but
    should be about as fast as a normal Stack build.
 
-* Integrated developer environment with Emacs
+* Integrated Developer Environment with Emacs
 
   This repository's [[../../tools/README.org][=tools=]] directory has configuration for a few tools
   including Emacs (Spacemacs), Direnv, and Zsh (Oh-my-ZSH). If you set these

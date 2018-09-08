@@ -1,7 +1,7 @@
 #+TITLE: Extn-Spacemacs Spacemacs Layer
 #+SETUPFILE: ../../../../internal/setup.org
 
-* Introduction
+* About Extn-Spacemacs Spacemacs Layer
 
   This layer extends what's already in Emacs and Spacemacs without bringing in
   any new packages.

@@ -1,7 +1,7 @@
 #+TITLE: Direnv Spacemacs Layer
 #+SETUPFILE: ../../../../internal/setup.org
 
-* Introduction
+* About Direnv Spacemacs Layer
 
   This layer provides [[emacs-direnv][emacs-direnv]]/[[direnv][Direnv]] integration for managing different
   sets of environment variables for different directories.
@@ -16,7 +16,7 @@
   need to launch Emacs from a special environment that only works for certain
   projects. So direnv is much friendly for Emacs in daemon mode.
 
-  This layer doesn't do much. It just sets up a few key bindings.
+  This layer just sets up a few key bindings and delegates to emacs-direnv.
 
 * Installation
 
@@ -44,13 +44,12 @@
 
 * Features/Configuration
 
-  All the important direnv Emacs commands have key bindings under the prefix
-  ~SPC d~:
+  Some useful Direnv Emacs commands have key bindings under the prefix ~SPC d~:
 
-  | Key Binding | Description                                       |
-  |-------------+---------------------------------------------------|
-  | ~SPC d e~   | edit the relevant .envrc file for the buffer      |
-  | ~SPC d d~   | update the environment from direnv for the buffer |
-  | ~SPC d u~   | update the environment for the buffer's directory |
+  | Key Binding | Command                               | Description                                       |
+  |-------------+---------------------------------------+---------------------------------------------------|
+  | ~SPC d e~   | ~direnv-edit~                         | edit the relevant .envrc file for the buffer      |
+  | ~SPC d d~   | ~direnv-update-environment~           | update the environment from direnv for the buffer |
+  | ~SPC d u~   | ~direnv-update-directory-environment~ | update the environment for the buffer's directory |
 
   See the [[emacs-direnv-usage][emacs-direnv documentation]] for more information.

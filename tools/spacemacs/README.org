@@ -1,7 +1,7 @@
 #+TITLE: A Nix-sensitive Spacemacs Configuration
 #+SETUPFILE: ../../internal/setup.org
 
-* Introduction
+* About Nix-configuration for Spacemacs
 
   This is an editor configuration some of us have used professionally for a
   while now, so we feel it's vetted enough to share. There may be other ways to
@@ -50,7 +50,7 @@
 * Configuration
 
   Spacemacs is extensible with what they call /layers/. This repository
-  distributes four layers. Each is documented individually:
+  distributes five layers. Each is documented individually:
 
   - [[./private/extn-spacemacs/README.org][Extn-Spacemacs]]
   - [[./private/extn-haskell/README.org][Extn-Haskell]]

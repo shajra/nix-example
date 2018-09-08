@@ -1,18 +1,15 @@
-- [Introduction](#orge2bfef3)
-- [Installation](#orgadae9c7)
-  - [Dependencies](#orgbac4126)
-  - [Enabling the layer](#org293906f)
-- [Features/Configuration](#org98d0e98)
-  - [Layer configuration](#orgaafbc89)
-  - [Key bindings](#org5c4b6da)
-    - [From the `haskell` Spacemacs layer](#org844c7cc)
-    - [From this layer](#org1f3168e)
+- [About Extn-Haskell Spacemacs Layer](#sec-1)
+- [Installation](#sec-2)
+  - [Dependencies](#sec-2-1)
+  - [Enabling the layer](#sec-2-2)
+- [Features/Configuration](#sec-3)
+  - [Layer configuration](#sec-3-1)
+  - [Key bindings](#sec-3-2)
+    - [From the `haskell` Spacemacs layer](#sec-3-2-1)
+    - [From this layer](#sec-3-2-2)
 
 
-
-<a id="orge2bfef3"></a>
-
-# Introduction
+# About Extn-Haskell Spacemacs Layer<a id="sec-1"></a>
 
 This layer extends the Spacemacs-provided `haskell` layer, but fully commits to integration with [Dante](https://github.com/jyp/dante) disabling competing/redundant support for [ghc-mod](http://hackage.haskell.org/package/ghc-mod), and [Intero](https://commercialhaskell.github.io/intero/). Although Dante has less support for some features like completion and navigating references it has some benefits:
 
@@ -37,7 +34,7 @@ Here's a summary of the features provided by this layer:
 
 -   [emacs-direnv](https://github.com/wbolster/emacs-direnv)/[Direnv](https://direnv.net/) integration for per-project discovery of Cabal/GHC binaries.
 
-Some features come from the Spacemacs `haskell` layer this layer extends such including:
+Some features come from the Spacemacs `haskell` layer this layer extends including:
 
 -   syntax highlighting (as one would expect)
 -   support for literate Haskell files (bird-track and LaTeX styles)
@@ -52,17 +49,11 @@ Finally, here's a few things that are lacking that hopefully might improve in th
 -   [Dante's Xref support is finicky](https://github.com/jyp/dante/issues/78)
 -   Emacs-based debugging support is fragile/broken, especially with newer GHC versions
 
+# Installation<a id="sec-2"></a>
 
-<a id="orgadae9c7"></a>
+## Dependencies<a id="sec-2-1"></a>
 
-# Installation
-
-
-<a id="orgbac4126"></a>
-
-## Dependencies
-
-Beyond the normal build tools for a Haskell project (GHC, Cabal, Stack, etc.) to use this layer fully you may want the following executables (all are Haskell application distributed on Hackage):
+Beyond the normal build tools for a Haskell project (GHC, Cabal, Stack, etc.) to use this layer fully you may want the following executables (all are Haskell applications distributed on Hackage):
 
 -   `apply-refact` (required by `hlint-refactor`)
 -   `hlint` (required by `hlint-refactor`)
@@ -70,12 +61,11 @@ Beyond the normal build tools for a Haskell project (GHC, Cabal, Stack, etc.) to
 -   `hasktags` (optional for Xref)
 -   `hoogle` (optional for `haskell-mode` and `helm-hoogle`)
 
-You can install these dependencies using Cabal, Stack, or an OS package manager like Nix. Make sure they are on your `PATH`. Consider using a tool like Direnv to manage all your environment variables at the directory-level, including `PATH`. You can even use the `direnv` Spacemacs layer distributed along with this layer.
+We want our development experiences to be stable and portable from machine to machine, so it's nice to have project-level Nix expressions provide project-level dependencies. [Pkgs-make](../../../../pkgs-make/README.md) can do this by providing all the dependencies listed above for a `nix-shell` session. Nix shell environment variables can be integrated into Direnv with the [Direnv support provided](../../../direnv/README.md) as well as [Oh-My-ZSH integration](../../../oh-my-zsh/README.md). To tie this back to Spacemacs, you can use the [provided `direnv` Spacemacs layer](../direnv/README.md).
 
+Otherwise, you can install these dependencies using Cabal, Stack, or an OS package manager like Nix.
 
-<a id="org293906f"></a>
-
-## Enabling the layer
+## Enabling the layer<a id="sec-2-2"></a>
 
 To use this configuration layer, copy or link this layer's `extn-haskell` directory to the private layers directory of your Spacemacs installation keeping the name (`~/.emacs.d/private/extn-haskell`).
 
@@ -94,15 +84,9 @@ Then enable it in your `~/.spacemacs`:
 	extn-haskell/dante-xref-enable nil))))
 ```
 
+# Features/Configuration<a id="sec-3"></a>
 
-<a id="org98d0e98"></a>
-
-# Features/Configuration
-
-
-<a id="orgaafbc89"></a>
-
-## Layer configuration
+## Layer configuration<a id="sec-3-1"></a>
 
 The follow layer settings are supported with the `:variables` keyword when enabling the layer:
 
@@ -115,39 +99,30 @@ The follow layer settings are supported with the `:variables` keyword when enabl
 
 See [their definitions/docstrings](./config.el) for more details on these options.
 
+## Key bindings<a id="sec-3-2"></a>
 
-<a id="org5c4b6da"></a>
-
-## Key bindings
-
-
-<a id="org844c7cc"></a>
-
-### From the `haskell` Spacemacs layer
+### From the `haskell` Spacemacs layer<a id="sec-3-2-1"></a>
 
 Many keys bind from the ~haskell= layer. Rather than redocument those bindings here, see the [documentation for that layer](https://github.com/syl20bnr/spacemacs/tree/master/layers/+lang/haskell#key-bindings). Note that because this layer disables Intero and ghc-mod support, key bindings for those won't be available.
 
-
-<a id="org1f3168e"></a>
-
-### From this layer
+### From this layer<a id="sec-3-2-2"></a>
 
 Dante-specific commands are prefixed by `SPC m ,`
 
-| Key Binding | Description                                           |
-|----------- |----------------------------------------------------- |
-| `SPC m , "` | evaluate comment line of the form “&#x2013; >>> expr” |
-| `SPC m , .` | GHCi :info for the expression at the point            |
-| `SPC m , ,` | GHCi :type for the expression at the point            |
-| `SPC m , r` | restart Dante GHCi process                            |
-| `SPC m , d` | diagnose Dante in `*Help*` buffer                     |
+| Key Binding | Command                      | Description                                           |
+|----------- |---------------------------- |----------------------------------------------------- |
+| `SPC m , "` | `dante-eval-block`           | evaluate comment line of the form “&#x2013; >>> expr” |
+| `SPC m , .` | `dante-info`                 | GHCi :info for the expression at the point            |
+| `SPC m , ,` | `dante-type-at`              | GHCi :type for the expression at the point            |
+| `SPC m , r` | `extn-haskell/dante-restart` | restart Dante GHCi process                            |
+| `SPC m , d` | `dante-diagnose`             | diagnose Dante in `*Help*` buffer                     |
 
 See the [Dante documentation](https://github.com/jyp/dante) for more information.
 
-Additionally, since some Dante repairs are supported by the [Attrap Emacs package](https://github.com/jyp/attrap) the follow key binding is made available:
+Additionally, since some Dante repairs are supported by the [Attrap Emacs package](https://github.com/jyp/attrap) the following key binding is made available:
 
-| Key Binding | Description                                     |
-|----------- |----------------------------------------------- |
-| `SPC m r /` | attempt to repair a Haskell defect at the point |
+| Key Binding | Command         | Description                                     |
+|----------- |--------------- |----------------------------------------------- |
+| `SPC m r /` | `attrap-attrap` | attempt to repair a Haskell defect at the point |
 
-You can enable Attrap with the `attrap` layer provided by this project.
+You can enable Attrap with the [`attrap` layer provided by this project](../attrap/README.md).
