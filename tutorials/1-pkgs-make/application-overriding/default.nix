@@ -1,7 +1,7 @@
-{ example-shell-lib
-, fetchurl
-, writeShellScriptBin
+{ writeShellScriptBin
+, example-shell-lib
 , stdenv
+, fetchurl
 }:
 
 let

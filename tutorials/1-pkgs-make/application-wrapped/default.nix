@@ -1,12 +1,12 @@
-{ stdenv
+{ hello
 , example-shell-app-unwrapped
-, hello
+, stdenv
 , makeWrapper
 }:
 
 stdenv.mkDerivation {
 
-    name = "example-shell-app-unwrapped";
+    name = "example-shell-app-wrapped";
 
     nativeBuildInputs = [ makeWrapper ];
 

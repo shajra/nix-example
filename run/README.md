@@ -6,7 +6,7 @@ Three tutorials provide accompanying code that can be run as discussed in their 
 
 These programs are simple and just output a message to the terminal.
 
-There are four “run-\*” scripts in this directory that you can run if you have Nix installed. Each takes as a single argument either “shell”, “haskell”, or “python” to call the respective tutorial.
+There are four “run-” scripts in this directory that you can run if you have Nix installed. Each takes as a single argument either “shell”, “haskell”, or “python” to call the respective tutorial.
 
 Here's a description of the four scripts:
 

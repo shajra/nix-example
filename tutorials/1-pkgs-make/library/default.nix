@@ -1,4 +1,4 @@
-{ writeText, coreutils, gnused }:
+{ coreutils, gnused, writeText }:
 
 writeText "example-shell-lib"
     ''

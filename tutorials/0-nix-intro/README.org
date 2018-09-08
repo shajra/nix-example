@@ -334,7 +334,7 @@
    : error: undefined variable 'bar' at (string):1:10
 
    If a function accepts an attribute set as an argument, we can have Nix
-   unpack the argument as a convenience with the following syntax:
+   destructure the set as a convenience with the following pattern syntax:
 
    #+BEGIN_SRC shell :results output :exports both
      nix eval '(({ foo, bar }: foo + bar ) { foo = 1; bar = 2; })'
@@ -343,18 +343,38 @@
    #+RESULTS:
    : 3
 
-   We can still bind the argument to a name if we want using a “@” form, and if
-   we want to accept sets with other attributes we can use a “...” form:
+   This basic pattern syntax is strict, and we can't pass in a attribute set
+   with attributes that don't match the pattern:
 
    #+BEGIN_SRC shell :results output :exports both
-     nix eval '((s@{ foo, ... }: foo + s.bar ) { foo = 1; bar = 2; baz = 3; })'
+     nix eval '(({ foo }: foo + 2 ) { foo = 3; bar = 4; })' 2>&1 || true
    #+END_SRC
 
    #+RESULTS:
-   : 3
+   : error: anonymous function at (string):1:3 called with unexpected argument 'bar', at (string):1:2
+
+   If we want to accept sets with other attributes we can use a “...” form:
+
+   #+BEGIN_SRC shell :results output :exports both
+     nix eval '(({ foo, ...}: foo + 2 ) { foo = 3; bar = 4; })'
+   #+END_SRC
+
+   #+RESULTS:
+   : 5
+
+   When destructuring, we can still bind the whole set to a name if we want
+   using a “@” form.
+
+   #+BEGIN_SRC shell :results output :exports both
+     nix eval '((s@{ foo, bar }: foo + s.bar ) { foo = 2; bar = 3; })'
+   #+END_SRC
+
+   #+RESULTS:
+   : 5
 
    Attribute sets also support an additional syntactic convenience when pulling
-   in locally bound values as attributes, which comes up a lot in Nix:
+   in locally bound values as attributes, which comes up a lot in Nix. For
+   example, consider the way we're using ~a = a~ here:
 
    #+BEGIN_SRC shell :results output :exports both
      nix eval '(let a = 3; in { a = a; })'
@@ -363,8 +383,8 @@
    #+RESULTS:
    : { a = 3; }
 
-   Using the ~inherit~ key word, we accomplish the same thing while simplifying
-   the ~a = a~ to:
+   Rather than worrying about spelling the same name correctly both sides of
+   the ‘=’ for an attribute setting, we can use the ~inherit~ key word:
 
    #+BEGIN_SRC shell :results output :exports both
      nix eval '(let a = 3; in { inherit a; })'
@@ -474,10 +494,10 @@
   #+RESULTS:
   #+begin_example
   {
-    "/nix/store/c271aryv5jzm0aq640lb7gw0102id5f5-hello-2.10.drv": {
+    "/nix/store/v2l3ncp0ypdssjf7b8rxyppn3kyq3w87-hello-2.10.drv": {
       "outputs": {
         "out": {
-          "path": "/nix/store/188avy0j39h7iiw3y7fazgh7wk43diz1-hello-2.10"
+          "path": "/nix/store/58r35bqb4f3lxbnbabq718svq9i2pda3-hello-2.10"
   …
         "system": "x86_64-linux",
         "version": "2.10"
@@ -499,7 +519,7 @@
   #+END_SRC
 
   #+RESULTS:
-  : "our value is /nix/store/188avy0j39h7iiw3y7fazgh7wk43diz1-hello-2.10"
+  : "our value is /nix/store/58r35bqb4f3lxbnbabq718svq9i2pda3-hello-2.10"
 
   Note, that it may not exist there yet. We can build it with a call to =nix
   build=:
@@ -509,7 +529,7 @@
   #+END_SRC
 
   #+RESULTS:
-  : copying path '/nix/store/188avy0j39h7iiw3y7fazgh7wk43diz1-hello-2.10' from 'https://cache.nixos.org'...
+  : copying path '/nix/store/58r35bqb4f3lxbnbabq718svq9i2pda3-hello-2.10' from 'https://cache.nixos.org'...
 
   If we were to dig into the Nixpkgs repository, we'd find [[nixpkgs-hello][code for building
   Hello from source]]. But notice that we didn't end up fetching the Hello
@@ -536,7 +556,7 @@
   #+END_SRC
 
   #+RESULTS:
-  : result -> /nix/store/188avy0j39h7iiw3y7fazgh7wk43diz1-hello-2.10
+  : result -> /nix/store/58r35bqb4f3lxbnbabq718svq9i2pda3-hello-2.10
   : ├── bin
   : │   └── hello
   : └── share
@@ -681,8 +701,8 @@
 
   #+RESULTS:
   : installing 'hello-2.10'
-  : building '/nix/store/32anrkb2hrzd74fq7hwawaz7x4mp59g5-user-environment.drv'...
-  : created 36 symlinks in user environment
+  : building '/nix/store/lwf6zfhyvaxw7g5zjpnbv8rcrq2rvdqn-user-environment.drv'...
+  : created 307 symlinks in user environment
 
   #+BEGIN_SRC shell :exports both
     which hello
@@ -752,8 +772,8 @@
   #+END_SRC
 
   #+RESULTS:
-  : /nix/store/83lrbvbmxrgv7iz49mgd42yvhi473xp6-glibc-2.27     25010496
-  : /nix/store/188avy0j39h7iiw3y7fazgh7wk43diz1-hello-2.10     25208024
+  : /nix/store/fg4yq8i8wd08xg3fy58l6q73cjy8hjr2-glibc-2.27	   25010512
+  : /nix/store/58r35bqb4f3lxbnbabq718svq9i2pda3-hello-2.10	   25208040
 
   Hello doesn't rely on much, just the standard glibc library. In real-world
   programs the dependencies can add up.
@@ -784,7 +804,7 @@
   #+END_SRC
 
   #+RESULTS:
-  : 2 store paths deleted, 0.01 MiB freed
+  : 0 store paths deleted, 0.00 MiB freed
   : 0 store paths deleted, 0.00 MiB freed
 
   Then we can try to delete our symlink, but another garbage collection doesn't
@@ -797,11 +817,11 @@
 
   #+RESULTS:
   : finding garbage collector roots...
-  : removing stale link from '/nix/var/nix/gcroots/auto/qn37jdmf8zj32mzkp66nii4b8vwpd85s' to '/home/shajra/src/shajra/example-nix/tutorials/0-nix-intro/result'
+  : removing stale link from '/nix/var/nix/gcroots/auto/3zvhwd2faawz9xbnnr2p4b20q1z86z81' to '/home/shajra/src/shajra/example-nix/tutorials/0-nix-intro/result'
   : deleting garbage...
   : deleting '/nix/store/trash'
   : deleting unused links...
-  : note: currently hard linking saves -0.00 MiB
+  : note: currently hard linking saves -17.39 MiB
   : 0 store paths deleted, 0.00 MiB freed
 
   Now with the ~--delete-generations~ switch of =nix-env= we can delete old
@@ -812,8 +832,8 @@
   #+END_SRC
 
   #+RESULTS:
-  : removing generation 130
-  : removing generation 131
+  : removing generation 251
+  : removing generation 252
 
   And then then garbage collection works as you'd expect:
 
@@ -826,14 +846,16 @@
   #+begin_example
   finding garbage collector roots...
   deleting garbage...
-  deleting '/nix/store/chpaa1va5rpcvvzhjw65dhd1ymxg4pv2-user-environment'
-  deleting '/nix/store/32anrkb2hrzd74fq7hwawaz7x4mp59g5-user-environment.drv'
-  deleting '/nix/store/rpn44f5ih4i2wfpw6apmyi1dp5q2n52n-env-manifest.nix'
-  deleting '/nix/store/188avy0j39h7iiw3y7fazgh7wk43diz1-hello-2.10'
+  deleting '/nix/store/gb2kq41xf2rv8gy3cx0fkwz49yv5gcsl-user-environment'
+  deleting '/nix/store/lwf6zfhyvaxw7g5zjpnbv8rcrq2rvdqn-user-environment.drv'
+  deleting '/nix/store/arqc85rvysw5yjlb9gbvi1pwvap9a95f-env-manifest.nix'
+  deleting '/nix/store/58r35bqb4f3lxbnbabq718svq9i2pda3-hello-2.10'
+  deleting '/nix/store/v2l3ncp0ypdssjf7b8rxyppn3kyq3w87-hello-2.10.drv'
+  deleting '/nix/store/13jqqk547i2hn3899zf2nq9nnn94b7sy-hello-2.10.tar.gz.drv'
   deleting '/nix/store/trash'
   deleting unused links...
-  note: currently hard linking saves -0.00 MiB
-  4 store paths deleted, 0.39 MiB freed
+  note: currently hard linking saves -17.39 MiB
+  6 store paths deleted, 1.43 MiB freed
   #+end_example
 
 * Developing with =nix-shell=
@@ -852,7 +874,7 @@
   This drops us into a bash shell we can use interactively. We can also use
   nix-shell with a ~--run~ switch to run a single command non-interactively
   Additionally, we can use the ~--pure~ switch to throw away the previous
-  environment variables rather than overlay changes on top of them
+  environment variables rather than overlay changes on top of them.
 
   Here's a small example:
 
@@ -862,17 +884,17 @@
 
   #+RESULTS:
   #+begin_example
-  WINDRES=/nix/store/vp40my263xk32f07788srrgl59rycsna-binutils-2.30/bin/windres
+  WINDRES=windres
   propagatedBuildInputs=
-  stdenv=/nix/store/fjxk3k59n102sqs572kkspdjy303kv45-stdenv-linux
+  stdenv=/nix/store/i6vl5lwlz5jbkg4r6p340dwmj6fha3xq-stdenv-linux
   __ETC_PROFILE_SOURCED=1
   DISPLAY=:0
   …
-  SIZE=/nix/store/vp40my263xk32f07788srrgl59rycsna-binutils-2.30/bin/size
+  SIZE=size
   nativeBuildInputs=
-  LD=/nix/store/9z650yzczx5zyhcw5n36ya6x4jq436mr-gcc-wrapper-7.3.0/bin/ld
+  LD=ld
   depsTargetTargetPropagated=
-  _=/nix/store/rhzcwaz7xk6dq9z2h9yca0z7wx0nwg7c-coreutils-8.29/bin/env
+  _=/nix/store/wm8va53fh5158ipi0ic9gir64hrvqv1z-coreutils-8.29/bin/env
   #+end_example
 
   We're using ~--expr~ to pass expressions directly to the command line.

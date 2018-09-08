@@ -44,7 +44,7 @@
   exactly what Nix is.
 
   But Nix is not a typical package manager. By its nature, we can use Nix as
-  our build system too (though it delegates to typical build tools in the
+  our build system too (though it delegates to GHC and Cabal in the
   background).
 
   Ideally, we want a way to
@@ -273,7 +273,7 @@
 
    You can call =nix-shell= with no arguments to enter into an interactive
    shell, or we can run commands in it non-interactively. For instance, here we
-   show that the discussed tools are on our ~PATH~ provided by Nix:
+   show that the some of discussed tools are on our ~PATH~ provided by Nix:
 
    #+BEGIN_SRC shell :results output :exports both
     nix-shell --run '
@@ -281,6 +281,7 @@
         which ghci
         which ghcid
         which cabal
+        which cabal2nix
         which nix-tags-haskell
         which cabal-new-watch
         which hello
@@ -292,8 +293,9 @@
    : /nix/store/q2prxgva7999iwz4rfcyhkjsmjxv3l65-ghc-8.2.2-with-packages/bin/ghci
    : /nix/store/w4vdrfr2b9gs7iyaax17jgjrpmv3wgmr-ghcid-0.6.10/bin/ghcid
    : /nix/store/m46vcdhpsb027ik71vs0bjh5hf85n1j4-cabal-install-2.2.0.0/bin/cabal
+   : /nix/store/6kn3rjjdykwbsfisv3z31mjgji93gjhp-cabal2nix-2.9.2/bin/cabal2nix
    : /nix/store/dk44xyy25xfgl4xjbfrwamwvn3axgp1z-nix-tags-haskell/bin/nix-tags-haskell
-   : /nix/store/vdkwrvjfpfipq0hs7cjkwklpzfsl6wzc-cabal-new-watch/bin/cabal-new-watch
+   : /nix/store/ygwqndlnl3ixjc76k6shgxyxfn89kggn-cabal-new-watch/bin/cabal-new-watch
    : /nix/store/188avy0j39h7iiw3y7fazgh7wk43diz1-hello-2.10/bin/hello
 
    The instance of GHC provided is a “-with-packages” version preloaded with
@@ -316,7 +318,7 @@
    but we can use =nix-shell= to call =cabal= explicitly.
 
    The provided version of Cabal is recent enough that we can use its latest
-   [[cabal-new][“new-*” support for multiple-package projects]]. Our tutorial's
+   [[cabal-new][“new-style” support for multiple-package projects]]. Our tutorial's
    [[./cabal.project][=cabal.project= file]] tells Cabal that our project includes both our library
    and application package:
 
@@ -378,17 +380,17 @@
    because we are using very close to the same environment Nix would use. We
    accept this compromise for developer conveniences, like incremental builds.
 
-   Regarding the “new-*” commands, they've been released for testing by the
+   Regarding the “new-” commands, they've been released for testing by the
    Cabal development team. Once they've been deemed stable, the normal commands
    will be replaced with their “new-” counterparts, which will go away. In an
    effort to help to contribute towards these commands' success, we don't not
    shy from using them, and encourages people to try them out.
 
    If you're familiar with Cabal sandboxes, you can use those too instead of
-   the “new-*” commands, but you will deviate from the integration of tools
+   the “new-” commands, but you will deviate from the integration of tools
    shown by these tutorials. Some things may break and require a different
    approach, so sandboxes are beyond the scope of this project. Also, sandboxes
-   seem likely to go away with once the “new-*” commands are officially
+   seem likely to go away with once the “new-” commands are officially
    released.
 
 ** Accidentally building outside a Nix shell

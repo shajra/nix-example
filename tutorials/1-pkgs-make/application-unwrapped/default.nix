@@ -1,5 +1,5 @@
-{ example-shell-lib
-, writeShellScriptBin
+{ writeShellScriptBin
+, example-shell-lib
 }:
 
 writeShellScriptBin "example-shell"

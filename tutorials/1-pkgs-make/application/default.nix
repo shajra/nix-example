@@ -1,6 +1,6 @@
-{ example-shell-lib
-, hello
+{ hello
 , writeShellScriptBin
+, example-shell-lib
 }:
 
 writeShellScriptBin "example-shell"
