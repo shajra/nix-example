@@ -47,7 +47,7 @@ There are also [many good tutorials](https://www.google.com/search?q=nix+tutoria
 
 -   [Gabriel Gonzalez's haskell-nix](https://github.com/Gabriel439/haskell-nix)
 -   [Luca Bruno's "pill" series](http://lethalman.blogspot.com/2014/07/nix-pill-1-why-you-should-give-it-try.html)
--   [John Wiegley's Haskell/Nix talk](https://www.youtube.com/watch?v=G9yiJ7d5Ledjj)
+-   [John Wiegley's Haskell/Nix talk](https://www.youtube.com/watch?v=G9yiJ7d5LeI)
 
 ## Technology<a id="sec-3-2"></a>
 
