@@ -1,15 +1,18 @@
-- [About Extn-Haskell Spacemacs Layer](#sec-1)
-- [Installation](#sec-2)
-  - [Dependencies](#sec-2-1)
-  - [Enabling the layer](#sec-2-2)
-- [Features/Configuration](#sec-3)
-  - [Layer configuration](#sec-3-1)
-  - [Key bindings](#sec-3-2)
-    - [From the `haskell` Spacemacs layer](#sec-3-2-1)
-    - [From this layer](#sec-3-2-2)
+- [About Extn-Haskell Spacemacs Layer](#orgde43710)
+- [Installation](#org4d20ecc)
+  - [Dependencies](#orgf575c71)
+  - [Enabling the layer](#org4beb92f)
+- [Features/Configuration](#org99220a2)
+  - [Layer configuration](#orged52193)
+  - [Key bindings](#org2f80e2e)
+    - [From the `haskell` Spacemacs layer](#orgd625886)
+    - [From this layer](#orgef06a95)
 
 
-# About Extn-Haskell Spacemacs Layer<a id="sec-1"></a>
+
+<a id="orgde43710"></a>
+
+# About Extn-Haskell Spacemacs Layer
 
 This layer extends the Spacemacs-provided `haskell` layer, but fully commits to integration with [Dante](https://github.com/jyp/dante) disabling competing/redundant support for [ghc-mod](http://hackage.haskell.org/package/ghc-mod), and [Intero](https://commercialhaskell.github.io/intero/). Although Dante has less support for some features like completion and navigating references it has some benefits:
 
@@ -49,9 +52,15 @@ Finally, here's a few things that are lacking that hopefully might improve in th
 -   [Dante's Xref support is finicky](https://github.com/jyp/dante/issues/78)
 -   Emacs-based debugging support is fragile/broken, especially with newer GHC versions
 
-# Installation<a id="sec-2"></a>
 
-## Dependencies<a id="sec-2-1"></a>
+<a id="org4d20ecc"></a>
+
+# Installation
+
+
+<a id="orgf575c71"></a>
+
+## Dependencies
 
 Beyond the normal build tools for a Haskell project (GHC, Cabal, Stack, etc.) to use this layer fully you may want the following executables (all are Haskell applications distributed on Hackage):
 
@@ -65,7 +74,10 @@ We want our development experiences to be stable and portable from machine to ma
 
 Otherwise, you can install these dependencies using Cabal, Stack, or an OS package manager like Nix.
 
-## Enabling the layer<a id="sec-2-2"></a>
+
+<a id="org4beb92f"></a>
+
+## Enabling the layer
 
 To use this configuration layer, copy or link this layer's `extn-haskell` directory to the private layers directory of your Spacemacs installation keeping the name (`~/.emacs.d/private/extn-haskell`).
 
@@ -84,9 +96,15 @@ Then enable it in your `~/.spacemacs`:
 	extn-haskell/dante-xref-enable nil))))
 ```
 
-# Features/Configuration<a id="sec-3"></a>
 
-## Layer configuration<a id="sec-3-1"></a>
+<a id="org99220a2"></a>
+
+# Features/Configuration
+
+
+<a id="orged52193"></a>
+
+## Layer configuration
 
 The follow layer settings are supported with the `:variables` keyword when enabling the layer:
 
@@ -99,13 +117,22 @@ The follow layer settings are supported with the `:variables` keyword when enabl
 
 See [their definitions/docstrings](./config.el) for more details on these options.
 
-## Key bindings<a id="sec-3-2"></a>
 
-### From the `haskell` Spacemacs layer<a id="sec-3-2-1"></a>
+<a id="org2f80e2e"></a>
+
+## Key bindings
+
+
+<a id="orgd625886"></a>
+
+### From the `haskell` Spacemacs layer
 
 Many keys bind from the ~haskell= layer. Rather than redocument those bindings here, see the [documentation for that layer](https://github.com/syl20bnr/spacemacs/tree/master/layers/+lang/haskell#key-bindings). Note that because this layer disables Intero and ghc-mod support, key bindings for those won't be available.
 
-### From this layer<a id="sec-3-2-2"></a>
+
+<a id="orgef06a95"></a>
+
+### From this layer
 
 Dante-specific commands are prefixed by `SPC m ,`
 

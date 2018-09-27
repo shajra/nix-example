@@ -576,7 +576,7 @@
 
   When we call =nix= with an argument not parenthesized, the argument is
   interpreted as an attribute of an attribute set, which is by default built
-  from of ~NIX_PATH~.
+  from ~NIX_PATH~.
 
   Consider the following setting of the ~NIX_PATH~ environment variable:
 

@@ -1,32 +1,38 @@
-- [Introduction to Nix](#sec-1)
-- [Motivation For Nix](#sec-2)
-- [Exploring a Fresh Nix Installation](#sec-3)
-- [The Nix Language](#sec-4)
-  - [Numeric literals](#sec-4-1)
-  - [Strings](#sec-4-2)
-  - [Let-expressions](#sec-4-3)
-  - [String interpolation](#sec-4-4)
-  - [Functions](#sec-4-5)
-  - [Lists](#sec-4-6)
-  - [Attribute sets](#sec-4-7)
-  - [Paths](#sec-4-8)
-  - [Importing](#sec-4-9)
-- [Nixpkgs and Building](#sec-5)
-- [Calling `nix`](#sec-6)
-- [Finding Packages](#sec-7)
-- [Running](#sec-8)
-- [Installing](#sec-9)
-- [Uninstalling](#sec-10)
-- [Inspecting Dependencies](#sec-11)
-- [Cleaning Up](#sec-12)
-- [Developing with `nix-shell`](#sec-13)
+- [Introduction to Nix](#org5f2bd2c)
+- [Motivation For Nix](#org64ef5d4)
+- [Exploring a Fresh Nix Installation](#org66495ed)
+- [The Nix Language](#orgdd86877)
+  - [Numeric literals](#org2012828)
+  - [Strings](#org57a2c1d)
+  - [Let-expressions](#org95827d9)
+  - [String interpolation](#org1a6efb3)
+  - [Functions](#orge2869fb)
+  - [Lists](#org78b5963)
+  - [Attribute sets](#orge702529)
+  - [Paths](#org53b1227)
+  - [Importing](#org8ec7d49)
+- [Nixpkgs and Building](#org951d1b5)
+- [Calling `nix`](#org8fb6431)
+- [Finding Packages](#org1e345ab)
+- [Running](#org69cd000)
+- [Installing](#org96e694d)
+- [Uninstalling](#org7891632)
+- [Inspecting Dependencies](#orgac30d39)
+- [Cleaning Up](#org6718920)
+- [Developing with `nix-shell`](#org2f9a110)
 
 
-# Introduction to Nix<a id="sec-1"></a>
+
+<a id="org5f2bd2c"></a>
+
+# Introduction to Nix
 
 This tutorial illustrates some basic operation of Nix. We'll introduce some some concepts, terminology, and command-line utilities. That will provide some setup for building our own projects with Pkgs-make in later tutorials.
 
-# Motivation For Nix<a id="sec-2"></a>
+
+<a id="org64ef5d4"></a>
+
+# Motivation For Nix
 
 Nix at its heart is a package manager that can build from source arbitrary packages written in a variety of languages, and also manage concurrent per-user installations.
 
@@ -51,7 +57,10 @@ Nix is not without its problems, as [Gabriel Gonzalez points out](https://github
 
 For many of us the benefits of Nix outweigh the inconveniences. Hopefully, projects and tutorials like this can help tip the balance further.
 
-# Exploring a Fresh Nix Installation<a id="sec-3"></a>
+
+<a id="org66495ed"></a>
+
+# Exploring a Fresh Nix Installation
 
 By design, Nix sequesters almost all of its installation under `/nix`. This way, Nix has extremely few dependencies on the surrounding environment.
 
@@ -71,11 +80,17 @@ There are two directories under `/nix`:
 
 Typically, you'll never manage files under `/nix` directly. Instead you'll use the Nix command-line tools. To get packages into `/nix/store` we first need a Nix expression. These expressions can either come from a third party like the central Nixpkgs GitHub repository. Or we can write our own.
 
-# The Nix Language<a id="sec-4"></a>
+
+<a id="orgdd86877"></a>
+
+# The Nix Language
 
 To better discuss the Nix command-line tools and also Nixpkgs, we'll introduce the Nix language a little. This is no substitute for the [official Nix language documentation](https://nixos.org/nix/manual/#ch-expression-language), which is surprisingly not that long for a programming language; Nix does not have much syntax relative to other general-purpose programming languages.
 
-## Numeric literals<a id="sec-4-1"></a>
+
+<a id="org2012828"></a>
+
+## Numeric literals
 
 We can play around with the Nix language with the `nix eval` command. As with many languages, we can use Nix as a simple calculator by passing Nix expressions to it:
 
@@ -97,7 +112,10 @@ nix eval '(builtins.typeOf 1.0)'
     "int"
     "float"
 
-## Strings<a id="sec-4-2"></a>
+
+<a id="org57a2c1d"></a>
+
+## Strings
 
 As you may expect from other languages, Nix supports string literals with the conventional double quote syntax:
 
@@ -129,7 +147,10 @@ nix eval '("a" + "b")'
 
     "ab"
 
-## Let-expressions<a id="sec-4-3"></a>
+
+<a id="org95827d9"></a>
+
+## Let-expressions
 
 For the most part, Nix is a lazily evaluated purely functional programming language. We don't imperatively run commands that change things, and in general, the language restricts us from doing so. There's not even syntax to do so. At the top-level, you can't bind values to variables as you may in other imperative languages. Instead, we are only ever working with a single Nix expression at a time, and we bind values to names locally with *let-expressions*:
 
@@ -141,7 +162,10 @@ nix eval '(let a = 1; b = 2; in a + b)'
 
 Note that semicolons are mandatory in all Nix forms that have them, including let-expressions. Because of Nix's strict parsing you can neither elide semicolons, nor put extra ones.
 
-## String interpolation<a id="sec-4-4"></a>
+
+<a id="org1a6efb3"></a>
+
+## String interpolation
 
 Sometimes we build up small code snippets inline in a Nix expression, so it's useful to have string interpolation support. This is done with the following syntax:
 
@@ -158,7 +182,10 @@ String interpolation is supported by both normal and multi-line strings.
 
 Note that unlike shell scripts, the curly braces are not optional for string interpolation in Nix. This works out in our favor if we're writing shell scripts inline in a Nix expression, because we can use `$name` for shell string interpolation and `${nix_expr}` for Nix string interpolation. If this is not enough, though not covered in this tutorial, there is a syntax for suppressing interpolation in both normal and multi-line Nix string literals.
 
-## Functions<a id="sec-4-5"></a>
+
+<a id="orge2869fb"></a>
+
+## Functions
 
 Nix has first class functions. Functions take in only one argument at a time, and use a colon to separate the parameter name from the body of the function. Furthermore, Nix uses whitespace for function application:
 
@@ -178,7 +205,10 @@ nix eval '((a: b: a + b) 1 2)'
 
     3
 
-## Lists<a id="sec-4-6"></a>
+
+<a id="org78b5963"></a>
+
+## Lists
 
 Nix also has list literals which use square brackets and are whitespace-delimited:
 
@@ -196,7 +226,10 @@ nix eval '([1 2] ++ [3 4])'
 
     [ 1 2 3 4 ]
 
-## Attribute sets<a id="sec-4-7"></a>
+
+<a id="orge702529"></a>
+
+## Attribute sets
 
 Very importantly, Nix has a kind of map called an *attribute set* that is specialized to have textual indices called *attributes* that index values of arbitrary types. It uses the following syntax:
 
@@ -282,7 +315,10 @@ nix eval '(let a = 3; in { inherit a; })'
 
     { a = 3; }
 
-## Paths<a id="sec-4-8"></a>
+
+<a id="org53b1227"></a>
+
+## Paths
 
 Because the Nix language is domain-specific for building packages, it also has a *path* type, which is indicated by an identifier with a slash:
 
@@ -314,7 +350,10 @@ Remember that a major motivation for using Nix is for deterministic builds. We h
 
 If you inspect `~/.nix-defexpr/channels/nixpkgs` you'll notice it's a symlink pointing to a snapshot of Nixpkgs in `/nix/store`. This symlink is set up during Nix installation, and can be upgraded with a call to `nix-channel --update`.
 
-## Importing<a id="sec-4-9"></a>
+
+<a id="org8ec7d49"></a>
+
+## Importing
 
 We can import paths. If the path is a file, it's loaded as a Nix expression. If it's a directory, a file called “default.nix” is loaded within it. A snapshot of Nixpkgs, for example, has a `default.nix` file at its root, so we can import the path directly:
 
@@ -326,7 +365,10 @@ nix eval '(builtins.typeOf (import <nixpkgs>))'
 
 We see here that Nixpkgs is a function. We'll talk more about the nature of the Nixpkgs function next.
 
-# Nixpkgs and Building<a id="sec-5"></a>
+
+<a id="org951d1b5"></a>
+
+# Nixpkgs and Building
 
 Nixpkgs is a function that takes an attribute set as configuration and returns a nested attribute set containing thousands of packages and functions. An empty attribute set passed to the Nixpkgs function configures it with defaults:
 
@@ -402,11 +444,14 @@ You've probably also noticed the hashes in names of `/nix/store`'s contents. Nix
 
 `nix build` also supports a `--no-link` switch if we want to build without leaving behind this “result” symlink.
 
-# Calling `nix`<a id="sec-6"></a>
+
+<a id="org8fb6431"></a>
+
+# Calling `nix`
 
 We've shown thus far that Nix expressions can be passed to the `nix` utility but must be surrounded by parentheses.
 
-When we call `nix` with an argument not parenthesized, the argument is interpreted as an attribute of an attribute set, which is by default built from of `NIX_PATH`.
+When we call `nix` with an argument not parenthesized, the argument is interpreted as an attribute of an attribute set, which is by default built from `NIX_PATH`.
 
 Consider the following setting of the `NIX_PATH` environment variable:
 
@@ -438,7 +483,10 @@ nix build nixpkgs.hello
 
 Additionally, if we don't want the attribute set built implicitly from `NIX_PATH`, we can use the `--file` switch for `nix` to specify explicitly a path to be imported and select attributes from.
 
-# Finding Packages<a id="sec-7"></a>
+
+<a id="org1e345ab"></a>
+
+# Finding Packages
 
 We took for granted above that Nixpkgs had a package on the `hello` attribute.
 
@@ -473,7 +521,10 @@ nix search hello
     Version: 1.0
     Description: An example package with unfree license (for testing)
 
-# Running<a id="sec-8"></a>
+
+<a id="org69cd000"></a>
+
+# Running
 
 If you've never run the GNU Hello program, it's not too interesting. It's just a small C program useful for tutorials like this. We can run it using the “result” symlink left behind by an invocation of `nix build`:
 
@@ -493,7 +544,10 @@ nix run nixpkgs.hello --command hello
 
 This invocation makes an environment in which we have the `nixpkgs.hello` package on our path (we can put other packages as well), and then we run the command after the `--command` switch. See `nix run --help` for more information.
 
-# Installing<a id="sec-9"></a>
+
+<a id="org96e694d"></a>
+
+# Installing
 
 `~/.nix-profile` is a symlink that follows to a *profile* under `/nix/var/nix/profiles` managed by `nix-env`. The profile furthermore points to an aggregated symlink tree of various programs installed into the profile by `nix-env`, often called an *environment* (though a very overloaded term). Programs installed by `nix-env` are made available to us by putting `~/.nix-profile/bin` on our `PATH`.
 
@@ -523,7 +577,10 @@ nix-env --query | grep hello
 
 Every time we install an application with `nix-env` a new environment symlink tree is created in `/nix/store`. For posterity, `nix-env` keeps references to old versions under `/nix/var/nix/profiles`. You can use switches like `--rollback` with `nix-env` to revert back to previous states. See `nix-env --help` for more.
 
-# Uninstalling<a id="sec-10"></a>
+
+<a id="org7891632"></a>
+
+# Uninstalling
 
 If you no longer want an installed application in your profile, you can uninstall it with `nix-env` as well:
 
@@ -539,7 +596,10 @@ which hello || true
 
     hello not found
 
-# Inspecting Dependencies<a id="sec-11"></a>
+
+<a id="orgac30d39"></a>
+
+# Inspecting Dependencies
 
 To find dependencies of a built package, Nix literally scans all files in a package (text and even binary) looking for textual references to “/nix/store/…”.
 
@@ -561,7 +621,10 @@ nix path-info --recursive --closure-size nixpkgs.hello \
 
 Hello doesn't rely on much, just the standard glibc library. In real-world programs the dependencies can add up.
 
-# Cleaning Up<a id="sec-12"></a>
+
+<a id="org6718920"></a>
+
+# Cleaning Up
 
 Every time you build a new version of your code, it's stored in `/nix/store`. There is a command called `nix-collect-garbage` that purges unneeded packages. What keeps a package from being reclaimed by `nix-collect-garbage` are symlinks under `/nix/var/nix/gcroots`. These come in a few flavors including:
 
@@ -624,7 +687,10 @@ nix-collect-garbage 2>&1
     note: currently hard linking saves -17.39 MiB
     6 store paths deleted, 1.43 MiB freed
 
-# Developing with `nix-shell`<a id="sec-13"></a>
+
+<a id="org2f9a110"></a>
+
+# Developing with `nix-shell`
 
 When Nix builds a derivation, it sets up a clean and controlled environment in which to do the build. Thus far, we've not inspected how `nix build` works. Nix comes with a `nix-shell` utility that allows us to get the environment variables that would be set up for a build. For instance, to get into the environment used to build Hello, we could use `nix-shell` as follows:
 

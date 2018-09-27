@@ -1,8 +1,11 @@
-- [About Recommended Developer Tools for Nix](#sec-1)
-- [Quick Start with Spacemacs+Direnv](#sec-2)
+- [About Recommended Developer Tools for Nix](#org15666bf)
+- [Quick Start with Spacemacs+Direnv](#orgc446a35)
 
 
-# About Recommended Developer Tools for Nix<a id="sec-1"></a>
+
+<a id="org15666bf"></a>
+
+# About Recommended Developer Tools for Nix
 
 We want all of Nix's uses and benefits, but without sacrificing the smoothness of our developer experiences.
 
@@ -14,7 +17,10 @@ Subdirectories here have Nix-sensitive configuration as follows:
 -   **[`spacemacs`](./spacemacs/README.md):** a recommended Emacs configuration
 -   **[`oh-my-zsh`](./oh-my-zsh/README.md):** Direnv integration with Zsh
 
-# Quick Start with Spacemacs+Direnv<a id="sec-2"></a>
+
+<a id="orgc446a35"></a>
+
+# Quick Start with Spacemacs+Direnv
 
 The tutorials of this project are set up to work well with the following configuration for a rich Emacs experience.
 

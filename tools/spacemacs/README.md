@@ -1,14 +1,20 @@
-- [About Nix-configuration for Spacemacs](#sec-1)
-  - [A Small Pitch](#sec-1-1)
-- [Installation](#sec-2)
-- [Configuration](#sec-3)
+- [About Nix-configuration for Spacemacs](#org7d46594)
+  - [A Small Pitch](#orgd478ac2)
+- [Installation](#orgd6dcbfe)
+- [Configuration](#org221e52d)
 
 
-# About Nix-configuration for Spacemacs<a id="sec-1"></a>
+
+<a id="org7d46594"></a>
+
+# About Nix-configuration for Spacemacs
 
 This is an editor configuration some of us have used professionally for a while now, so we feel it's vetted enough to share. There may be other ways to configure other editors. This is just the best way we've found.
 
-## A Small Pitch<a id="sec-1-1"></a>
+
+<a id="orgd478ac2"></a>
+
+## A Small Pitch
 
 The [Spacemacs](http://spacemacs.org) project is just an opinionated configuration for [GNU Emacs](https://www.gnu.org/software/emacs). We like the Spacemacs project because it has a very good user experience that provides easier discovery of features for beginners, but doesn't hamper the full expressiveness of Emacs. Also, though Spacemacs does have a lot of code beyond what's provided by plain Emacs, it's not all turned on at once. Even if you enable a lot of Spacemacs layers, they are often lazily loaded upon first use.
 
@@ -16,7 +22,10 @@ Most importantly, Spacemacs code is well-factored. When first picking up Emacs, 
 
 Because Spacemacs code is modular, it makes it easier to share our Emacs configuration in a pluggable way that's more declarative and plays into the design decisions of the Spacemacs project that we like.
 
-# Installation<a id="sec-2"></a>
+
+<a id="orgd6dcbfe"></a>
+
+# Installation
 
 To start with, you need to install Emacs and then Spacemacs. To install Spacemacs, Git is recommended.
 
@@ -32,7 +41,10 @@ If you do have an Emacs configuration already, save/move it off to a temporary l
 
 You can now invoke `emacs` and get the default Spacemacs experience.
 
-# Configuration<a id="sec-3"></a>
+
+<a id="org221e52d"></a>
+
+# Configuration
 
 Spacemacs is extensible with what they call *layers*. This repository distributes five layers. Each is documented individually:
 

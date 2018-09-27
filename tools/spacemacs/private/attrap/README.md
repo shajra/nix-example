@@ -1,15 +1,21 @@
-- [About Attrap Spacemacs Layer](#sec-1)
-- [Installation](#sec-2)
-- [Features/Configuration](#sec-3)
+- [About Attrap Spacemacs Layer](#org0265246)
+- [Installation](#org294776c)
+- [Features/Configuration](#org4f2f699)
 
 
-# About Attrap Spacemacs Layer<a id="sec-1"></a>
+
+<a id="org0265246"></a>
+
+# About Attrap Spacemacs Layer
 
 This layer provides [Attrap](https://github.com/jyp/attrap) integration for fixing error at the active point.
 
 This layer doesn't do much. It mostly just pulls in the package and sets up a keybinding to the `attrap-attrap` command.
 
-# Installation<a id="sec-2"></a>
+
+<a id="org294776c"></a>
+
+# Installation
 
 To use this configuration layer, copy or link this layer's `attrap` directory to the private layers directory of your Spacemacs installation keeping the name (`~/.emacs.d/private/attrap`).
 
@@ -24,7 +30,10 @@ Then enable it in your `~/.spacemacs`:
        attrap)))
 ```
 
-# Features/Configuration<a id="sec-3"></a>
+
+<a id="org4f2f699"></a>
+
+# Features/Configuration
 
 Attrap Emacs commands have key bindings under the major mode prefix `SPC m`:
 

@@ -1,22 +1,31 @@
-- [About Extn-Python Spacemacs Layer](#sec-1)
-- [Installation](#sec-2)
-  - [Dependencies](#sec-2-1)
-  - [Enabling the layer](#sec-2-2)
-- [Features/Configuration](#sec-3)
-  - [Key bindings](#sec-3-1)
-    - [From the `python` Spacemacs layer](#sec-3-1-1)
-    - [From this layer](#sec-3-1-2)
+- [About Extn-Python Spacemacs Layer](#orga772366)
+- [Installation](#org7802702)
+  - [Dependencies](#org83e319e)
+  - [Enabling the layer](#org1ac67e0)
+- [Features/Configuration](#org1c4209d)
+  - [Key bindings](#orgf0d8d4c)
+    - [From the `python` Spacemacs layer](#org18f6402)
+    - [From this layer](#org5587148)
 
 
-# About Extn-Python Spacemacs Layer<a id="sec-1"></a>
+
+<a id="orga772366"></a>
+
+# About Extn-Python Spacemacs Layer
 
 This layer extends the Spacemacs-provided `python` layer with just an extra keystroke and command to restart the Anaconda server. This restart also picks up Direnv environment changes via the [emacs-direnv](https://github.com/wbolster/emacs-direnv) Emacs package if enabled.
 
 That's all it does for now. Otherwise, it just turns on the `python` layer for you, see [that layer's official documentation](https://github.com/syl20bnr/spacemacs/tree/master/layers/+lang/python) for more information.
 
-# Installation<a id="sec-2"></a>
 
-## Dependencies<a id="sec-2-1"></a>
+<a id="org7802702"></a>
+
+# Installation
+
+
+<a id="org83e319e"></a>
+
+## Dependencies
 
 Spacemacs's `python` layer naturally requires an installation of Python, but also provides support for a variety of Python static analysis tools and test runners.
 
@@ -24,7 +33,10 @@ We want our development experiences to be stable and portable from machine to ma
 
 Otherwise, you can install any dependencies using an OS package manager like Nix.
 
-## Enabling the layer<a id="sec-2-2"></a>
+
+<a id="org1ac67e0"></a>
+
+## Enabling the layer
 
 To use this configuration layer, copy or link this layer's `extn-python` directory to the private layers directory of your Spacemacs installation keeping the name (`~/.emacs.d/private/extn-python`).
 
@@ -39,15 +51,27 @@ Then enable it in your `~/.spacemacs`:
        extn-python)))
 ```
 
-# Features/Configuration<a id="sec-3"></a>
 
-## Key bindings<a id="sec-3-1"></a>
+<a id="org1c4209d"></a>
 
-### From the `python` Spacemacs layer<a id="sec-3-1-1"></a>
+# Features/Configuration
+
+
+<a id="orgf0d8d4c"></a>
+
+## Key bindings
+
+
+<a id="org18f6402"></a>
+
+### From the `python` Spacemacs layer
 
 Many key binds come from the `python` layer. Rather than redocument those bindings here, see the [documentation for that layer](https://github.com/syl20bnr/spacemacs/tree/master/layers/+lang/python#key-bindings).
 
-### From this layer<a id="sec-3-1-2"></a>
+
+<a id="org5587148"></a>
+
+### From this layer
 
 There's just one command/keybinding we provide:
 

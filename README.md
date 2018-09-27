@@ -1,22 +1,28 @@
-- [About This Project](#sec-1)
-- [Navigating This Repository](#sec-2)
-- [Prerequisites](#sec-3)
-  - [Knowledge](#sec-3-1)
-  - [Technology](#sec-3-2)
-    - [Nix](#sec-3-2-1)
-    - [Docker](#sec-3-2-2)
-    - [Additional developers tools](#sec-3-2-3)
-    - [Things you don't need to install](#sec-3-2-4)
-- [Feedback Desired](#sec-4)
+- [About This Project](#orgdcd9b97)
+- [Navigating This Repository](#org4abb898)
+- [Prerequisites](#orgb4cf7ef)
+  - [Knowledge](#orga41b1a3)
+  - [Technology](#org7c53898)
+    - [Nix](#org034846c)
+    - [Docker](#orge3020cc)
+    - [Additional developers tools](#orgd5fccc5)
+    - [Things you don't need to install](#orgb011aed)
+- [Feedback Desired](#org2e84cef)
 
 
-# About This Project<a id="sec-1"></a>
+
+<a id="orgdcd9b97"></a>
+
+# About This Project
 
 This project illustrates using [the Nix package manager](https://nixos.org/nix) for programming heterogeneous, multi-module projects. Notably, it provides [a Nix library called Pkgs-make](./pkgs-make/README.md) to save some the boilerplate we might have to write when using Nix for managing a software lifecycle. Pkgs-make currently directly supports [Haskell](https://haskell.org) and [Python](https://www.python.org/) development, but has the potential to support other language platforms.
 
 Use this project to learn and explore what's possible. It's set up for pedagogy, but you should be able to use Pkgs-make in real projects (a group of us does). There are many ways to organize code, and the beauty of Nix is that it's very flexible. So use Pkgs-make if you can, but be aware that there's many ways to achieve the same goal, and your needs will determine what's best.
 
-# Navigating This Repository<a id="sec-2"></a>
+
+<a id="org4abb898"></a>
+
+# Navigating This Repository
 
 We've tried hard to keep the code clean and self-documenting. Here's a survey of the project's layout with some links, each with their own README files explaining more:
 
@@ -34,9 +40,15 @@ The links are presented in loose recommended reading order, starting with tutori
 
 If you don't have a preferred Markdown or Org-mode viewer, we recommend just using Github's Markdown rendering at <https://github.com/shajra/example-nix>.
 
-# Prerequisites<a id="sec-3"></a>
 
-## Knowledge<a id="sec-3-1"></a>
+<a id="orgb4cf7ef"></a>
+
+# Prerequisites
+
+
+<a id="orga41b1a3"></a>
+
+## Knowledge
 
 We've tried to make this project explanatory enough that you don't need to read external references first. But covering Nix in its entirety is beyond the scope of this project, so it's really good to have the official documentation available for reference:
 
@@ -49,9 +61,15 @@ There are also [many good tutorials](https://www.google.com/search?q=nix+tutoria
 -   [Luca Bruno's "pill" series](http://lethalman.blogspot.com/2014/07/nix-pill-1-why-you-should-give-it-try.html)
 -   [John Wiegley's Haskell/Nix talk](https://www.youtube.com/watch?v=G9yiJ7d5LeI)
 
-## Technology<a id="sec-3-2"></a>
 
-### Nix<a id="sec-3-2-1"></a>
+<a id="org7c53898"></a>
+
+## Technology
+
+
+<a id="org034846c"></a>
+
+### Nix
 
 Because this project is really about Nix, you should have [the Nix package manager installed](https://nixos.org/nix/manual/#chap-installation).
 
@@ -65,23 +83,35 @@ Also, be aware that this project is actively tested on a GNU/Linux OS, and only 
 
 If some some reason you can't install Nix, we can still use the project partially via [Docker](https://www.docker.com) to build the project. We just won't be able to showcase development tools without Nix installed on the host system.
 
-### Docker<a id="sec-3-2-2"></a>
+
+<a id="orge3020cc"></a>
+
+### Docker
 
 This project illustrates how to build and package up applications in Docker.
 
 See the [Docker installation guide](https://docs.docker.com/install) for instructions on how to install Docker for your system.
 
-### Additional developers tools<a id="sec-3-2-3"></a>
+
+<a id="orgd5fccc5"></a>
+
+### Additional developers tools
 
 This project also provides some [configuration for some developers tools](./tools) for a nice Nix-based developer experience with this project. Some of us have used these tools on real projects, and we've been pleased with the results.
 
-### Things you don't need to install<a id="sec-3-2-4"></a>
+
+<a id="orgb011aed"></a>
+
+### Things you don't need to install
 
 Beyond Docker and these developer tools, you don't need to install platform-specific tooling like interpreters/compilers, build systems, or static analysis tools.
 
 Once you have Nix, we can use it as a bootstrap to get all the other tools you might need that are more likely to vary from project to project. Pkgs-make can help with this.
 
-# Feedback Desired<a id="sec-4"></a>
+
+<a id="org2e84cef"></a>
+
+# Feedback Desired
 
 If you have an idea to improve this project's documentation or features, please submit an issue or pull request. Otherwise, feel free to fork/modify it.
 

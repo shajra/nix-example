@@ -1,11 +1,14 @@
-- [About Direnv Spacemacs Layer](#sec-1)
-- [Installation](#sec-2)
-  - [Dependencies](#sec-2-1)
-  - [Enabling the layer](#sec-2-2)
-- [Features/Configuration](#sec-3)
+- [About Direnv Spacemacs Layer](#orgecbd0ec)
+- [Installation](#org7c88b95)
+  - [Dependencies](#org38a20ea)
+  - [Enabling the layer](#org0bf58f1)
+- [Features/Configuration](#org452cb5a)
 
 
-# About Direnv Spacemacs Layer<a id="sec-1"></a>
+
+<a id="orgecbd0ec"></a>
+
+# About Direnv Spacemacs Layer
 
 This layer provides [emacs-direnv](https://github.com/wbolster/emacs-direnv)/[Direnv](https://direnv.net/) integration for managing different sets of environment variables for different directories.
 
@@ -15,13 +18,22 @@ With Direnv, we need a lot less language-platform specific configuration with Em
 
 This layer just sets up a few key bindings and delegates to emacs-direnv.
 
-# Installation<a id="sec-2"></a>
 
-## Dependencies<a id="sec-2-1"></a>
+<a id="org7c88b95"></a>
+
+# Installation
+
+
+<a id="org38a20ea"></a>
+
+## Dependencies
 
 You need the `direnv` executable on your `PATH`. There are [many ways to get it](https://github.com/direnv/direnv#install).
 
-## Enabling the layer<a id="sec-2-2"></a>
+
+<a id="org0bf58f1"></a>
+
+## Enabling the layer
 
 To use this configuration layer, copy or link this layer's `direnv` directory to the private layers directory of your Spacemacs installation keeping the name (`~/.emacs.d/private/direnv`).
 
@@ -36,7 +48,10 @@ Then enable it in your `~/.spacemacs`:
        direnv)))
 ```
 
-# Features/Configuration<a id="sec-3"></a>
+
+<a id="org452cb5a"></a>
+
+# Features/Configuration
 
 Some useful Direnv Emacs commands have key bindings under the prefix `SPC d`:
 
