@@ -1,24 +1,24 @@
-- [Introduction to Haskell Development with Pkgs-make](#org68bf92b)
-- [Prerequisites](#org9301d97)
-- [Following Along With Code](#org05a947b)
-- [Walk-through](#orgc728156)
-  - [Basic build](#org48999be)
-  - [Modifying the Haskell build](#org91a41f1)
-- [Developing Haskell](#org384cf68)
-  - [Development tools in a Nix shell](#org3b56fe7)
-  - [Cabal](#org7e23685)
-  - [Accidentally building outside a Nix shell](#org2b1a75f)
-  - [Ghcid](#org28d3e0d)
-  - [Editor tags files](#org5db4af9)
-  - [Haskell Stack](#orgfc14a01)
-    - [Using Stack](#org86fdc5c)
-    - [Build files for Stack](#org0bda9a2)
-  - [Stack-less change-triggered builds](#org983aff8)
-- [Integrated Developer Environment with Emacs](#org30f413e)
+- [Introduction to Haskell Development with Pkgs-make](#org10f3d3a)
+- [Prerequisites](#org7ebc9bf)
+- [Following Along With Code](#org1d5f3bc)
+- [Walk-through](#org15cad90)
+  - [Basic build](#org231b614)
+  - [Modifying the Haskell build](#orge2bcc58)
+- [Developing Haskell](#orgb00944b)
+  - [Development tools in a Nix shell](#org9d83a2c)
+  - [Cabal](#org293889a)
+  - [Accidentally building outside a Nix shell](#org10fffd4)
+  - [Ghcid](#orgdb374cf)
+  - [Editor tags files](#org2251f41)
+  - [Haskell Stack](#org8c1b8ad)
+    - [Using Stack](#org3ed1365)
+    - [Build files for Stack](#org11a839b)
+  - [Stack-less change-triggered builds](#orgb428b5c)
+- [Integrated Developer Environment with Emacs](#org0b9540a)
 
 
 
-<a id="org68bf92b"></a>
+<a id="org10f3d3a"></a>
 
 # Introduction to Haskell Development with Pkgs-make
 
@@ -41,7 +41,7 @@ Ideally, we want a way to
 This tutorial shows how to obtain the first of our goals with Nix. The second two are always a work in process, but we feel we have something workable.
 
 
-<a id="org9301d97"></a>
+<a id="org7ebc9bf"></a>
 
 # Prerequisites
 
@@ -50,7 +50,7 @@ We'll presume you're familiar with Haskell and the tooling ecosystem.
 We'll assume that you know what's covered in the previous two tutorials [introducing Nix](../0-nix-intro/README.md) and [introducing Pkgs-make](../1-pkgs-make/README.md).
 
 
-<a id="org05a947b"></a>
+<a id="org1d5f3bc"></a>
 
 # Following Along With Code
 
@@ -72,12 +72,12 @@ nix run -f build.nix example-haskell-app -c example-haskell
 This is a trivial application. The complexity we're introducing is just enough to showcase usage of Nix.
 
 
-<a id="orgc728156"></a>
+<a id="org15cad90"></a>
 
 # Walk-through
 
 
-<a id="org48999be"></a>
+<a id="org231b614"></a>
 
 ## Basic build
 
@@ -108,7 +108,7 @@ Also, similarly to the previous tutorial, there are three attributes to illustra
 Since they work the same way as shown in the previous tutorial, we don't discuss them more there, but the [top-level `run` directory](../../run/README.md) has scripts that illustrate their use.
 
 
-<a id="org91a41f1"></a>
+<a id="orge2bcc58"></a>
 
 ## Modifying the Haskell build
 
@@ -195,18 +195,18 @@ Unfortunately, the design of `changePkgs` only works for functions in `lib.haske
 With three methods to modify packages with Pkgs-make, hopefully you can find one that works well for your needs.
 
 
-<a id="org384cf68"></a>
+<a id="orgb00944b"></a>
 
 # Developing Haskell
 
 We introduced `nix-shell` at the end of the [first tutorial](../0-nix-intro/README.md). We'll now see how we can use Pkgs-make with `nix-shell` to get a rich programming environment for a Haskell project built with Nix.
 
 
-<a id="org3b56fe7"></a>
+<a id="org9d83a2c"></a>
 
 ## Development tools in a Nix shell
 
-Pkgs-make generates for us special derivations tailored for use with `nix-shell` to develop multi-module projects. These derivations are returned by Pkgs-make in addition to the derivations we explicitly specify. The one tailored for Haskell are on the `env.haskell` attribute.
+Pkgs-make generates for us special derivations tailored for use with `nix-shell` to develop multi-module projects. These shell derivations are returned by Pkgs-make in addition to the package derivations we explicitly specify. The shell derivation tailored for Haskell is on the `env.haskell` attribute.
 
 We have in this tutorial a [`shell.nix` file](./shell.nix) that accesses this attribute from the tutorial's `build.nix`.
 
@@ -255,10 +255,10 @@ nix-shell --run '
 
 The instance of GHC provided is a “-with-packages” version preloaded with all the external libraries and tools declared as dependencies gleaned from our project's two Cabal files (`example-haskell-lib.cabal` and `example-haskell-app.cabal`). This way versions of external dependencies are explicitly pinned to the versions coming from Nixpkgs, and not resolved dynamically by Cabal.
 
-One consequence of this is that once you enter into a Nix shell for a derivation, you can disable your computer's networking. Entering the shell should download all the dependencies you need from the internet, and check their hashes to assure a deterministic build. From there, you should only need your source code, which should should be able to compile and work with offline.
+One consequence of this is that once you enter into a Nix shell for a derivation, you can disable your computer's networking. Entering the shell should download all the dependencies you need from the internet, and check their hashes to assure a deterministic build. From there, you should only need your source code, which you can compile offline.
 
 
-<a id="org7e23685"></a>
+<a id="org293889a"></a>
 
 ## Cabal
 
@@ -319,12 +319,12 @@ find dist-newstyle -name example-haskell -type f -exec {} +
 
 Note, this build is not exactly what Nix builds, but is extremely close because we are using very close to the same environment Nix would use. We accept this compromise for developer conveniences, like incremental builds.
 
-Regarding the “new-” commands, they've been released for testing by the Cabal development team. Once they've been deemed stable, the normal commands will be replaced with their “new-” counterparts, which will go away. In an effort to help to contribute towards these commands' success, we don't not shy from using them, and encourages people to try them out.
+Regarding the “new-” commands, they've been released for testing by the Cabal development team. Once they've been deemed stable, the normal commands will be replaced with their “new-” counterparts, which will go away. In an effort to help to contribute towards these commands' success, we don't shy away from using them. We encourage you to try them out.
 
 If you're familiar with Cabal sandboxes, you can use those too instead of the “new-” commands, but you will deviate from the integration of tools shown by these tutorials. Some things may break and require a different approach, so sandboxes are beyond the scope of this project. Also, sandboxes seem likely to go away with once the “new-” commands are officially released.
 
 
-<a id="org2b1a75f"></a>
+<a id="org10fffd4"></a>
 
 ## Accidentally building outside a Nix shell
 
@@ -365,7 +365,7 @@ If you get confused about whether you've compiled with or without Nix, you can a
 These last `.ghc.environment.*` files are [a controversial file](https://github.com/haskell/cabal/issues/4542) generated by Cabal that saves state from build to build. Fortunately, Pkgs-make filters out this file for all Haskell builds so we don't have to think about it.
 
 
-<a id="org28d3e0d"></a>
+<a id="orgdb374cf"></a>
 
 ## Ghcid
 
@@ -380,7 +380,7 @@ Ghcid will sense changes in source files, and automatically recompile them. Howe
 Note, the reason Ghcid is faster than a normal build with Cabal or Stack is because, it's using a REPL session, which it uses to reload modules. This provides a faster compilation, but sometimes error messages get out of sync, and you have to restart Ghcid.
 
 
-<a id="org5db4af9"></a>
+<a id="org2251f41"></a>
 
 ## Editor tags files
 
@@ -413,14 +413,14 @@ In Emacs, you can use the `find-tag` command, which is by default bound to `Meta
 There are also a myriad of ways to configure various editors to run the tags-generation command on demand and/or as necessary.
 
 
-<a id="orgfc14a01"></a>
+<a id="org8c1b8ad"></a>
 
 ## Haskell Stack
 
 Although with Nix, you don't need Stack at all, we show how to build this Pkgs-make Haskell project with Stack if you like.
 
 
-<a id="org86fdc5c"></a>
+<a id="org3ed1365"></a>
 
 ### Using Stack
 
@@ -446,7 +446,7 @@ With Stack's `--file-watch` switch, Stack will rebuild the project when files ch
 ****WARNING****: This project uses Stack's [built-in support for Nix integration](https://docs.haskellstack.org/en/stable/nix_integration/). System dependencies for Stack come from the Nix configuration. But be aware that Stack manages Haskell dependencies (including GHC) independently using the *resolver* specified in the tutorial's [`stack.yaml`](./stack.yaml). When developing with Nix and Stack, it's up to you to make sure the versions used by Stack are congruent (enough) to those used by Nix.
 
 
-<a id="org0bda9a2"></a>
+<a id="org11a839b"></a>
 
 ### Build files for Stack
 
@@ -484,7 +484,7 @@ The attributes we get values for from `call.package` include
 Otherwise, the [`stack.yaml`](./stack.yaml) and [`stack/stack.nix`](./stack/stack.nix) files tie everything together as one would expect from the [official Stack documentation for Nix integration](https://docs.haskellstack.org/en/stable/nix_integration/).
 
 
-<a id="org983aff8"></a>
+<a id="orgb428b5c"></a>
 
 ## Stack-less change-triggered builds
 
@@ -493,7 +493,7 @@ This tutorial's `nix-shell` environment provides a `cabal-new-watch` script that
 This is a non-incremental Cabal build, so it won't be as fast as Ghcid, but should be about as fast as a normal Stack build.
 
 
-<a id="org30f413e"></a>
+<a id="org0b9540a"></a>
 
 # Integrated Developer Environment with Emacs
 

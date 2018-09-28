@@ -1,28 +1,28 @@
-- [Introduction to Pkgs-make](#org55e54cd)
-- [Prerequisites](#org6390bbf)
-- [Following Along With Code](#org689f6ff)
-- [Setting Up a Minimal Build](#org662575f)
-  - [Referencing Pkgs-make](#org42e901e)
-  - [Calling Pkgs-make](#org5a5d49d)
-  - [Call-package calls](#org3ccf00c)
-    - [Example library code](#org34a3b4d)
-    - [Example application code](#orgf9c0c41)
-- [Alternative to Hardcoding `/nix/store` References](#org7fec7b4)
-- [Pinning Nixpkgs](#org0bd06d0)
-- [Overriding Dependencies](#org99382b7)
-  - [Overriding globally](#org64c24e6)
-  - [Overriding locally](#org7c52855)
-- [Curated Overlays](#org87efe67)
-- [Build Docker](#orgdc3a51c)
-  - [Nix-built Docker image](#orgc22d779)
-  - [Nix-built self-contained tarball](#org18d7838)
-- [License Report (experimental)](#org3882f81)
-  - [Usage](#org805e0e0)
-  - [Caveats](#org98e2d98)
+- [Introduction to Pkgs-make](#orgb4d5720)
+- [Prerequisites](#org53287d1)
+- [Following Along With Code](#org55b76cd)
+- [Setting Up a Minimal Build](#org93fc32c)
+  - [Referencing Pkgs-make](#orgb8ec888)
+  - [Calling Pkgs-make](#org99c4b1b)
+  - [Call-package calls](#orgf146ebb)
+    - [Example library code](#orge75ff87)
+    - [Example application code](#org2be2a50)
+- [Alternative to Hardcoding `/nix/store` References](#org83b2dd1)
+- [Pinning Nixpkgs](#orga217fe5)
+- [Overriding Dependencies](#orgb11d42d)
+  - [Overriding globally](#org6c30d91)
+  - [Overriding locally](#org4c6d7de)
+- [Curated Overlays](#orga43cccd)
+- [Build Docker](#orgc6823ad)
+  - [Nix-built Docker image](#org000df27)
+  - [Nix-built self-contained tarball](#org6095357)
+- [License Report (experimental)](#org01ad5dd)
+  - [Usage](#org6e57a78)
+  - [Caveats](#org80f50fa)
 
 
 
-<a id="org55e54cd"></a>
+<a id="orgb4d5720"></a>
 
 # Introduction to Pkgs-make
 
@@ -35,7 +35,7 @@ However, with all this flexibility, projects can easily end up with a sprawl of 
 If you have a C, Haskell, or Python project, this library should be usable as is. If you're using another language, it can likely be extended.
 
 
-<a id="org6390bbf"></a>
+<a id="org53287d1"></a>
 
 # Prerequisites
 
@@ -46,7 +46,7 @@ Additionally, we're going to overview using Pkgs-make, but won't dive into every
 And since you'll see not only calls to Pkgs-make, but also calls to Nixpkgs, you may want to have the [Nixpkgs manual](https://github.com/NixOS/nixpkgs) handy as well.
 
 
-<a id="org689f6ff"></a>
+<a id="org55b76cd"></a>
 
 # Following Along With Code
 
@@ -84,7 +84,7 @@ nix run --file build.nix example-shell-app --command example-shell
     Hello, world!
 
 
-<a id="org662575f"></a>
+<a id="org93fc32c"></a>
 
 # Setting Up a Minimal Build
 
@@ -113,7 +113,7 @@ pkgsMake pkgsMakeArgs ({call, ...}: {
 Let's discuss this expression piece by piece.
 
 
-<a id="org42e901e"></a>
+<a id="orgb8ec888"></a>
 
 ## Referencing Pkgs-make
 
@@ -137,7 +137,7 @@ pkgsMake = import ./path/to/pkgs-make;
 ```
 
 
-<a id="org5a5d49d"></a>
+<a id="org99c4b1b"></a>
 
 ## Calling Pkgs-make
 
@@ -148,11 +148,11 @@ The first argument is configuration for Pkgs-make, passed in as an attribute set
 The second argument passed to Pkgs-make is a function that builds an attribute set of your final derivations. Pkgs-make will pass to this function a set of utilities to use. As shown in our example usage above, one such utility is the `call` attribute, providing a nested set of functions for building derivations for different languages.
 
 
-<a id="org3ccf00c"></a>
+<a id="orgf146ebb"></a>
 
 ## Call-package calls
 
-If you look at the [`build.nix` file in this tutorial's directory](./build.nix), you'll see we pass a function to Pkgs-make similarly as our example usage above:
+If you look at the [`build.nix` file in this tutorial's directory](./build.nix), you'll see we pass a function to Pkgs-make just as our example above:
 
 ```text
 pkgsMake pkgsMakeArgs ({call, lib}: rec {
@@ -162,10 +162,10 @@ pkgsMake pkgsMakeArgs ({call, lib}: rec {
 })
 ```
 
-We're only using one of these functions provided by `call.package` attribute. All of the functions available from `call` accept a path an argument. This path when imported should always accept an attribute set as input and return a derivation of a package. We'll look at an example of this function next.
+We're only using one of these functions provided by `call`, namely the function bound to the `package` attribute. All of the functions available from `call` accept a path an argument. This path should reference a file defining a Nix function that takes an attribute set as input and returns a derivation. We'll look at an example of this function next.
 
 
-<a id="org34a3b4d"></a>
+<a id="orge75ff87"></a>
 
 ### Example library code
 
@@ -208,7 +208,7 @@ nix search 'nixpkgs.(coreutils|gnused)$'
     Version: 4.5
     Description: GNU sed, a batch stream editor
 
-The `writeText` attribute is not a derivation, but a function not found by `nix search`. There are a lot of functions at Nixpkgs' top-level. Some of these are documented in the [Nixpkgs manual](https://nixos.org/nixpkgs/manual). Others you discover by looking at other people's Nix expressions or by reading the Nixpkgs source code.
+Unlike `coreutils` and `gnused`, the `writeText` attribute is not a derivation, but a function. `nix search` only finds derivations in Nixpkgs, and not other values like functions, so we can't use `nix search` to find functions like `writeText`. There are a lot of functions at Nixpkgs' top-level. Some of these are documented in the [Nixpkgs manual](https://nixos.org/nixpkgs/manual). Others you discover by looking at other people's Nix expressions or by reading the Nixpkgs source code.
 
 `writeText` produces a derivation for a single-file package given a name for the package, and the text content for the file. We use string interpolation to have the `/nix/store` paths of dependencies injected into the script.
 
@@ -231,7 +231,7 @@ cat `nix path-info --file build.nix example-shell-lib`
 We can see that our string interpolation has hardcoded references to our dependencies. We'll discuss the importance of this more later.
 
 
-<a id="orgf9c0c41"></a>
+<a id="org2be2a50"></a>
 
 ### Example application code
 
@@ -287,7 +287,7 @@ nix path-info --recursive --file build.nix example-shell-app
     /nix/store/rmq6gnybmxxzpssj3s63sfjivlq4inrm-attr-2.4.47
 
 
-<a id="org7fec7b4"></a>
+<a id="org83b2dd1"></a>
 
 # Alternative to Hardcoding `/nix/store` References
 
@@ -305,7 +305,7 @@ pkgsMake pkgsMakeArgs ({call, lib}: rec {
 })
 ```
 
-If we look at the [`default.nix` for our unwrapped application](./application-unwrapped/default.nix), we'll see the exact same Nix expression except for one exception — we've called `hello` without an absolute path reference into `/nix/store`:
+If we look at the [`default.nix` for our unwrapped application](./application-unwrapped/default.nix), we'll see the exact same Nix expression as our [previous `default.nix` for our application](./application/default.nix) except for one exception — we've called `hello` without an absolute path reference into `/nix/store`:
 
 ```nix
 { writeShellScriptBin
@@ -364,7 +364,7 @@ stdenv.mkDerivation {
 }
 ```
 
-This utility makes a shell wrapper for any executable file that can do things like set environment variables. In our case our wrapper sets the `PATH` to include a `/nix/store` path where a specific version of Hello can can be found.
+This utility makes a shell wrapper for any executable. This wrapper can do things like set environment variables. In our case our wrapper sets the `PATH` to include a `/nix/store` path where a specific version of Hello can can be found.
 
 This is a common technique for many derivations in Nixpkgs. Furthermore, with techniques like this, we can use Nix to mix programs from all kinds of language ecosystems together.
 
@@ -386,7 +386,7 @@ nix run --file build.nix example-shell-app-wrapped \
     Hello, world!
 
 
-<a id="org0bd06d0"></a>
+<a id="orga217fe5"></a>
 
 # Pinning Nixpkgs
 
@@ -423,7 +423,7 @@ But typing that entire URL can get tedious. What many Nix users actually do is p
 Nix's error message tells us the calculated hash of the download which is the same as what we'd get with the `nix-prefetch-url` call. We can use it if we trust the GitHub and Nixpkgs. It may seem silly to intentionally create an error to figure out what you need, but it's undeniably convenient and used broadly within the Nix community.
 
 
-<a id="org99382b7"></a>
+<a id="orgb11d42d"></a>
 
 # Overriding Dependencies
 
@@ -444,7 +444,7 @@ nix run --file build.nix example-shell-app --command example-shell
 We may want another version, say 2.9. We have the option of changing the version of Hello locally for just `example-shell-app`, or we can globally change all references in Nixpkgs to Hello to a new version consistently. In other package managers, we can often only have one version of a library or application installed at a time. With Nix, we get more flexibility.
 
 
-<a id="org64c24e6"></a>
+<a id="org6c30d91"></a>
 
 ## Overriding globally
 
@@ -495,7 +495,7 @@ nix run --file build.override_global.nix example-shell-app \
     Hello, world!
 
 
-<a id="org7c52855"></a>
+<a id="org4c6d7de"></a>
 
 ## Overriding locally
 
@@ -563,7 +563,7 @@ nix run --file build.override_local.nix example-shell-app \
 But if any other application in Nixpkgs depended on Hello, it would pull in the later 2.10 version.
 
 
-<a id="org87efe67"></a>
+<a id="orga43cccd"></a>
 
 # Curated Overlays
 
@@ -585,7 +585,7 @@ pkgsMake = import "${pkgsMakePath}/variant/plain";
 Please note, we don't have a lot of people managing this curation. Also, it would be even better if the work from curation within Pkgs-make could work back into Nixpkgs. Any help is much appreciated.
 
 
-<a id="orgdc3a51c"></a>
+<a id="orgc6823ad"></a>
 
 # Build Docker
 
@@ -598,7 +598,7 @@ There are two attributes in the [`build.nix` file for this tutorial](./build.nix
 -   **`example-shell-tarball`:** a derivation that builds a self-contained tarball that can be used with an externally managed `Dockerfile`.
 
 
-<a id="orgc22d779"></a>
+<a id="org000df27"></a>
 
 ## Nix-built Docker image
 
@@ -641,7 +641,7 @@ docker run --rm -i example-shell
     Hello, world!
 
 
-<a id="org18d7838"></a>
+<a id="org6095357"></a>
 
 ## Nix-built self-contained tarball
 
@@ -719,12 +719,12 @@ docker run --rm -i example-shell-tarball
     Hello, world!
 
 
-<a id="org3882f81"></a>
+<a id="org01ad5dd"></a>
 
 # License Report (experimental)
 
 
-<a id="org805e0e0"></a>
+<a id="org6e57a78"></a>
 
 ## Usage
 
@@ -767,7 +767,7 @@ jq . < "$(nix path-info --file build.nix "example-shell-licenses")"
     }
 
 
-<a id="org98e2d98"></a>
+<a id="org80f50fa"></a>
 
 ## Caveats
 

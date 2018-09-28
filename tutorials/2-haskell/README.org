@@ -246,9 +246,10 @@
 ** Development tools in a Nix shell
 
    Pkgs-make generates for us special derivations tailored for use with
-   =nix-shell= to develop multi-module projects. These derivations are returned
-   by Pkgs-make in addition to the derivations we explicitly specify. The one
-   tailored for Haskell are on the ~env.haskell~ attribute.
+   =nix-shell= to develop multi-module projects. These shell derivations are
+   returned by Pkgs-make in addition to the package derivations we explicitly
+   specify. The shell derivation tailored for Haskell is on the ~env.haskell~
+   attribute.
 
    We have in this tutorial a [[./shell.nix][=shell.nix= file]] that accesses this attribute
    from the tutorial's =build.nix=.
@@ -309,8 +310,7 @@
    derivation, you can disable your computer's networking. Entering the shell
    should download all the dependencies you need from the internet, and check
    their hashes to assure a deterministic build. From there, you should only
-   need your source code, which should should be able to compile and work with
-   offline.
+   need your source code, which you can compile offline.
 
 ** Cabal
 
@@ -383,8 +383,8 @@
    Regarding the “new-” commands, they've been released for testing by the
    Cabal development team. Once they've been deemed stable, the normal commands
    will be replaced with their “new-” counterparts, which will go away. In an
-   effort to help to contribute towards these commands' success, we don't not
-   shy from using them, and encourages people to try them out.
+   effort to help to contribute towards these commands' success, we don't shy
+   away from using them. We encourage you to try them out.
 
    If you're familiar with Cabal sandboxes, you can use those too instead of
    the “new-” commands, but you will deviate from the integration of tools

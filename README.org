@@ -79,8 +79,8 @@
       only loosely tested on Macs. Nix support for Macs is always improving, but
       is known to be idiosyncratic.
 
-      If some some reason you can't install Nix, we can still use the project
-      partially via [[docker][Docker]] to build the project. We just won't be able to
+      If for some reason you can't install Nix, we can still use [[docker][Docker]] to
+      build some of the projects in the tutorials. We just won't be able to
       showcase development tools without Nix installed on the host system.
 
 *** Docker

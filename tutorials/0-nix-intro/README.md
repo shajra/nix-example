@@ -1,36 +1,36 @@
-- [Introduction to Nix](#org5f2bd2c)
-- [Motivation For Nix](#org64ef5d4)
-- [Exploring a Fresh Nix Installation](#org66495ed)
-- [The Nix Language](#orgdd86877)
-  - [Numeric literals](#org2012828)
-  - [Strings](#org57a2c1d)
-  - [Let-expressions](#org95827d9)
-  - [String interpolation](#org1a6efb3)
-  - [Functions](#orge2869fb)
-  - [Lists](#org78b5963)
-  - [Attribute sets](#orge702529)
-  - [Paths](#org53b1227)
-  - [Importing](#org8ec7d49)
-- [Nixpkgs and Building](#org951d1b5)
-- [Calling `nix`](#org8fb6431)
-- [Finding Packages](#org1e345ab)
-- [Running](#org69cd000)
-- [Installing](#org96e694d)
-- [Uninstalling](#org7891632)
-- [Inspecting Dependencies](#orgac30d39)
-- [Cleaning Up](#org6718920)
-- [Developing with `nix-shell`](#org2f9a110)
+- [Introduction to Nix](#org512adcb)
+- [Motivation For Nix](#org22fab33)
+- [Exploring a Fresh Nix Installation](#org6c7406a)
+- [The Nix Language](#org0533883)
+  - [Numeric literals](#orgf588d85)
+  - [Strings](#org9e25969)
+  - [Let-expressions](#orgbf97752)
+  - [String interpolation](#org618fc66)
+  - [Functions](#orgb2f49ea)
+  - [Lists](#orgabba538)
+  - [Attribute sets](#org08be5b4)
+  - [Paths](#org9ad15d1)
+  - [Importing](#org0778df1)
+- [Nixpkgs and Building](#org3a61bd1)
+- [Calling `nix`](#orgc35dbdb)
+- [Finding Packages](#org475a0a0)
+- [Running](#org27dbf43)
+- [Installing](#org1d2365e)
+- [Uninstalling](#org6fa808c)
+- [Inspecting Dependencies](#orgb834be5)
+- [Cleaning Up](#org3fdd761)
+- [Developing with `nix-shell`](#org6864764)
 
 
 
-<a id="org5f2bd2c"></a>
+<a id="org512adcb"></a>
 
 # Introduction to Nix
 
 This tutorial illustrates some basic operation of Nix. We'll introduce some some concepts, terminology, and command-line utilities. That will provide some setup for building our own projects with Pkgs-make in later tutorials.
 
 
-<a id="org64ef5d4"></a>
+<a id="org22fab33"></a>
 
 # Motivation For Nix
 
@@ -58,7 +58,7 @@ Nix is not without its problems, as [Gabriel Gonzalez points out](https://github
 For many of us the benefits of Nix outweigh the inconveniences. Hopefully, projects and tutorials like this can help tip the balance further.
 
 
-<a id="org66495ed"></a>
+<a id="org6c7406a"></a>
 
 # Exploring a Fresh Nix Installation
 
@@ -81,14 +81,14 @@ There are two directories under `/nix`:
 Typically, you'll never manage files under `/nix` directly. Instead you'll use the Nix command-line tools. To get packages into `/nix/store` we first need a Nix expression. These expressions can either come from a third party like the central Nixpkgs GitHub repository. Or we can write our own.
 
 
-<a id="orgdd86877"></a>
+<a id="org0533883"></a>
 
 # The Nix Language
 
 To better discuss the Nix command-line tools and also Nixpkgs, we'll introduce the Nix language a little. This is no substitute for the [official Nix language documentation](https://nixos.org/nix/manual/#ch-expression-language), which is surprisingly not that long for a programming language; Nix does not have much syntax relative to other general-purpose programming languages.
 
 
-<a id="org2012828"></a>
+<a id="orgf588d85"></a>
 
 ## Numeric literals
 
@@ -113,7 +113,7 @@ nix eval '(builtins.typeOf 1.0)'
     "float"
 
 
-<a id="org57a2c1d"></a>
+<a id="org9e25969"></a>
 
 ## Strings
 
@@ -148,7 +148,7 @@ nix eval '("a" + "b")'
     "ab"
 
 
-<a id="org95827d9"></a>
+<a id="orgbf97752"></a>
 
 ## Let-expressions
 
@@ -163,7 +163,7 @@ nix eval '(let a = 1; b = 2; in a + b)'
 Note that semicolons are mandatory in all Nix forms that have them, including let-expressions. Because of Nix's strict parsing you can neither elide semicolons, nor put extra ones.
 
 
-<a id="org1a6efb3"></a>
+<a id="org618fc66"></a>
 
 ## String interpolation
 
@@ -183,7 +183,7 @@ String interpolation is supported by both normal and multi-line strings.
 Note that unlike shell scripts, the curly braces are not optional for string interpolation in Nix. This works out in our favor if we're writing shell scripts inline in a Nix expression, because we can use `$name` for shell string interpolation and `${nix_expr}` for Nix string interpolation. If this is not enough, though not covered in this tutorial, there is a syntax for suppressing interpolation in both normal and multi-line Nix string literals.
 
 
-<a id="orge2869fb"></a>
+<a id="orgb2f49ea"></a>
 
 ## Functions
 
@@ -206,7 +206,7 @@ nix eval '((a: b: a + b) 1 2)'
     3
 
 
-<a id="org78b5963"></a>
+<a id="orgabba538"></a>
 
 ## Lists
 
@@ -227,7 +227,7 @@ nix eval '([1 2] ++ [3 4])'
     [ 1 2 3 4 ]
 
 
-<a id="orge702529"></a>
+<a id="org08be5b4"></a>
 
 ## Attribute sets
 
@@ -316,7 +316,7 @@ nix eval '(let a = 3; in { inherit a; })'
     { a = 3; }
 
 
-<a id="org53b1227"></a>
+<a id="org9ad15d1"></a>
 
 ## Paths
 
@@ -351,7 +351,7 @@ Remember that a major motivation for using Nix is for deterministic builds. We h
 If you inspect `~/.nix-defexpr/channels/nixpkgs` you'll notice it's a symlink pointing to a snapshot of Nixpkgs in `/nix/store`. This symlink is set up during Nix installation, and can be upgraded with a call to `nix-channel --update`.
 
 
-<a id="org8ec7d49"></a>
+<a id="org0778df1"></a>
 
 ## Importing
 
@@ -366,7 +366,7 @@ nix eval '(builtins.typeOf (import <nixpkgs>))'
 We see here that Nixpkgs is a function. We'll talk more about the nature of the Nixpkgs function next.
 
 
-<a id="org951d1b5"></a>
+<a id="org3a61bd1"></a>
 
 # Nixpkgs and Building
 
@@ -445,7 +445,7 @@ You've probably also noticed the hashes in names of `/nix/store`'s contents. Nix
 `nix build` also supports a `--no-link` switch if we want to build without leaving behind this “result” symlink.
 
 
-<a id="org8fb6431"></a>
+<a id="orgc35dbdb"></a>
 
 # Calling `nix`
 
@@ -459,7 +459,7 @@ Consider the following setting of the `NIX_PATH` environment variable:
 NIX_PATH=nixpkgs=/home/shajra/.nix-defexpr/channels/nixpkgs
 ```
 
-With this setting of `NIX_PATH`, the set `nix` would choose an attribute from would be:
+With this setting of `NIX_PATH`, the set that `nix` would choose an attribute from would be:
 
 ```nix
 {
@@ -484,7 +484,7 @@ nix build nixpkgs.hello
 Additionally, if we don't want the attribute set built implicitly from `NIX_PATH`, we can use the `--file` switch for `nix` to specify explicitly a path to be imported and select attributes from.
 
 
-<a id="org1e345ab"></a>
+<a id="org475a0a0"></a>
 
 # Finding Packages
 
@@ -522,7 +522,7 @@ nix search hello
     Description: An example package with unfree license (for testing)
 
 
-<a id="org69cd000"></a>
+<a id="org27dbf43"></a>
 
 # Running
 
@@ -545,7 +545,7 @@ nix run nixpkgs.hello --command hello
 This invocation makes an environment in which we have the `nixpkgs.hello` package on our path (we can put other packages as well), and then we run the command after the `--command` switch. See `nix run --help` for more information.
 
 
-<a id="org96e694d"></a>
+<a id="org1d2365e"></a>
 
 # Installing
 
@@ -578,7 +578,7 @@ nix-env --query | grep hello
 Every time we install an application with `nix-env` a new environment symlink tree is created in `/nix/store`. For posterity, `nix-env` keeps references to old versions under `/nix/var/nix/profiles`. You can use switches like `--rollback` with `nix-env` to revert back to previous states. See `nix-env --help` for more.
 
 
-<a id="org7891632"></a>
+<a id="org6fa808c"></a>
 
 # Uninstalling
 
@@ -597,7 +597,7 @@ which hello || true
     hello not found
 
 
-<a id="orgac30d39"></a>
+<a id="orgb834be5"></a>
 
 # Inspecting Dependencies
 
@@ -605,7 +605,7 @@ To find dependencies of a built package, Nix literally scans all files in a pack
 
 This makes it easy for Nix to find exactly what's needed for any compiled artifact to run. These references are often automated by Nix's tooling and library support, and it is generally considered a defect if a required runtime dependency is missing a reference point back to `/nix/store`.
 
-This is important, because it allows for different compilations to rely on different versions of dependencies without conflicts. Our application shouldn't break if we do something like upgrade to our host operating system.
+This is important, because it allows for different compilations to rely on different versions of dependencies without conflicts. Our application shouldn't break if we do something like upgrade our host operating system.
 
 Also, without this clear and reliable method to detect dependencies, garbage collection wouldn't know how to keep needed dependencies around.
 
@@ -622,7 +622,7 @@ nix path-info --recursive --closure-size nixpkgs.hello \
 Hello doesn't rely on much, just the standard glibc library. In real-world programs the dependencies can add up.
 
 
-<a id="org6718920"></a>
+<a id="org3fdd761"></a>
 
 # Cleaning Up
 
@@ -688,7 +688,7 @@ nix-collect-garbage 2>&1
     6 store paths deleted, 1.43 MiB freed
 
 
-<a id="org2f9a110"></a>
+<a id="org6864764"></a>
 
 # Developing with `nix-shell`
 
@@ -718,7 +718,7 @@ nix-shell --pure --expr 'import <nixpkgs> {}' --attr hello --run 'env'
     depsTargetTargetPropagated=
     _=/nix/store/wm8va53fh5158ipi0ic9gir64hrvqv1z-coreutils-8.29/bin/env
 
-We're using `--expr` to pass expressions directly to the command line. Without this switch, `nix-env` looks for file called `shell.nix` to import in the current working directory. If that's not found, it looks for `default.nix`. Otherwise, a file can be passed as a positional parameter.
+We're using `--expr` to pass expressions directly to the command line. Without this switch, `nix-shell` looks for a `shell.nix` file to import in the current working directory. If that's not found, it looks for `default.nix`. Otherwise, a file can be passed as a positional parameter.
 
 `nix-shell` is great for the following two scenarios, which we'll explore in later tutorials:
 
@@ -726,4 +726,4 @@ We're using `--expr` to pass expressions directly to the command line. Without t
 
 -   entering into a development environment for a project.
 
-In our derivation we can include as build dependencies not only things like compilers that we absolutely need for a build, but also optional tools for developer conveniences. This means that with `nix-shell`, we have different tools installed per-project, rather than worrying about having the right tool installed at a system- or user-level.
+In our derivations we can include as build dependencies not only things like compilers that we absolutely need for a build, but also optional tools for developer conveniences. This means that with `nix-shell`, we have different tools installed per-project, rather than worrying about having the right tool installed at a system- or user-level.

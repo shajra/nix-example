@@ -179,7 +179,7 @@
 ** Call-package calls
 
    If you look at the [[./build.nix][=build.nix= file in this tutorial's directory]], you'll see
-   we pass a function to Pkgs-make similarly as our example usage above:
+   we pass a function to Pkgs-make just as our example above:
 
    #+BEGIN_SRC text :eval no
      pkgsMake pkgsMakeArgs ({call, lib}: rec {
@@ -189,11 +189,11 @@
      })
    #+END_SRC
 
-   We're only using one of these functions provided by ~call.package~
-   attribute. All of the functions available from ~call~ accept a path an
-   argument. This path when imported should always accept an attribute set as
-   input and return a derivation of a package. We'll look at an example of this
-   function next.
+   We're only using one of these functions provided by ~call~, namely the
+   function bound to the ~package~ attribute. All of the functions available
+   from ~call~ accept a path an argument. This path should reference a file
+   defining a Nix function that takes an attribute set as input and returns a
+   derivation. We'll look at an example of this function next.
 
 *** Example library code
 
@@ -238,10 +238,13 @@
     : Version: 4.5
     : Description: GNU sed, a batch stream editor
 
-    The ~writeText~ attribute is not a derivation, but a function not found by
-    ~nix search~. There are a lot of functions at Nixpkgs' top-level. Some of
-    these are documented in the [[nixpkgs-manual][Nixpkgs manual]]. Others you discover by looking
-    at other people's Nix expressions or by reading the Nixpkgs source code.
+    Unlike ~coreutils~ and ~gnused~, the ~writeText~ attribute is not a
+    derivation, but a function. ~nix search~ only finds derivations in Nixpkgs,
+    and not other values like functions, so we can't use ~nix search~ to find
+    functions like ~writeText~. There are a lot of functions at Nixpkgs'
+    top-level. Some of these are documented in the [[nixpkgs-manual][Nixpkgs manual]]. Others you
+    discover by looking at other people's Nix expressions or by reading the
+    Nixpkgs source code.
 
     ~writeText~ produces a derivation for a single-file package given a name for
     the package, and the text content for the file. We use string interpolation
@@ -351,8 +354,9 @@
   #+END_SRC
 
   If we look at the [[./application-unwrapped/default.nix][=default.nix= for our unwrapped application]], we'll see the
-  exact same Nix expression except for one exception — we've called ~hello~
-  without an absolute path reference into =/nix/store=:
+  exact same Nix expression as our [[./application/default.nix][previous =default.nix= for our application]]
+  except for one exception — we've called ~hello~ without an absolute path
+  reference into =/nix/store=:
 
   #+INCLUDE: ./application-unwrapped/default.nix src nix
 
@@ -378,10 +382,10 @@
 
   #+INCLUDE: ./application-wrapped/default.nix src nix
 
-  This utility makes a shell wrapper for any executable file that can do things
-  like set environment variables. In our case our wrapper sets the ~PATH~ to
-  include a =/nix/store= path where a specific version of Hello can can be
-  found.
+  This utility makes a shell wrapper for any executable. This wrapper can do
+  things like set environment variables. In our case our wrapper sets the
+  ~PATH~ to include a =/nix/store= path where a specific version of Hello can
+  can be found.
 
   This is a common technique for many derivations in Nixpkgs. Furthermore, with
   techniques like this, we can use Nix to mix programs from all kinds of

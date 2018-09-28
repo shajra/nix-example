@@ -584,8 +584,8 @@
     NIX_PATH=nixpkgs=/home/shajra/.nix-defexpr/channels/nixpkgs
   #+END_SRC
 
-  With this setting of ~NIX_PATH~, the set =nix= would choose an attribute from
-  would be:
+  With this setting of ~NIX_PATH~, the set that =nix= would choose an attribute
+  from would be:
 
   #+BEGIN_SRC nix :eval no
     {
@@ -758,7 +758,7 @@
 
   This is important, because it allows for different compilations to rely on
   different versions of dependencies without conflicts. Our application
-  shouldn't break if we do something like upgrade to our host operating system.
+  shouldn't break if we do something like upgrade our host operating system.
 
   Also, without this clear and reliable method to detect dependencies, garbage
   collection wouldn't know how to keep needed dependencies around.
@@ -898,7 +898,7 @@
   #+end_example
 
   We're using ~--expr~ to pass expressions directly to the command line.
-  Without this switch, =nix-env= looks for file called =shell.nix= to import in
+  Without this switch, =nix-shell= looks for a =shell.nix= file to import in
   the current working directory. If that's not found, it looks for
   =default.nix=. Otherwise, a file can be passed as a positional parameter.
 
@@ -909,7 +909,7 @@
 
   - entering into a development environment for a project.
 
-  In our derivation we can include as build dependencies not only things like
+  In our derivations we can include as build dependencies not only things like
   compilers that we absolutely need for a build, but also optional tools for
   developer conveniences. This means that with =nix-shell=, we have different
   tools installed per-project, rather than worrying about having the right tool
