@@ -1,14 +1,14 @@
 { stdenv
-, makeWrapper
+, coreutils
+, fswatch
 , gnugrep
-, inotify-tools
+, makeWrapper
 }:
 
 stdenv.mkDerivation {
     name = "cabal-new-watch";
     src = ./.;
     buildInputs = [ makeWrapper ];
-    inherit gnugrep;
-    inotifyTools = inotify-tools;
+    inherit coreutils fswatch gnugrep;
     builder = ./builder.sh;
 }

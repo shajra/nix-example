@@ -1,9 +1,12 @@
-#!/bin/sh
+#!/bin/sh -eu
+
+
+FIRST_RUN="first run"
 
 
 main()
 {
-    echo "first run" | run_cabal_per_line "$@"
+    echo "$FIRST_RUN" | run_cabal_per_line "$@"
     wait_for_change \
         | filter_unrelated_out \
         | run_cabal_per_line "$@"
@@ -11,26 +14,36 @@ main()
 
 wait_for_change()
 {
-    inotifywait -m -r -e create,delete,modify . 2>/dev/null
+    fswatch -rdaE -l .5 -e '/\.' \
+        --event Updated --event Removed . 2>/dev/null
 }
 
 filter_unrelated_out()
 {
-    grep -E ' [^.#][^ ]*\.(hs|lhs|cabal)$' --line-buffered \
-        | grep -E -v --line-buffered '(/dist-newstyle/| flycheck_)'
+    grep -E '/[^.#][^/]*\.(hs|lhs|cabal)$' --line-buffered \
+        | grep -E -v --line-buffered '(/dist-newstyle/|/flycheck_)'
 }
 
 run_cabal_per_line()
 {
-    while read -r file_changed
+    last_hash=""
+    while read -r file_triggering
     do
-        echo "TRIGGER: $file_changed"
-        if output="$(run_cabal "$@")"
+        new_hash="$(
+            md5sum "$file_triggering" 2> /dev/null \
+                || echo "$last_hash")"
+        if [ "$new_hash" != "$last_hash" ] \
+            || [ "$file_triggering" = "$FIRST_RUN" ]
         then
-            echo -e "\033[34m"$(date)": SUCCESS\033[m"
-        else
-            echo -e "\n\033[31m$output\033[m"
-            echo -e "\n\033[1;31m"$(date)": ERROR\033[m"
+            printf '\nTRIGGER: %s\n' "$file_triggering"
+            last_hash="$new_hash"
+            if output="$(run_cabal "$@")"
+            then
+                printf '\033[34m%s: SUCCESS\033[m\n' "$(date)"
+            else
+                printf '\n\033[31m%s\033[m\n' "$output"
+                printf '\n\033[1;31m%s: ERROR\033[m\n' "$(date)"
+            fi
         fi
     done
 }
