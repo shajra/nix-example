@@ -14,8 +14,13 @@ main()
 
 wait_for_change()
 {
-    fswatch -rdaE -l .5 -e '/\.' \
-        --event Updated --event Removed . 2>/dev/null
+    fswatch -raE -l .5 -e '/\.' \
+        --event AttributeModified \
+        --event Created \
+        --event Removed \
+        --event Renamed \
+        --event Updated \
+        . 2>/dev/null
 }
 
 filter_unrelated_out()
