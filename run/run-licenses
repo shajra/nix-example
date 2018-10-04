@@ -1,6 +1,6 @@
 #! /usr/bin/env nix-shell
 #! nix-shell -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/14a9ca27e69e33ac8ffb708de08883f8079f954a.tar.gz
-#! nix-shell -i bash -p jq -p less -p gnused
+#! nix-shell -i bash -p jq -p gnused
 set -eu
 
 
@@ -10,8 +10,7 @@ set -eu
 show_report()
 (
     project="$1"
-    jq --color-output --unbuffered . < "$(build_report "$project")" \
-        | less -r
+    jq --color-output --unbuffered . < "$(build_report "$project")"
 )
 
 build_report()
