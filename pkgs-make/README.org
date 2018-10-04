@@ -25,11 +25,10 @@
 
   | Path                          | Variant |
   |-------------------------------+---------|
-  | =example-nix=                 | curated |
-  | =example-nix/pkg-make=        | curated |
+  | =example-nix=                 | plain   |
+  | =example-nix/pkg-make=        | plain   |
   | =example-nix/variant/curated= | curated |
   | =example-nix/variant/plain=   | plain   |
-
 
   Sometimes changes haven't gotten into Nixpkgs. As an experiment, the
   Pkgs-make contributors curate a set of overrides for Nixpkgs. In particular,
@@ -41,8 +40,8 @@
   - plain (no overrides)
   - curated (with overrides)
 
-  By default, you get the curated variant. But you can import =variant/plain=
-  if you don't prefer these overrides:
+  By default, you get the plain variant. But you can import =variant/curated=
+  if you'd like to try out these overrides:
 
   #+BEGIN_SRC text :eval no
     …

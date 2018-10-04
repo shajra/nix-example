@@ -15,6 +15,7 @@ pkgsMake pkgsMakeArgs ({call, lib}: rec {
 
     example-shell-docker = lib.nix.dockerTools.buildImage {
         name = "example-shell";
+        tag = "latest";
         contents = example-shell-app;
         config = {
             Entrypoint = [ "/bin/example-shell" ];

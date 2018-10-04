@@ -1,28 +1,27 @@
-- [Introduction to Pkgs-make](#orgb4d5720)
-- [Prerequisites](#org53287d1)
-- [Following Along With Code](#org55b76cd)
-- [Setting Up a Minimal Build](#org93fc32c)
-  - [Referencing Pkgs-make](#orgb8ec888)
-  - [Calling Pkgs-make](#org99c4b1b)
-  - [Call-package calls](#orgf146ebb)
-    - [Example library code](#orge75ff87)
-    - [Example application code](#org2be2a50)
-- [Alternative to Hardcoding `/nix/store` References](#org83b2dd1)
-- [Pinning Nixpkgs](#orga217fe5)
-- [Overriding Dependencies](#orgb11d42d)
-  - [Overriding globally](#org6c30d91)
-  - [Overriding locally](#org4c6d7de)
-- [Curated Overlays](#orga43cccd)
-- [Build Docker](#orgc6823ad)
-  - [Nix-built Docker image](#org000df27)
-  - [Nix-built self-contained tarball](#org6095357)
-- [License Report (experimental)](#org01ad5dd)
-  - [Usage](#org6e57a78)
-  - [Caveats](#org80f50fa)
+- [Introduction to Pkgs-make](#orgc767e63)
+- [Prerequisites](#org08826d3)
+- [Following Along With Code](#orgb47c149)
+- [Setting Up a Minimal Build](#orgb4970bf)
+  - [Referencing Pkgs-make](#orgdc86b06)
+  - [Calling Pkgs-make](#orgf4fc037)
+  - [Call-package calls](#org4014692)
+    - [Example library code](#orgef34cc3)
+    - [Example application code](#orgf634fed)
+- [Alternative to Hardcoding `/nix/store` References](#org56a4b92)
+- [Pinning Nixpkgs](#orgaa3046a)
+- [Overriding Dependencies](#orga7e2ab0)
+  - [Overriding globally](#org3f9faa2)
+  - [Overriding locally](#orgc854346)
+- [Build Docker](#org298af56)
+  - [Nix-built Docker image](#org70da360)
+  - [Nix-built self-contained tarball](#org47a3cf0)
+- [License Report (experimental)](#org91020df)
+  - [Usage](#org9b3bc21)
+  - [Caveats](#orge3a1d42)
 
 
 
-<a id="orgb4d5720"></a>
+<a id="orgc767e63"></a>
 
 # Introduction to Pkgs-make
 
@@ -35,7 +34,7 @@ However, with all this flexibility, projects can easily end up with a sprawl of 
 If you have a C, Haskell, or Python project, this library should be usable as is. If you're using another language, it can likely be extended.
 
 
-<a id="org53287d1"></a>
+<a id="org08826d3"></a>
 
 # Prerequisites
 
@@ -46,7 +45,7 @@ Additionally, we're going to overview using Pkgs-make, but won't dive into every
 And since you'll see not only calls to Pkgs-make, but also calls to Nixpkgs, you may want to have the [Nixpkgs manual](https://github.com/NixOS/nixpkgs) handy as well.
 
 
-<a id="org55b76cd"></a>
+<a id="orgb47c149"></a>
 
 # Following Along With Code
 
@@ -84,7 +83,7 @@ nix run --file build.nix example-shell-app --command example-shell
     Hello, world!
 
 
-<a id="org93fc32c"></a>
+<a id="orgb4970bf"></a>
 
 # Setting Up a Minimal Build
 
@@ -113,7 +112,7 @@ pkgsMake pkgsMakeArgs ({call, ...}: {
 Let's discuss this expression piece by piece.
 
 
-<a id="orgb8ec888"></a>
+<a id="orgdc86b06"></a>
 
 ## Referencing Pkgs-make
 
@@ -137,7 +136,7 @@ pkgsMake = import ./path/to/pkgs-make;
 ```
 
 
-<a id="org99c4b1b"></a>
+<a id="orgf4fc037"></a>
 
 ## Calling Pkgs-make
 
@@ -148,7 +147,7 @@ The first argument is configuration for Pkgs-make, passed in as an attribute set
 The second argument passed to Pkgs-make is a function that builds an attribute set of your final derivations. Pkgs-make will pass to this function a set of utilities to use. As shown in our example usage above, one such utility is the `call` attribute, providing a nested set of functions for building derivations for different languages.
 
 
-<a id="orgf146ebb"></a>
+<a id="org4014692"></a>
 
 ## Call-package calls
 
@@ -165,7 +164,7 @@ pkgsMake pkgsMakeArgs ({call, lib}: rec {
 We're only using one of these functions provided by `call`, namely the function bound to the `package` attribute. All of the functions available from `call` accept a path an argument. This path should reference a file defining a Nix function that takes an attribute set as input and returns a derivation. We'll look at an example of this function next.
 
 
-<a id="orge75ff87"></a>
+<a id="orgef34cc3"></a>
 
 ### Example library code
 
@@ -231,7 +230,7 @@ cat `nix path-info --file build.nix example-shell-lib`
 We can see that our string interpolation has hardcoded references to our dependencies. We'll discuss the importance of this more later.
 
 
-<a id="org2be2a50"></a>
+<a id="orgf634fed"></a>
 
 ### Example application code
 
@@ -287,7 +286,7 @@ nix path-info --recursive --file build.nix example-shell-app
     /nix/store/rmq6gnybmxxzpssj3s63sfjivlq4inrm-attr-2.4.47
 
 
-<a id="org83b2dd1"></a>
+<a id="org56a4b92"></a>
 
 # Alternative to Hardcoding `/nix/store` References
 
@@ -386,7 +385,7 @@ nix run --file build.nix example-shell-app-wrapped \
     Hello, world!
 
 
-<a id="orga217fe5"></a>
+<a id="orgaa3046a"></a>
 
 # Pinning Nixpkgs
 
@@ -423,7 +422,7 @@ But typing that entire URL can get tedious. What many Nix users actually do is p
 Nix's error message tells us the calculated hash of the download which is the same as what we'd get with the `nix-prefetch-url` call. We can use it if we trust the GitHub and Nixpkgs. It may seem silly to intentionally create an error to figure out what you need, but it's undeniably convenient and used broadly within the Nix community.
 
 
-<a id="orgb11d42d"></a>
+<a id="orga7e2ab0"></a>
 
 # Overriding Dependencies
 
@@ -444,7 +443,7 @@ nix run --file build.nix example-shell-app --command example-shell
 We may want another version, say 2.9. We have the option of changing the version of Hello locally for just `example-shell-app`, or we can globally change all references in Nixpkgs to Hello to a new version consistently. In other package managers, we can often only have one version of a library or application installed at a time. With Nix, we get more flexibility.
 
 
-<a id="org6c30d91"></a>
+<a id="org3f9faa2"></a>
 
 ## Overriding globally
 
@@ -495,7 +494,7 @@ nix run --file build.override_global.nix example-shell-app \
     Hello, world!
 
 
-<a id="org4c6d7de"></a>
+<a id="orgc854346"></a>
 
 ## Overriding locally
 
@@ -563,29 +562,7 @@ nix run --file build.override_local.nix example-shell-app \
 But if any other application in Nixpkgs depended on Hello, it would pull in the later 2.10 version.
 
 
-<a id="orga43cccd"></a>
-
-# Curated Overlays
-
-Sometimes changes haven't gotten into Nixpkgs. As an experiment, the Pkgs-make contributors curate a set of overrides for Nixpkgs. In particular, many of these overrides help keep some machine learning libraries more up-to-date.
-
-As a result Pkgs-make has two variants:
-
--   plain (no overrides)
--   curated (with overrides)
-
-By default, you get the curated variant. But you can import `variant/plain` if you don't prefer these overrides:
-
-```text
-…
-pkgsMake = import "${pkgsMakePath}/variant/plain";
-…
-```
-
-Please note, we don't have a lot of people managing this curation. Also, it would be even better if the work from curation within Pkgs-make could work back into Nixpkgs. Any help is much appreciated.
-
-
-<a id="orgc6823ad"></a>
+<a id="org298af56"></a>
 
 # Build Docker
 
@@ -598,7 +575,7 @@ There are two attributes in the [`build.nix` file for this tutorial](./build.nix
 -   **`example-shell-tarball`:** a derivation that builds a self-contained tarball that can be used with an externally managed `Dockerfile`.
 
 
-<a id="org000df27"></a>
+<a id="org70da360"></a>
 
 ## Nix-built Docker image
 
@@ -607,6 +584,7 @@ We can build Docker images with Nix without requiring an installation of Docker.
 ```text
 example-shell-docker = lib.nix.dockerTools.buildImage {
     name = "example-shell";
+    tag = "latest";
     contents = example-shell-app;
     config = {
 	Entrypoint = [ "/bin/example-shell" ];
@@ -641,7 +619,7 @@ docker run --rm -i example-shell
     Hello, world!
 
 
-<a id="org6095357"></a>
+<a id="org47a3cf0"></a>
 
 ## Nix-built self-contained tarball
 
@@ -719,12 +697,12 @@ docker run --rm -i example-shell-tarball
     Hello, world!
 
 
-<a id="org01ad5dd"></a>
+<a id="org91020df"></a>
 
 # License Report (experimental)
 
 
-<a id="org6e57a78"></a>
+<a id="org9b3bc21"></a>
 
 ## Usage
 
@@ -767,7 +745,7 @@ jq . < "$(nix path-info --file build.nix "example-shell-licenses")"
     }
 
 
-<a id="org80f50fa"></a>
+<a id="orge3a1d42"></a>
 
 ## Caveats
 

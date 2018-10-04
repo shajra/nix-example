@@ -566,31 +566,6 @@
    But if any other application in Nixpkgs depended on Hello, it would pull in
    the later 2.10 version.
 
-* Curated Overlays
-
-  Sometimes changes haven't gotten into Nixpkgs. As an experiment, the
-  Pkgs-make contributors curate a set of overrides for Nixpkgs. In particular,
-  many of these overrides help keep some machine learning libraries more
-  up-to-date.
-
-  As a result Pkgs-make has two variants:
-
-  - plain (no overrides)
-  - curated (with overrides)
-
-  By default, you get the curated variant. But you can import =variant/plain=
-  if you don't prefer these overrides:
-
-  #+BEGIN_SRC text :eval no
-    …
-    pkgsMake = import "${pkgsMakePath}/variant/plain";
-    …
-  #+END_SRC
-
-  Please note, we don't have a lot of people managing this curation. Also, it
-  would be even better if the work from curation within Pkgs-make could work
-  back into Nixpkgs. Any help is much appreciated.
-
 * Build Docker
 
   You may find that with all the tools and features the Nix ecosystem offers
@@ -614,7 +589,7 @@
    We can build Docker images with Nix without requiring an installation of
    Docker. Here's the Nix expression from our =build.nix= file:
 
-   #+INCLUDE: ./build.nix src text :lines "16-23"
+   #+INCLUDE: ./build.nix src text :lines "16-24"
 
    Just as Pkgs-make passes us a ~call~ attribute, we are also passed in a
    ~lib~ attribute that has some useful utilities for building Nix expressions.
@@ -659,7 +634,7 @@
    Pkgs-make provides a function to create a self-contained tarball on the
    ~lib.nix.tarball~ attribute:
 
-   #+INCLUDE: ./build.nix src text :lines "24-26"
+   #+INCLUDE: ./build.nix src text :lines "25-27"
 
    This tarball is self-contained and includes all the =/nix/store= files
    necessary to run the application. As a convenience, some symlinks are also
@@ -753,7 +728,7 @@
    file]] has an expression that generates a JSON file with license information
    for many of the dependencies required:
 
-   #+INCLUDE: ./build.nix src text :lines "27-30"
+   #+INCLUDE: ./build.nix src text :lines "28-31"
 
    We can use a tool like =jq= to nicely render it.
 

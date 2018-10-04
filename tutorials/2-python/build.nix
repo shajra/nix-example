@@ -11,6 +11,7 @@ pkgsMake pkgsMakeArgs ({ call, lib, ... }: rec {
 
     example-python-docker = lib.nix.dockerTools.buildImage {
         name = "example-python";
+        tag = "latest";
         contents = example-python-app;
         config = {
             ExposedPorts = { "8080/tcp" = {}; };

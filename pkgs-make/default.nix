@@ -1,1 +1,1 @@
-import variant/curated
+import variant/plain

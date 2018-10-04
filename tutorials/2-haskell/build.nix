@@ -28,6 +28,7 @@ pkgsMake pkgsMakeArgs ({ call, lib, ... }: rec {
 
     example-haskell-docker = lib.nix.dockerTools.buildImage {
         name = "example-haskell";
+        tag = "latest";
         contents = example-haskell-app;
         config = {
             ExposedPorts = { "8081/tcp" = {}; };

@@ -2,9 +2,9 @@ let
 
     base = {
 
-        # git describe: 18.03-beta-12822-g5ac6ab091a4
-        nixpkgsRev = "14a9ca27e69e33ac8ffb708de08883f8079f954a";
-        nixpkgsSha256 = "1grsq8mcpl88v6kz8dp0vsybr0wzfg4pvhamj42dpd3vgr93l2ib";
+        # git describe: 18.09-beta-2447-g89b618771ad
+        nixpkgsRev = "89b618771ad4b0cfdb874dee3d51eb267c4257dd";
+        nixpkgsSha256 = "0jlyggy7pvqj2a6iyn44r7pscz9ixjb6fn6s4ssvahfywsncza6y";
 
         nixpkgsArgs.config = {
             allowUnfree = true;
@@ -24,7 +24,7 @@ let
     };
 
     haskell = {
-        ghcVersion = "ghc822";
+        ghcVersion = "ghc843";
         overrides = pkgs: self: super: {};
         extraOverrides = pkgs: self: super: {};
         srcFilter = lib: lib.nix.sources.cleanHaskell;
