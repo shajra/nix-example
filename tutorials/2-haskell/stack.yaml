@@ -2,7 +2,7 @@
 #
 # See https://docs.haskellstack.org/en/stable/yaml_configuration/
 
-resolver: lts-11.22
+resolver: lts-12.13
 
 packages:
     - ./library
