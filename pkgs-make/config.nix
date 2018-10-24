@@ -34,13 +34,13 @@ let
         envMoreTools = nixpkgs: [
             (nixpkgs.callPackage (import haskell/tools/nix-tags-haskell) {})
             (nixpkgs.callPackage (import haskell/tools/cabal-new-watch) {})
-            nixpkgs.haskellPackages.apply-refact
-            nixpkgs.haskellPackages.cabal2nix
-            nixpkgs.haskellPackages.cabal-install
-            nixpkgs.haskellPackages.ghcid
-            nixpkgs.haskellPackages.hlint
-            nixpkgs.haskellPackages.hoogle
-            nixpkgs.haskellPackages.stylish-haskell
+            nixpkgs.haskell.packages.ghc843.apply-refact
+            nixpkgs.haskell.packages.ghc843.cabal2nix
+            nixpkgs.haskell.packages.ghc843.cabal-install
+            nixpkgs.haskell.packages.ghc843.ghcid
+            nixpkgs.haskell.packages.ghc843.hlint
+            nixpkgs.haskell.packages.ghc843.hoogle
+            nixpkgs.haskell.packages.ghc843.stylish-haskell
         ];
     };
 
@@ -52,10 +52,10 @@ let
         extraSrcFilter = lib: p: t: true;
         envMoreTools = nixpkgs: [
             nixpkgs.autoflake
-            nixpkgs.pythonPackages.flake8
-            nixpkgs.pythonPackages.ipython
-            nixpkgs.pythonPackages.pylint
-            nixpkgs.pythonPackages.yapf
+            nixpkgs.python3Packages.flake8
+            nixpkgs.python3Packages.ipython
+            nixpkgs.python3Packages.pylint
+            nixpkgs.python3Packages.yapf
         ];
         envPersists = true;
     };
