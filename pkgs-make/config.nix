@@ -2,9 +2,9 @@ let
 
     base = {
 
-        # git describe: 18.09-beta-2447-g89b618771ad
-        nixpkgsRev = "89b618771ad4b0cfdb874dee3d51eb267c4257dd";
-        nixpkgsSha256 = "0jlyggy7pvqj2a6iyn44r7pscz9ixjb6fn6s4ssvahfywsncza6y";
+        # git describe: 18.09-beta-4191-g8070a6333f3
+        nixpkgsRev = "8070a6333f3fc41ef93c2b0e07f999459615cc8d";
+        nixpkgsSha256 = "0v6nycl7lzr1kdsy151j10ywhxvlb4dg82h55hpjs1dxjamms9i3";
 
         nixpkgsArgs.config = {
             allowUnfree = true;

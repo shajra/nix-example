@@ -3,7 +3,7 @@
 
 USAGE="$0 [--help ] (shell | haskell | python)"
 
-export NIX_PATH=nixpkgs=https://github.com/NixOS/nixpkgs/archive/14a9ca27e69e33ac8ffb708de08883f8079f954a.tar.gz
+export NIX_PATH=nixpkgs=https://github.com/NixOS/nixpkgs/archive/8070a6333f3fc41ef93c2b0e07f999459615cc8d.tar.gz
 
 
 run()
