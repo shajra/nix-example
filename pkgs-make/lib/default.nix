@@ -97,6 +97,8 @@ let
 
     sources = { inherit
         allFilters
+        filterByRegex
+        filterFilesBySuffices
         filterSource
         filterSourceIf
         filterSourceIfLocal
