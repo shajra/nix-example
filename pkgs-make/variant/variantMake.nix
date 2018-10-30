@@ -8,6 +8,7 @@ defaults:
 , nixpkgsArgs ? defaults.base.nixpkgsArgs
 , srcFilter ? defaults.base.srcFilter
 , extraSrcFilter ? defaults.base.extraSrcFilter
+, srcTransform ? defaults.base.srcTransform
 , overlay ? defaults.base.overlay
 , extraOverlay ? defaults.base.extraOverlay
 , haskellArgs ? defaults.base.haskellArgs
@@ -46,18 +47,17 @@ let
             py = import ../python defaults.python (pythonArgs // commonArgs);
             lib = import ../lib super;
             tools = import ../tools.nix super.callPackage;
-            cleanSource = src:
-                if lib.nix.sources.sourceLocal src
-                then
-                    lib.nix.sources.cleanSourceWith {
-                        filter = p: t:
-                            (srcFilter lib p t)
-                            && (extraSrcFilter lib p t);
-                        inherit src;
-                    }
-                else src;
+            filterSource = lib.nix.sources.filterSource
+                (lib.nix.sources.allFilters [
+                    (extraSrcFilter lib)
+                    (srcFilter lib)
+                ]);
+            cleanSource = lib.nix.sources.transformSourceIfLocal
+                (lib.nix.composed [ (srcTransform lib) filterSource ]);
             cleanSourceOverride = attrs:
-                if attrs ? src then { src = cleanSource attrs.src; } else {};
+                if attrs ? src
+                then { src = cleanSource attrs.src; }
+                else {};
             callPackage = p:
                 let
                     expr = if builtins.typeOf p == "path" then import p else p;

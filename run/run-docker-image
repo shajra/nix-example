@@ -14,7 +14,8 @@ docker_run()
     attr="example-$project-docker"
     image="example-$project"
     build_expr="$(project_root "$project")/build.nix"
-    do_with_header nix build --no-link --file "$build_expr" "$attr"
+    do_with_header \
+        nix build --show-trace --no-link --file "$build_expr" "$attr"
     do_with_header \
         docker load --input "$(nix path-info --file "$build_expr" "$attr")"
     do_with_header \

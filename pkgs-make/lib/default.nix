@@ -14,54 +14,49 @@ let
         ! nixpkgs.lib.hasPrefix builtins.storeDir
             (toString (unfilteredSource src));
 
-    cleanMiscDev = p: t:
+    ignoreMisc = p: t:
         let b = baseNameOf p;
         in (b != "cscope.out") && (b != ".direnv") && (b != ".envrc");
 
-    cleanTagFiles = p: t:
-        let b = baseNameOf p;
-        in (b != "GPATH") && (b != "GRTAGS") && (b != "GTAGS")
-            && (b != "tags") && (b != "TAGS");
-
-    cleanEmacs = p: t:
+    ignoreEmacs = p: t:
         let b = baseNameOf p;
         in (! (nixpkgs.lib.hasSuffix "#" b && nixpkgs.lib.hasPrefix "#" b))
             && (! nixpkgs.lib.hasPrefix ".#" b)
             && (b != ".dir-locals.el")
             && (b != ".projectile");
 
-    cleanVim = p: t:
+    ignoreVim = p: t:
         let b = baseNameOf p;
         in (! nixpkgs.lib.hasSuffix "~" b)
             && (! nixpkgs.lib.hasSuffix ".swp" b)
             && (! nixpkgs.lib.hasSuffix ".swo" b);
 
-    cleanIdea = p: t:
+    ignoreIdea = p: t:
         let b = baseNameOf p;
         in (b != ".idea") && (b != "idea_modules")
             && (! nixpkgs.lib.hasSuffix ".iml" b)
             && (! nixpkgs.lib.hasSuffix ".ipr" b)
             && (! nixpkgs.lib.hasSuffix ".iws" b);
 
-    cleanCommonDev = p: t:
+    ignoreDevCommon = p: t:
         nixpkgs.lib.sources.cleanSourceFilter p t
-            && cleanEmacs p t
-            && cleanIdea p t
-            && cleanMiscDev p t
-            && cleanTagFiles p t
-            && cleanVim p t;
+            && ignoreEmacs p t
+            && ignoreIdea p t
+            && ignoreMisc p t
+            && ignoreVim p t
+            && ignoreTagFiles p t;
 
-    cleanPython = p: t:
+    ignoreDevPython = p: t:
         let b = baseNameOf p;
-        in cleanCommonDev p t
+        in ignoreDevCommon p t
             && (b != "__pycache__")
             && (b != ".ipynb_checkpoints")
             && (! nixpkgs.lib.hasSuffix ".egg-info" b)
             && (! nixpkgs.lib.hasSuffix ".pyc" b);
 
-    cleanHaskell = p: t:
+    ignoreDevHaskell = p: t:
         let b = baseNameOf p;
-        in cleanCommonDev p t
+        in ignoreDevCommon p t
             && (b != "dist-newstyle")
             && (b != "dist")
             && (b != ".stack-work")
@@ -70,20 +65,58 @@ let
             && (b != "cabal.sandbox.config")
             && (! nixpkgs.lib.hasPrefix ".ghc.environment." b);
 
-    libExtn = {
-        inherit composed applying;
-        sources = { inherit
-            cleanCommonDev
-            cleanEmacs
-            cleanHaskell
-            cleanIdea
-            cleanMiscDev
-            cleanPython
-            cleanTagFiles
-            cleanVim
-            sourceLocal
-            unfilteredSource;
-        };
+    ignoreNixFiles = p: t: ! nixpkgs.lib.hasSuffix ".nix" (baseNameOf p);
+
+    ignoreTagFiles = p: t:
+        let b = baseNameOf p;
+        in (b != "GPATH") && (b != "GRTAGS") && (b != "GTAGS")
+            && (b != "tags") && (b != "TAGS");
+
+    allFilters = builtins.foldl' (a: acc: p: t: a p t && acc p t) (p: t: true);
+
+    transformSourceIf = cond: f: src:
+        if cond src then f src else src;
+
+    transformSourceIfLocal = transformSourceIf sourceLocal;
+
+    filterSourceIf = cond: filter:
+        transformSourceIf cond (src:
+            nixpkgs.lib.sources.cleanSourceWith {
+                inherit filter src;
+            });
+
+    filterSource = filterSourceIf (x: true);
+
+    filterByRegex = regexes: src:
+        nixpkgs.lib.sources.sourceByRegex src regexes;
+
+    filterFilesBySuffices = exts: src:
+        nixpkgs.lib.sources.sourceFilesBySuffices src exts;
+
+    filterSourceIfLocal = filterSourceIf sourceLocal;
+
+    sources = { inherit
+        allFilters
+        filterSource
+        filterSourceIf
+        filterSourceIfLocal
+        ignoreDevCommon
+        ignoreDevHaskell
+        ignoreDevPython
+        ignoreEmacs
+        ignoreIdea
+        ignoreMisc
+        ignoreNixFiles
+        ignoreTagFiles
+        ignoreVim
+        sourceLocal
+        transformSourceIf
+        transformSourceIfLocal
+        unfilteredSource;
+    };
+
+    libExtn = sources // {
+        inherit composed applying sources;
         dockerTools = nixpkgs.dockerTools;
         tarball = nixpkgs.callPackage ./tarball {};
         license-report = nixpkgs.callPackage ./license-report {} nixpkgs;

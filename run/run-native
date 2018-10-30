@@ -13,7 +13,7 @@ nix_run()
     attr="example-$project-app"
     cmd="example-$project"
     build_expr="$(project_root "$project")/build.nix"
-    do_with_header nix run -f "$build_expr" "$attr" -c "$cmd"
+    do_with_header nix run --show-trace -f "$build_expr" "$attr" -c "$cmd"
 )
 
 

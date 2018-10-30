@@ -48,6 +48,7 @@
 #+LINK: nixpkgs-issue https://github.com/NixOS/nixpkgs/issues/4504
 #+LINK: nixpkgs-manual https://nixos.org/nixpkgs/manual
 #+LINK: nixpkgs-python https://nixos.org/nixpkgs/manual/#python
+#+LINK: nixpkgs-sources https://github.com/NixOS/nixpkgs/blob/master/lib/sources.nix
 #+LINK: nix-tutorials https://www.google.com/search?q=nix+tutorial
 #+LINK: ohmyzsh https://ohmyz.sh
 #+LINK: ohmyzsh-install https://github.com/robbyrussell/oh-my-zsh#manual-installation

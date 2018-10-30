@@ -18,7 +18,8 @@ docker_run()
     build_expr="$root/build.nix"
     dockerfile="$root/Dockerfile"
     trap "rm -rf \"$context\"" EXIT
-    do_with_header nix build --no-link --file "$build_expr" "$attr"
+    do_with_header \
+        nix build --show-trace --no-link --file "$build_expr" "$attr"
     do_with_header \
         cp "$(nix path-info --file "$build_expr" "$attr")" "$context_tarball"
     do_with_header cp "$dockerfile" "$context"

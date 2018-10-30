@@ -2,22 +2,23 @@ nixpkgs:
 
 nixpkgs.haskell.lib // rec {
 
-    cleanSourceIf = cond: f: pkg:
+    transformSourceIf = cond: f: pkg:
         nixpkgs.haskell.lib.overrideCabal
             pkg
             (args: {
-                src =
-                    if cond args.src
-                    then
-                        nixpkgs.lib.sources.cleanSourceWith {
-                            filter = f;
-                            src = args.src;
-                        }
-                    else args.src;
+                src = if cond args.src then f args.src else args.src;
             });
 
-    cleanSource = cleanSourceIf (x: true);
+    transformSourceIfLocal = transformSourceIf nixpkgs.lib.sources.sourceLocal;
 
-    cleanSourceIfLocal = cleanSourceIf nixpkgs.lib.sources.sourceLocal;
+    filterSourceIf = cond: filter: pkg:
+        transformSourceIf cond (src:
+            nixpkgs.lib.sources.cleanSourceWith {
+                inherit filter src;
+            });
+
+    filterSource = filterSourceIf (x: true);
+
+    filterSourceIfLocal = filterSourceIf nixpkgs.lib.sources.sourceLocal;
 
 }

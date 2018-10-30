@@ -96,20 +96,21 @@
 
    Here's some details its attributes:
 
-   | ~PkgsMakeArgs~ Attribute | Type          | Description                              |
-   |--------------------------+---------------+------------------------------------------|
-   | ~nixpkgsRev~             | ~String~      | commit ID of base ~Nixpkgs~              |
-   | ~nixpkgsSha256~          | ~String~      | hash parity check for ~nixpkgsRev~       |
-   | ~nixpkgsArgs~            | ~NixpkgsArgs~ | standard arguments for ~Nixpkgs~         |
-   | ~bootPkgsPath~           | ~Path~        | path of explicitly set boot ~Nixpkgs~    |
-   | ~bootPkgs~               | ~Nixpkgs~     | ~Nixpkgs~ to use to fetch base ~Nixpkgs~ |
-   | ~basePkgsPath~           | ~Path~        | path of explicitly set base ~Nixpkgs~    |
-   | ~overlay~                | ~Overlay~     | overlay for ~Nixpkgs~ replacing defaults |
-   | ~extraOverlay~           | ~Overlay~     | overlay for ~Nixpkgs~ extending defaults |
-   | ~srcFilter~              | ~SrcFilter~   | source filter replacing defaults         |
-   | ~extraSrcFilter~         | ~SrcFilter~   | source filter extending defaults         |
-   | ~haskellArgs~            | ~HaskellArgs~ | Haskell-specific arguments               |
-   | ~pythonArgs~             | ~PythonArgs~  | Python-specific arguments                |
+   | ~PkgsMakeArgs~ Attribute | Type           | Description                              |
+   |--------------------------+----------------+------------------------------------------|
+   | ~nixpkgsRev~             | ~String~       | commit ID of base ~Nixpkgs~              |
+   | ~nixpkgsSha256~          | ~String~       | hash parity check for ~nixpkgsRev~       |
+   | ~nixpkgsArgs~            | ~NixpkgsArgs~  | standard arguments for ~Nixpkgs~         |
+   | ~bootPkgsPath~           | ~Path~         | path of explicitly set boot ~Nixpkgs~    |
+   | ~bootPkgs~               | ~Nixpkgs~      | ~Nixpkgs~ to use to fetch base ~Nixpkgs~ |
+   | ~basePkgsPath~           | ~Path~         | path of explicitly set base ~Nixpkgs~    |
+   | ~overlay~                | ~Overlay~      | overlay for ~Nixpkgs~ replacing defaults |
+   | ~extraOverlay~           | ~Overlay~      | overlay for ~Nixpkgs~ extending defaults |
+   | ~srcFilter~              | ~SrcFilter~    | source filter replacing defaults         |
+   | ~extraSrcFilter~         | ~SrcFilter~    | source filter extending defaults         |
+   | ~srcTransform~           | ~SrcTransform~ | source-to-source transformation          |
+   | ~haskellArgs~            | ~HaskellArgs~  | Haskell-specific arguments               |
+   | ~pythonArgs~             | ~PythonArgs~   | Python-specific arguments                |
 
 *** Getting a base Nixpkgs
 
@@ -144,6 +145,14 @@
 
 *** Default source filtering:
 
+   Source files used to build derivations are by default filtered by Pkgs-make.
+   This way, things like temporary/intermediate files left behind by editors
+   and other tools don't invalidate Nix's caching and trigger a new build.
+
+   You can modify this filtering with three attributes: ~srcFilter,
+   ~extraSrcFilter~, and ~srcTransform~. These attributes have values of types
+   ~SrcFilter~ and ~SrcTransform~.
+
    ~SrcFilter~ is a similar to the standard Nix source filter predicate but
    with a extra leading ~PkgsMakeLib~ parameter:
 
@@ -162,6 +171,22 @@
    |                     3 | ~TypeStr~     | result of calling ~builtins.typeOf~ on the path   |
    |                result | ~Bool~        | ~false~ to discard file/directory, ~true~ to keep |
 
+   ~SrcTransform~ is a function to modify standard Nix sources:
+
+   #+BEGIN_SRC
+    SrcTransform = Src -> Src
+   #+END_SRC
+
+   Here ~Src~ is a standard source type for Nix's derivation building. Often
+   it's just a ~Path~, but after filtering, it might be a more complicated
+   attribute set that Nix can interpret as a filtered set of files.
+
+   Nixpkgs offers a some functions for filtering under [[nixpkgs-sources][~lib.sources~]]. The
+   ~lib.sources.cleanSource~ is an instance of the ~SrcTransform~ type, and
+   ~lib.sources.cleanSourceFilter~ is an instance of the ~SrcFilter~ type.
+   Pkgs-make provides more of these functions on the ~lib~ attribute of the
+   ~BuildArgs~ set discussed later.
+
 *** Language-specific configuration
 
    The language-specific ~HaskellArgs~ and ~PythonArgs~ are described more
@@ -173,6 +198,7 @@
    | ~extraOverrides~            | ~Override~         | overrides extending defaults       |
    | ~srcFilter~                 | ~SrcFilter~        | source filter replacing defaults   |
    | ~extraSrcFilter~            | ~SrcFilter~        | source filter extending defaults   |
+   | ~srcTransform~              | ~SrcTransform~     | source-to-source transformation    |
    | ~envMoreTools~              | ~Nixpkgs -> [Drv]~ | extra env tools replacing defaults |
 
    =Override= is has the following type:

@@ -7,6 +7,7 @@ defaults:
 , extraOverrides ? defaults.extraOverrides
 , srcFilter ? defaults.srcFilter
 , extraSrcFilter ? defaults.extraSrcFilter
+, srcTransform ? defaults.srcTransform
 , envMoreTools ? defaults.envMoreTools nixpkgs
 , envPersists ? defaults.envPersists
 }:
@@ -26,19 +27,20 @@ let
 
     pythonPackages = rawPyPkgs.override { overrides = finalOverrides; };
 
+    filterSource = lib.nix.sources.filterSource
+        (lib.nix.sources.allFilters [
+            (extraSrcFilter lib)
+            (srcFilter lib)
+        ]);
+
+    cleanSource = lib.nix.sources.transformSourceIfLocal
+        (lib.nix.composed [ (srcTransform lib) filterSource ]);
+
     callPython = p:
         let expr = if builtins.typeOf p == "path" then import p else p;
         in
         (pythonPackages.callPackage expr {}).overridePythonAttrs (old: {
-            src =
-               if lib.nix.sources.sourceLocal old.src
-               then
-                   lib.nix.sources.cleanSourceWith {
-                       filter = p: t:
-                           srcFilter lib p t && extraSrcFilter lib p t;
-                       src = old.src;
-                   }
-               else old.src;
+            src = cleanSource old.src;
             passthru = old.passthru or {} // {
                 _isLocalPythonPackage =
                     lib.nix.sources.sourceLocal old.src;

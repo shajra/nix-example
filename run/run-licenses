@@ -17,7 +17,8 @@ build_report()
 (
     project="$1"
     build_expr="$(project_root "$project")/build.nix"
-    nix build --no-link --file "$build_expr" "example-$project-licenses"
+    nix build --show-trace --no-link \
+        --file "$build_expr" "example-$project-licenses"
     nix path-info --file "$build_expr" "example-$project-licenses"
 )
 

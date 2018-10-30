@@ -16,8 +16,9 @@ let
         basePkgsPath = null;
         overlay = self: super: {};
         extraOverlay = self: super: {};
-        srcFilter = lib: lib.nix.sources.cleanCommonDev;
+        srcFilter = lib: lib.nix.sources.ignoreDevCommon;
         extraSrcFilter = lib: p: t: true;
+        srcTransform = lib: s: s;
         haskellArgs = {};
         pythonArgs = {};
 
@@ -27,8 +28,9 @@ let
         ghcVersion = "ghc843";
         overrides = pkgs: self: super: {};
         extraOverrides = pkgs: self: super: {};
-        srcFilter = lib: lib.nix.sources.cleanHaskell;
+        srcFilter = lib: lib.nix.sources.ignoreDevHaskell;
         extraSrcFilter = lib: p: t: true;
+        srcTransform = lib: s: s;
         pkgChanges = lib: {};
         changePkgs = {};
         envMoreTools = nixpkgs: [
@@ -48,8 +50,9 @@ let
         pyVersion = "36";
         overrides = pkgs: self: super: {};
         extraOverrides = pkgs: self: super: {};
-        srcFilter = lib: lib.nix.sources.cleanPython;
+        srcFilter = lib: lib.nix.sources.ignoreDevPython;
         extraSrcFilter = lib: p: t: true;
+        srcTransform = lib: s: s;
         envMoreTools = nixpkgs: [
             nixpkgs.autoflake
             nixpkgs.python3Packages.flake8

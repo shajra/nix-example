@@ -2,12 +2,13 @@
 
 * TODO Things to do
 
+- [ ] update Nixpkgs rev for run scripts
 - [ ] Python (mimic structure of Haskell)
 - [ ] technical improvements
   - [ ] review spacemacs.static.el for settings to return to layer
   - [ ] option for Python env to persist to non-/run/user
+  - [ ] remove ML library maintenance
 - [ ] An official release version/tag?
-  - [ ] factor ML library maintenance to another variant
   - [ ] Contributor documentation somewhere
   - [ ] Figure out a license
 

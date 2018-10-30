@@ -9,6 +9,7 @@ defaults:
 , extraOverrides ? defaults.extraOverrides
 , srcFilter ? defaults.srcFilter
 , extraSrcFilter ? defaults.extraSrcFilter
+, srcTransform ? defaults.srcTransform
 , envMoreTools ? defaults.envMoreTools nixpkgs
 }:
 
@@ -92,9 +93,17 @@ let
             };
         });
 
+    filterSource = lib.nix.sources.filterSource
+        (lib.nix.sources.allFilters [
+            (extraSrcFilter lib)
+            (srcFilter lib)
+        ]);
+
+    cleanSource = lib.haskell.transformSourceIfLocal
+        (lib.nix.composed [ (srcTransform lib) filterSource ]);
+
     callHaskellLib = lib.nix.composed [
-        (lib.haskell.cleanSourceIfLocal (extraSrcFilter lib))
-        (lib.haskell.cleanSourceIfLocal (srcFilter lib))
+        cleanSource
         tagPackages
         callHaskell
     ];
