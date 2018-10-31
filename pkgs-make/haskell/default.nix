@@ -60,29 +60,31 @@ let
 
     haskellPackages = rawHsPkgs.override { overrides = finalOverrides; };
 
-    callHaskellPath = p:
-        if builtins.pathExists (builtins.toPath (p + "/default.nix"))
-        then haskellPackages.callPackage (import p) {}
-        else
-            let
-                parent = dirOf p;
-                base = baseNameOf p;
-                type = (builtins.readDir parent).${base} or null;
-                isDir = type == "directory";
-                name = lib.nix.composed [
-                    (lib.nix.removeSuffix ".cabal")
-                    (lib.nix.findFirst
-                        (lib.nix.hasSuffix ".cabal")
-                        ("unknown"))
-                    builtins.attrNames
-                    builtins.readDir
-                ] (if isDir then p else parent);
-            in
-            haskellPackages.callCabal2nix name p {};
+    callHaskellPath = forceCabal2nix: p:
+        let
+            parent = dirOf p;
+            base = baseNameOf p;
+            type = (builtins.readDir parent).${base} or null;
+            isDir = type == "directory";
+            isFile = type == "regular";
+            name = lib.nix.composed [
+                (lib.nix.removeSuffix ".cabal")
+                (lib.nix.findFirst
+                    (lib.nix.hasSuffix ".cabal")
+                    ("unknown"))
+                builtins.attrNames
+                builtins.readDir
+            ] (if isDir then p else parent);
+            hasDefaultNix =
+                builtins.pathExists (builtins.toPath (p + "/default.nix"));
+        in
+            if ! forceCabal2nix && (isFile || hasDefaultNix)
+            then haskellPackages.callPackage (import p) {}
+            else haskellPackages.callCabal2nix name p {};
 
-    callHaskell = x:
+    callHaskell = forceCabal2nix: x:
         if builtins.typeOf x == "path"
-        then callHaskellPath x
+        then callHaskellPath forceCabal2nix x
         else haskellPackages.callPackage x {};
 
     tagPackages = p:
@@ -102,13 +104,15 @@ let
     cleanSource = lib.haskell.transformSourceIfLocal
         (lib.nix.composed [ (srcTransform lib) filterSource ]);
 
-    callHaskellLib = lib.nix.composed [
-        cleanSource
-        tagPackages
-        callHaskell
-    ];
+    callHaskellLib = forceCabal2nix:
+        lib.nix.composed [
+            cleanSource
+            tagPackages
+            (callHaskell forceCabal2nix)
+        ];
 
-    callHaskellApp = p: lib.haskell.justStaticExecutables (callHaskellLib p);
+    callHaskellApp = forceCabal2nix: p:
+        lib.haskell.justStaticExecutables (callHaskellLib forceCabal2nix p);
 
     envPkgs =
         builtins.filter
@@ -130,9 +134,11 @@ in
 
 {
     inherit
-        callHaskellApp
-        callHaskellLib
         pkgsChange
         haskellPackages
         env;
+    call.lib = callHaskellLib false;
+    call.app = callHaskellApp false;
+    call.cabal2nix.lib = callHaskellLib true;
+    call.cabal2nix.app = callHaskellApp true;
 }

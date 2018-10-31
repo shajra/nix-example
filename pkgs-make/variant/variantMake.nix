@@ -77,9 +77,7 @@ let
                     pkgsChange = hs.pkgsChange;
                     call = {
                         package = callPackage;
-                        haskell = {
-                            lib = hs.callHaskellLib;
-                            app = hs.callHaskellApp;
+                        haskell = hs.call // {
                             hackage = hs.haskellPackages.callHackage;
                         };
                         python = py.callPython;
