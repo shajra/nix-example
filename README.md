@@ -1,17 +1,17 @@
-- [About This Project](#org4a60b6d)
-- [Navigating This Repository](#org4f15fb2)
-- [Prerequisites](#orgee6216b)
-  - [Knowledge](#orgea1efe0)
-  - [Technology](#org4296866)
-    - [Nix](#orgdd1c8d3)
-    - [Docker](#org67f83c3)
-    - [Additional developers tools](#org370fba1)
-    - [Things you don't need to install](#org3f4d7bf)
-- [Feedback Desired](#orgf9227b0)
+- [About This Project](#org073b895)
+- [Navigating This Repository](#org9ddc8c0)
+- [Prerequisites](#org5ecd229)
+  - [Knowledge](#org79a4f64)
+  - [Technology](#org4874f66)
+    - [Nix](#orgd22e092)
+    - [Docker](#orgff56a33)
+    - [Additional developers tools](#org83c3742)
+    - [Things you don't need to install](#org04ab43a)
+- [Feedback Desired](#orge2cf6ae)
 
 
 
-<a id="org4a60b6d"></a>
+<a id="org073b895"></a>
 
 # About This Project
 
@@ -20,7 +20,7 @@ This project illustrates using [the Nix package manager](https://nixos.org/nix) 
 Use this project to learn and explore what's possible. It's set up for pedagogy, but you should be able to use Pkgs-make in real projects (a group of us does). There are many ways to organize code, and the beauty of Nix is that it's very flexible. So use Pkgs-make if you can, but be aware that there's many ways to achieve the same goal, and your needs will determine what's best.
 
 
-<a id="org4f15fb2"></a>
+<a id="org9ddc8c0"></a>
 
 # Navigating This Repository
 
@@ -36,17 +36,17 @@ We've tried hard to keep the code clean and self-documenting. Here's a survey of
 | [run/](./run)                                     | scripts to illustrate this project                 |
 | [pkgs-make/](./pkgs-make)                         | Pkgs-make, the Nix library driving this project    |
 
-The links are presented in loose recommended reading order, starting with tutorials on usage, and ending with the implementation Pkgs-make. If you don't know what Nix is or the motivation to use it over the alternatives, the first tutorial is a good place to start.
+The links are presented in loose recommended reading order, starting with tutorials on usage, and ending with the implementation of Pkgs-make. If you don't know what Nix is or the motivation to use it over the alternatives, the first tutorial is a good place to start.
 
 If you don't have a preferred Markdown or Org-mode viewer, we recommend just using Github's Markdown rendering at <https://github.com/shajra/example-nix>.
 
 
-<a id="orgee6216b"></a>
+<a id="org5ecd229"></a>
 
 # Prerequisites
 
 
-<a id="orgea1efe0"></a>
+<a id="org79a4f64"></a>
 
 ## Knowledge
 
@@ -62,12 +62,12 @@ There are also [many good tutorials](https://www.google.com/search?q=nix+tutoria
 -   [John Wiegley's Haskell/Nix talk](https://www.youtube.com/watch?v=G9yiJ7d5LeI)
 
 
-<a id="org4296866"></a>
+<a id="org4874f66"></a>
 
 ## Technology
 
 
-<a id="orgdd1c8d3"></a>
+<a id="orgd22e092"></a>
 
 ### Nix
 
@@ -84,7 +84,7 @@ Also, be aware that this project is actively tested on a GNU/Linux OS, and only 
 If for some reason you can't install Nix, we can still use [Docker](https://www.docker.com) to build some of the projects in the tutorials. We just won't be able to showcase development tools without Nix installed on the host system.
 
 
-<a id="org67f83c3"></a>
+<a id="orgff56a33"></a>
 
 ### Docker
 
@@ -93,14 +93,14 @@ This project illustrates how to build and package up applications in Docker.
 See the [Docker installation guide](https://docs.docker.com/install) for instructions on how to install Docker for your system.
 
 
-<a id="org370fba1"></a>
+<a id="org83c3742"></a>
 
 ### Additional developers tools
 
 This project also provides some [configuration for some developers tools](./tools) for a nice Nix-based developer experience with this project. Some of us have used these tools on real projects, and we've been pleased with the results.
 
 
-<a id="org3f4d7bf"></a>
+<a id="org04ab43a"></a>
 
 ### Things you don't need to install
 
@@ -109,7 +109,7 @@ Beyond Docker and these developer tools, you don't need to install language-spec
 Once you have Nix, we can use it as a bootstrap to get all the other tools you might need that are more likely to vary from project to project. Pkgs-make can help with this.
 
 
-<a id="orgf9227b0"></a>
+<a id="orge2cf6ae"></a>
 
 # Feedback Desired
 

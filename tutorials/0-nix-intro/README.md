@@ -1,36 +1,36 @@
-- [Introduction to Nix](#org512adcb)
-- [Motivation For Nix](#org22fab33)
-- [Exploring a Fresh Nix Installation](#org6c7406a)
-- [The Nix Language](#org0533883)
-  - [Numeric literals](#orgf588d85)
-  - [Strings](#org9e25969)
-  - [Let-expressions](#orgbf97752)
-  - [String interpolation](#org618fc66)
-  - [Functions](#orgb2f49ea)
-  - [Lists](#orgabba538)
-  - [Attribute sets](#org08be5b4)
-  - [Paths](#org9ad15d1)
-  - [Importing](#org0778df1)
-- [Nixpkgs and Building](#org3a61bd1)
-- [Calling `nix`](#orgc35dbdb)
-- [Finding Packages](#org475a0a0)
-- [Running](#org27dbf43)
-- [Installing](#org1d2365e)
-- [Uninstalling](#org6fa808c)
-- [Inspecting Dependencies](#orgb834be5)
-- [Cleaning Up](#org3fdd761)
-- [Developing with `nix-shell`](#org6864764)
+- [Introduction to Nix](#orgca1b36c)
+- [Motivation For Nix](#orge6d0309)
+- [Exploring a Fresh Nix Installation](#orgca71b38)
+- [The Nix Language](#orge42448c)
+  - [Numeric literals](#orgbd6550f)
+  - [Strings](#org29846bc)
+  - [Let-expressions](#org10749c4)
+  - [String interpolation](#org8d1b5ae)
+  - [Functions](#org407081e)
+  - [Lists](#org445bc1d)
+  - [Attribute sets](#org933bc8d)
+  - [Paths](#org436ad44)
+  - [Importing](#org89730a6)
+- [Nixpkgs and Building](#org77d49d7)
+- [Calling `nix`](#orgdc9d11c)
+- [Finding Packages](#orgb47b789)
+- [Running](#org035db38)
+- [Installing](#org7d89ddd)
+- [Uninstalling](#org7614251)
+- [Inspecting Dependencies](#org1ee89c2)
+- [Cleaning Up](#org921025a)
+- [Developing with `nix-shell`](#orgeae6024)
 
 
 
-<a id="org512adcb"></a>
+<a id="orgca1b36c"></a>
 
 # Introduction to Nix
 
 This tutorial illustrates some basic operation of Nix. We'll introduce some some concepts, terminology, and command-line utilities. That will provide some setup for building our own projects with Pkgs-make in later tutorials.
 
 
-<a id="org22fab33"></a>
+<a id="orge6d0309"></a>
 
 # Motivation For Nix
 
@@ -58,7 +58,7 @@ Nix is not without its problems, as [Gabriel Gonzalez points out](https://github
 For many of us the benefits of Nix outweigh the inconveniences. Hopefully, projects and tutorials like this can help tip the balance further.
 
 
-<a id="org6c7406a"></a>
+<a id="orgca71b38"></a>
 
 # Exploring a Fresh Nix Installation
 
@@ -81,14 +81,14 @@ There are two directories under `/nix`:
 Typically, you'll never manage files under `/nix` directly. Instead you'll use the Nix command-line tools. To get packages into `/nix/store` we first need a Nix expression. These expressions can either come from a third party like the central Nixpkgs GitHub repository. Or we can write our own.
 
 
-<a id="org0533883"></a>
+<a id="orge42448c"></a>
 
 # The Nix Language
 
 To better discuss the Nix command-line tools and also Nixpkgs, we'll introduce the Nix language a little. This is no substitute for the [official Nix language documentation](https://nixos.org/nix/manual/#ch-expression-language), which is surprisingly not that long for a programming language; Nix does not have much syntax relative to other general-purpose programming languages.
 
 
-<a id="orgf588d85"></a>
+<a id="orgbd6550f"></a>
 
 ## Numeric literals
 
@@ -113,7 +113,7 @@ nix eval '(builtins.typeOf 1.0)'
     "float"
 
 
-<a id="org9e25969"></a>
+<a id="org29846bc"></a>
 
 ## Strings
 
@@ -148,7 +148,7 @@ nix eval '("a" + "b")'
     "ab"
 
 
-<a id="orgbf97752"></a>
+<a id="org10749c4"></a>
 
 ## Let-expressions
 
@@ -163,7 +163,7 @@ nix eval '(let a = 1; b = 2; in a + b)'
 Note that semicolons are mandatory in all Nix forms that have them, including let-expressions. Because of Nix's strict parsing you can neither elide semicolons, nor put extra ones.
 
 
-<a id="org618fc66"></a>
+<a id="org8d1b5ae"></a>
 
 ## String interpolation
 
@@ -183,7 +183,7 @@ String interpolation is supported by both normal and multi-line strings.
 Note that unlike shell scripts, the curly braces are not optional for string interpolation in Nix. This works out in our favor if we're writing shell scripts inline in a Nix expression, because we can use `$name` for shell string interpolation and `${nix_expr}` for Nix string interpolation. If this is not enough, though not covered in this tutorial, there is a syntax for suppressing interpolation in both normal and multi-line Nix string literals.
 
 
-<a id="orgb2f49ea"></a>
+<a id="org407081e"></a>
 
 ## Functions
 
@@ -206,7 +206,7 @@ nix eval '((a: b: a + b) 1 2)'
     3
 
 
-<a id="orgabba538"></a>
+<a id="org445bc1d"></a>
 
 ## Lists
 
@@ -227,7 +227,7 @@ nix eval '([1 2] ++ [3 4])'
     [ 1 2 3 4 ]
 
 
-<a id="org08be5b4"></a>
+<a id="org933bc8d"></a>
 
 ## Attribute sets
 
@@ -316,7 +316,7 @@ nix eval '(let a = 3; in { inherit a; })'
     { a = 3; }
 
 
-<a id="org9ad15d1"></a>
+<a id="org436ad44"></a>
 
 ## Paths
 
@@ -351,7 +351,7 @@ Remember that a major motivation for using Nix is for deterministic builds. We h
 If you inspect `~/.nix-defexpr/channels/nixpkgs` you'll notice it's a symlink pointing to a snapshot of Nixpkgs in `/nix/store`. This symlink is set up during Nix installation, and can be upgraded with a call to `nix-channel --update`.
 
 
-<a id="org0778df1"></a>
+<a id="org89730a6"></a>
 
 ## Importing
 
@@ -366,7 +366,7 @@ nix eval '(builtins.typeOf (import <nixpkgs>))'
 We see here that Nixpkgs is a function. We'll talk more about the nature of the Nixpkgs function next.
 
 
-<a id="org3a61bd1"></a>
+<a id="org77d49d7"></a>
 
 # Nixpkgs and Building
 
@@ -406,7 +406,7 @@ nix show-derivation '((import <nixpkgs> {}).hello)'
       }
     }
 
-We've cropped the details of the derivation above, but you can get a sense that the derivation itself is also saved into `/nix/store` as a “\*.drv” file, and when the application is actually built, it is put in another output path, also in `/nix/store`.
+We've cropped the details of the derivation above, but you can get a sense that the derivation when evaluated is cached into `/nix/store` as a “\*.drv” file, and when the application is actually built it's put in another output path, also in `/nix/store`.
 
 Also important to know, when we interpolate a derivation into a string, we inject as a string the path of the derivation's output:
 
@@ -445,7 +445,7 @@ You've probably also noticed the hashes in names of `/nix/store`'s contents. Nix
 `nix build` also supports a `--no-link` switch if we want to build without leaving behind this “result” symlink.
 
 
-<a id="orgc35dbdb"></a>
+<a id="orgdc9d11c"></a>
 
 # Calling `nix`
 
@@ -484,7 +484,7 @@ nix build nixpkgs.hello
 Additionally, if we don't want the attribute set built implicitly from `NIX_PATH`, we can use the `--file` switch for `nix` to specify explicitly a path to be imported and select attributes from.
 
 
-<a id="org475a0a0"></a>
+<a id="orgb47b789"></a>
 
 # Finding Packages
 
@@ -522,7 +522,7 @@ nix search hello
     Description: An example package with unfree license (for testing)
 
 
-<a id="org27dbf43"></a>
+<a id="org035db38"></a>
 
 # Running
 
@@ -545,7 +545,7 @@ nix run nixpkgs.hello --command hello
 This invocation makes an environment in which we have the `nixpkgs.hello` package on our path (we can put other packages as well), and then we run the command after the `--command` switch. See `nix run --help` for more information.
 
 
-<a id="org1d2365e"></a>
+<a id="org7d89ddd"></a>
 
 # Installing
 
@@ -578,7 +578,7 @@ nix-env --query | grep hello
 Every time we install an application with `nix-env` a new environment symlink tree is created in `/nix/store`. For posterity, `nix-env` keeps references to old versions under `/nix/var/nix/profiles`. You can use switches like `--rollback` with `nix-env` to revert back to previous states. See `nix-env --help` for more.
 
 
-<a id="org6fa808c"></a>
+<a id="org7614251"></a>
 
 # Uninstalling
 
@@ -597,7 +597,7 @@ which hello || true
     hello not found
 
 
-<a id="orgb834be5"></a>
+<a id="org1ee89c2"></a>
 
 # Inspecting Dependencies
 
@@ -622,7 +622,7 @@ nix path-info --recursive --closure-size nixpkgs.hello \
 Hello doesn't rely on much, just the standard glibc library. In real-world programs the dependencies can add up.
 
 
-<a id="org3fdd761"></a>
+<a id="org921025a"></a>
 
 # Cleaning Up
 
@@ -688,7 +688,7 @@ nix-collect-garbage 2>&1
     6 store paths deleted, 1.43 MiB freed
 
 
-<a id="org6864764"></a>
+<a id="orgeae6024"></a>
 
 # Developing with `nix-shell`
 

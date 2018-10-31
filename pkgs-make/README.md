@@ -1,25 +1,25 @@
-- [About Pkgs-make](#orgda4d1dd)
-- [Importing](#orgba1a57d)
-- [Specification of Functions and Types](#org9efae00)
-  - [Notation and `PkgsMake`](#org04c5340)
-  - [`PkgsMakeArgs`](#orgbcc9278)
-    - [Getting a base Nixpkgs](#orgb389224)
-    - [Overlaying Nixpkgs](#org37d34f0)
-    - [Default source filtering:](#org7d7172f)
-    - [Language-specific configuration](#org7b20644)
-  - [`Builder` function](#orgf3763f2)
-    - [PkgsMakeLib](#org597ee66)
-    - [PkgsMakeCall](#org785d2d6)
-    - [Returned derivations](#org4d20ca9)
-  - [Returned `Build`](#orgfb009d8)
-  - [Nix-shell environments](#org87c266b)
-  - [Haskell-specific configuration](#org6831b18)
-  - [Python-specific configuration](#org713d3a4)
-- [Navigating the Code](#orgb43d7a0)
+- [About Pkgs-make](#org2442b69)
+- [Importing](#orgfc7cc42)
+- [Specification of Functions and Types](#org3f23552)
+  - [Notation and `PkgsMake`](#orgd01ba07)
+  - [`PkgsMakeArgs`](#orgb0006db)
+    - [Getting a base Nixpkgs](#org5385f59)
+    - [Overlaying Nixpkgs](#org460505c)
+    - [Default source filtering:](#orga0c031a)
+    - [Language-specific configuration](#orgbe07b69)
+  - [`Builder` function](#orgb20a6a2)
+    - [PkgsMakeLib](#org1b2dce3)
+    - [PkgsMakeCall](#org1848660)
+    - [Returned derivations](#org9673024)
+  - [Returned `Build`](#org845c4e6)
+  - [Nix-shell environments](#org80300c0)
+  - [Haskell-specific configuration](#org6bcdb1e)
+  - [Python-specific configuration](#org940fc36)
+- [Navigating the Code](#org38d42c5)
 
 
 
-<a id="orgda4d1dd"></a>
+<a id="org2442b69"></a>
 
 # About Pkgs-make
 
@@ -32,7 +32,7 @@ One of the accompanying tutorials provides [an overview of using Pkgs-make](../t
 This document specifies Pkgs-make in more rigor and completeness.
 
 
-<a id="orgba1a57d"></a>
+<a id="orgfc7cc42"></a>
 
 # Importing
 
@@ -65,12 +65,12 @@ pkgsMake = import "${pkgsMakePath}/variant/plain";
 Please note, we don't have a lot of people managing this curation. Also, it would be even better if the work from curation within Pkgs-make could work back into Nixpkgs. Any help is much appreciated.
 
 
-<a id="org9efae00"></a>
+<a id="org3f23552"></a>
 
 # Specification of Functions and Types
 
 
-<a id="org04c5340"></a>
+<a id="orgd01ba07"></a>
 
 ## Notation and `PkgsMake`
 
@@ -102,7 +102,7 @@ Here `PkgsMakeArgs`, `BuildArgs`, and `Build` are all attribute sets (some neste
 In the following sections, we'll specify each of these types in greater detail.
 
 
-<a id="orgbcc9278"></a>
+<a id="orgb0006db"></a>
 
 ## `PkgsMakeArgs`
 
@@ -127,14 +127,14 @@ Here's some details its attributes:
 | `pythonArgs`             | `PythonArgs`   | Python-specific arguments                |
 
 
-<a id="orgb389224"></a>
+<a id="org5385f59"></a>
 
 ### Getting a base Nixpkgs
 
 Many of `PkgsMakeArgs`'s attributes involve the retrieval and configuration of a base `Nixpkgs`. By default the dynamic `<nixpkgs>` path is used as the boot `Nixpkgs` only to fetch the real `Nixpkgs` used as a base (pinned to `nixpkgsRev`). If you prefer not to boot with the dynamic `<nixpkgs>`, you can supply a `bootPkgsPath` to import instead, or a pre-imported/configured `bootPkgs`. Or if you already have your base `Nixpkgs` pulled, you can provide its path as `basePkgsPath` for importing. We anticipate most people will just set `nixpkgsRev` and `nixpkgsSha256` and let Pkgs-make do the rest, trusting that the single fetch call we do with `<nixpkgs>` is benign.
 
 
-<a id="org37d34f0"></a>
+<a id="org460505c"></a>
 
 ### Overlaying Nixpkgs
 
@@ -155,7 +155,7 @@ These types for an `Overlay` have the following values:
 | return              | `Set<Drv>`     | overlaid packages.                         |
 
 
-<a id="org7d7172f"></a>
+<a id="orga0c031a"></a>
 
 ### Default source filtering:
 
@@ -191,7 +191,7 @@ Here `Src` is a standard source type for Nix's derivation building. Often it's j
 Nixpkgs offers a some functions for filtering under [`lib.sources`](https://github.com/NixOS/nixpkgs/blob/master/lib/sources.nix). The `lib.sources.cleanSource` is an instance of the `SrcTransform` type, and `lib.sources.cleanSourceFilter` is an instance of the `SrcFilter` type. Pkgs-make provides more of these functions on the `lib` attribute of the `BuildArgs` set discussed later.
 
 
-<a id="org7b20644"></a>
+<a id="orgbe07b69"></a>
 
 ### Language-specific configuration
 
@@ -226,7 +226,7 @@ These types for an `Override` have the following values:
 Note that `PkgsSelf` and `PkgsSuper` are platform-specific packages (like Nixpkgs's `haskellPackages` for Haskell or `pythonPackages` for Python), not top-level Nixpkgs packages.
 
 
-<a id="orgf3763f2"></a>
+<a id="orgb20a6a2"></a>
 
 ## `Builder` function
 
@@ -238,7 +238,7 @@ Pkgs-make will pass to a `Builder` function an input of type `BuildArgs`, which 
 | `call`              | PkgsMakeCall | various call-package functions (`Path -> Drv`) |
 
 
-<a id="org597ee66"></a>
+<a id="org1b2dce3"></a>
 
 ### PkgsMakeLib
 
@@ -250,7 +250,7 @@ The `lib` attribute of `BuildArgs` provides utilities that are largely the same 
 | `haskell`             | `Set<Function>` | Nixpkgs' `haskell.lib` with [some extras](./lib/haskell.nix) |
 
 
-<a id="org785d2d6"></a>
+<a id="org1848660"></a>
 
 ### PkgsMakeCall
 
@@ -260,12 +260,14 @@ In summary, call-package functions call functions that take a destructured attri
 
 Four call-package functions are provided on the `call` attribute:
 
-| Attribute     | Type              | Description                          |
-|------------- |----------------- |------------------------------------ |
-| `package`     | `PkgsMakeCallPkg` | standard call-package                |
-| `haskell.app` | `PkgsMakeCallPkg` | call-package for Haskell executables |
-| `haskell.lib` | `PkgsMakeCallPkg` | call-package for Haskell libraries   |
-| `python`      | `PkgsMakeCallPkg` | call-package for Python packages     |
+| Attribute               | Type              | Description                                 |
+|----------------------- |----------------- |------------------------------------------- |
+| `package`               | `PkgsMakeCallPkg` | standard call-package                       |
+| `haskell.app`           | `PkgsMakeCallPkg` | call-package for Haskell executables        |
+| `haskell.lib`           | `PkgsMakeCallPkg` | call-package for Haskell libraries          |
+| `haskell.cabal2nix.app` | `PkgsMakeCallPkg` | same as `haskell.app`, but forces cabal2nix |
+| `haskell.cabal2nix.lib` | `PkgsMakeCallPkg` | same as `haskell.lib`, but forces cabal2nix |
+| `python`                | `PkgsMakeCallPkg` | call-package for Python packages            |
 
 All of the call-package functions have a similar type:
 
@@ -277,19 +279,21 @@ The call-package function takes a set as an input and returns a derivation. Or a
 
 These call-package functions accept sets similar to the following call-package functions in Nixpkgs (which are delegated to ultimately). Additionally, these sets can include derivations being returned by the `Builder` function passed to Pkgs-make. This allows us to conveniently weave together code we're developing with other packages coming from Nixpkgs.
 
-| `call` Attribute | Expects `Set -> Drv` Similar To         |
-|---------------- |--------------------------------------- |
-| `package`        | Nixpkgs's `callPackage`                 |
-| `haskell.app`    | Nixpkgs's `haskellPackages.callPackage` |
-| `haskell.lib`    | Nixpkgs's `haskellPackages.callPackage` |
-| `python`         | Nixpkgs's `pythonPackages.callPackage`  |
+| `call` Attribute        | Expects `Set -> Drv` Similar To         |
+|----------------------- |--------------------------------------- |
+| `package`               | Nixpkgs's `callPackage`                 |
+| `haskell.app`           | Nixpkgs's `haskellPackages.callPackage` |
+| `haskell.lib`           | Nixpkgs's `haskellPackages.callPackage` |
+| `haskell.cabal2nix.app` | Nixpkgs's `haskellPackages.callPackage` |
+| `haskell.cabal2nix.lib` | Nixpkgs's `haskellPackages.callPackage` |
+| `python`                | Nixpkgs's `pythonPackages.callPackage`  |
 
 For the Haskell API, we have two call-package functions, `call.haskell.lib` and `call.haskell.app`, which are the same with the exception of the latter calling `lib.haskell.justStaticExecutables` on the derivation.
 
-Also, the Haskell API is slightly different in that if you don't have a `default.nix` in the path you supply, one will be automatically generated from the Cabal file found in the path using the tool [`cabal2nix`](https://github.com/NixOS/cabal2nix).
+Also, the Haskell API is slightly different in that if you don't have a `default.nix` in the path you supply, one will be automatically generated from the Cabal file found in the path using the tool [`cabal2nix`](https://github.com/NixOS/cabal2nix). If you have a `default.nix` in your path, but don't want the call-package call too use it, you can use `haskell.cabal2nix.app` or `haskell.cabal2nix.lib` instead to force the call to `cabal2nix`.
 
 
-<a id="org4d20ca9"></a>
+<a id="org9673024"></a>
 
 ### Returned derivations
 
@@ -300,7 +304,7 @@ As mentioned, all of the call-package functions will pull derivations from this 
 With the normal “callPackage” functions in Nixpkgs, we'd have to set up some boilerplate of overlays and overrides. Pkgs-make does this for us. Additionally, Pkgs-make has a few defaults like source filtering that remove boilerplate we'd end up with on every project (we almost always want to filter away the “result” symlinks a Nix build can leave behind).
 
 
-<a id="orgfb009d8"></a>
+<a id="org845c4e6"></a>
 
 ## Returned `Build`
 
@@ -315,7 +319,7 @@ What Pkgs-make returns you is largely the same `Set<Drv>` you define, but augmen
 From this returned set, you can select out the packages you want by attribute for packaging and distribution.
 
 
-<a id="org87c266b"></a>
+<a id="org80300c0"></a>
 
 ## Nix-shell environments
 
@@ -326,7 +330,7 @@ Also, both `env.haskell` and `env.python` derivations have an added attribute `w
 Note that the Haskell and Python environments already include some common development tools by default. You can see [`config.nix`](./config.nix) to see what's included.
 
 
-<a id="org6831b18"></a>
+<a id="org6bcdb1e"></a>
 
 ## Haskell-specific configuration
 
@@ -349,7 +353,7 @@ Note that the Haskell and Python environments already include some common develo
 For both `pkgChanges` and `changePkgs`, the packages modified can either come from the third-party Haskell libraries already in Nixpkgs, or they can be the packages we're currently building with the Pkgs-make call.
 
 
-<a id="org713d3a4"></a>
+<a id="org940fc36"></a>
 
 ## Python-specific configuration
 
@@ -367,7 +371,7 @@ The returned `env.python` derivation, designed for use with `nix-shell` has a Ni
 This setup by default involves some files persisted/cached in a temporary directory to save time entering the Nix shell after the first time. This persistence can be disabled with `envPersists`.
 
 
-<a id="orgb43d7a0"></a>
+<a id="org38d42c5"></a>
 
 # Navigating the Code
 

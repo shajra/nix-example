@@ -42,6 +42,10 @@
      git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d
   #+END_SRC
 
+  Note that the "master" branch is not updated nearly as frequently as the
+  "develop" branch. However, the configuration described here only works with
+  "master" for now.
+
   If you do have an Emacs configuration already, save/move it off to a
   temporary location first.
 

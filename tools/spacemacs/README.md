@@ -1,18 +1,18 @@
-- [About Nix-configuration for Spacemacs](#org7d46594)
-  - [A Small Pitch](#orgd478ac2)
-- [Installation](#orgd6dcbfe)
-- [Configuration](#org221e52d)
+- [About Nix-configuration for Spacemacs](#orgc816008)
+  - [A Small Pitch](#org8b62355)
+- [Installation](#org2383a77)
+- [Configuration](#org5c64b7b)
 
 
 
-<a id="org7d46594"></a>
+<a id="orgc816008"></a>
 
 # About Nix-configuration for Spacemacs
 
 This is an editor configuration some of us have used professionally for a while now, so we feel it's vetted enough to share. There may be other ways to configure other editors. This is just the best way we've found.
 
 
-<a id="orgd478ac2"></a>
+<a id="org8b62355"></a>
 
 ## A Small Pitch
 
@@ -23,7 +23,7 @@ Most importantly, Spacemacs code is well-factored. When first picking up Emacs, 
 Because Spacemacs code is modular, it makes it easier to share our Emacs configuration in a pluggable way that's more declarative and plays into the design decisions of the Spacemacs project that we like.
 
 
-<a id="orgd6dcbfe"></a>
+<a id="org2383a77"></a>
 
 # Installation
 
@@ -37,12 +37,14 @@ Then, assuming you don't yet have an Emacs configuration under `~/.emacs.d`, clo
 git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d
 ```
 
+Note that the "master" branch is not updated nearly as frequently as the "develop" branch. However, the configuration described here only works with "master" for now.
+
 If you do have an Emacs configuration already, save/move it off to a temporary location first.
 
 You can now invoke `emacs` and get the default Spacemacs experience.
 
 
-<a id="org221e52d"></a>
+<a id="org5c64b7b"></a>
 
 # Configuration
 

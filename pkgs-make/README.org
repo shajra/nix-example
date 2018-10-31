@@ -257,12 +257,14 @@
 
    Four call-package functions are provided on the ~call~ attribute:
 
-   | Attribute     | Type              | Description                          |
-   |---------------+-------------------+--------------------------------------|
-   | ~package~     | ~PkgsMakeCallPkg~ | standard call-package                |
-   | ~haskell.app~ | ~PkgsMakeCallPkg~ | call-package for Haskell executables |
-   | ~haskell.lib~ | ~PkgsMakeCallPkg~ | call-package for Haskell libraries   |
-   | ~python~      | ~PkgsMakeCallPkg~ | call-package for Python packages     |
+   | Attribute               | Type              | Description                                 |
+   |-------------------------+-------------------+---------------------------------------------|
+   | ~package~               | ~PkgsMakeCallPkg~ | standard call-package                       |
+   | ~haskell.app~           | ~PkgsMakeCallPkg~ | call-package for Haskell executables        |
+   | ~haskell.lib~           | ~PkgsMakeCallPkg~ | call-package for Haskell libraries          |
+   | ~haskell.cabal2nix.app~ | ~PkgsMakeCallPkg~ | same as ~haskell.app~, but forces cabal2nix |
+   | ~haskell.cabal2nix.lib~ | ~PkgsMakeCallPkg~ | same as ~haskell.lib~, but forces cabal2nix |
+   | ~python~                | ~PkgsMakeCallPkg~ | call-package for Python packages            |
 
    All of the call-package functions have a similar type:
 
@@ -281,12 +283,14 @@
    ~Builder~ function passed to Pkgs-make. This allows us to conveniently weave
    together code we're developing with other packages coming from Nixpkgs.
 
-   | ~call~ Attribute | Expects ~Set -> Drv~ Similar To         |
-   |------------------+-----------------------------------------|
-   | ~package~        | Nixpkgs's ~callPackage~                 |
-   | ~haskell.app~    | Nixpkgs's ~haskellPackages.callPackage~ |
-   | ~haskell.lib~    | Nixpkgs's ~haskellPackages.callPackage~ |
-   | ~python~         | Nixpkgs's ~pythonPackages.callPackage~  |
+   | ~call~ Attribute        | Expects ~Set -> Drv~ Similar To         |
+   |-------------------------+-----------------------------------------|
+   | ~package~               | Nixpkgs's ~callPackage~                 |
+   | ~haskell.app~           | Nixpkgs's ~haskellPackages.callPackage~ |
+   | ~haskell.lib~           | Nixpkgs's ~haskellPackages.callPackage~ |
+   | ~haskell.cabal2nix.app~ | Nixpkgs's ~haskellPackages.callPackage~ |
+   | ~haskell.cabal2nix.lib~ | Nixpkgs's ~haskellPackages.callPackage~ |
+   | ~python~                | Nixpkgs's ~pythonPackages.callPackage~  |
 
    For the Haskell API, we have two call-package functions, ~call.haskell.lib~
    and ~call.haskell.app~, which are the same with the exception of the latter
@@ -294,7 +298,10 @@
 
    Also, the Haskell API is slightly different in that if you don't have a
    ~default.nix~ in the path you supply, one will be automatically generated
-   from the Cabal file found in the path using the tool [[cabal2nix][=cabal2nix=]].
+   from the Cabal file found in the path using the tool [[cabal2nix][=cabal2nix=]].  If you
+   have a ~default.nix~ in your path, but don't want the call-package call too
+   use it, you can use ~haskell.cabal2nix.app~ or ~haskell.cabal2nix.lib~
+   instead to force the call to =cabal2nix=.
 
 *** Returned derivations
 

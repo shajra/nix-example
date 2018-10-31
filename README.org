@@ -34,7 +34,7 @@
   | [[./pkgs-make][pkgs-make/]]             | Pkgs-make, the Nix library driving this project    |
 
   The links are presented in loose recommended reading order, starting with
-  tutorials on usage, and ending with the implementation Pkgs-make. If you
+  tutorials on usage, and ending with the implementation of Pkgs-make. If you
   don't know what Nix is or the motivation to use it over the alternatives, the
   first tutorial is a good place to start.
 

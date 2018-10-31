@@ -507,9 +507,9 @@
   #+end_example
 
   We've cropped the details of the derivation above, but you can get a sense
-  that the derivation itself is also saved into =/nix/store= as a “*.drv” file,
-  and when the application is actually built, it is put in another output path,
-  also in =/nix/store=.
+  that the derivation when evaluated is cached into =/nix/store= as a “*.drv”
+  file, and when the application is actually built it's put in another output
+  path, also in =/nix/store=.
 
   Also important to know, when we interpolate a derivation into a string, we
   inject as a string the path of the derivation's output:
