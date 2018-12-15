@@ -34,6 +34,7 @@ generate_gfm()
     emacs \
         --batch \
         --kill \
+        --load ~/.emacs.d/init.el \
         --eval "(package-initialize)" \
         --file "$filepath" \
         --eval "(princ buffer-file-name 'external-debugging-output)" \
@@ -43,4 +44,3 @@ generate_gfm()
 
 
 main "$@"
-

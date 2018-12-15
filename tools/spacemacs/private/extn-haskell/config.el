@@ -82,7 +82,4 @@ The follow symbols alias additional built-in functions address these problem:
 
 Dante's ‘xref’ backend only finds references local to the project. So using
 using a tool like Haskell's haskdogs or codex, you might be able to set up a
-normal etags backend find references in source to non-local dependencies.
-
-You may also want to disable Dante's Dante's ‘xref’ backend due to a known
-annoyance (URL `https://github.com/jyp/dante/issues/78').")
+normal etags backend find references in source to non-local dependencies.")

@@ -1,18 +1,13 @@
 (defconst extn-haskell-packages
   '(dante
     flycheck
-    haskell-mode
-    (company-ghc :excluded t)
-    (company-ghci :excluded t)
-    (flycheck-haskell :excluded t)
-    (ghc :excluded t)
-    (intero :excluded t)))
+    haskell-mode))
 
-(defun extn-haskell/init-dante ()
-  (use-package dante
-    :commands dante-mode
-    :init
+(defun extn-haskell/pre-init-dante ()
+  (spacemacs|use-package-add-hook dante
+    :post-init
     (when (configuration-layer/package-usedp 'haskell-mode)
+      (remove-hook 'haskell-mode-hook 'dante-mode)
       (if (configuration-layer/package-usedp 'direnv)
           (spacemacs/add-to-hooks
            (extn-haskell//hook-if-not-regex
@@ -21,7 +16,7 @@
         (spacemacs/add-to-hooks
          (extn-haskell//hook-if-not-regex 'dante-mode)
          '(haskell-mode-hook literate-haskell-mode-hook))))
-    :config
+    :post-config
     (spacemacs|diminish dante-mode "Ⓓ" "D")
     (dolist (mode haskell-modes)
       (spacemacs/declare-prefix-for-mode mode
@@ -29,10 +24,10 @@
       (spacemacs/set-leader-keys-for-major-mode mode
         ",\"" 'dante-eval-block
         ",."  'dante-info
-        ",,"  'dante-type-at
+        ",,"  'spacemacs-haskell//dante-insert-type
         ",r"  'extn-haskell/dante-restart
-        ",d"  'dante-diagnose
-        "cb"  nil)
+        "sr"  'extn-haskell/dante-restart
+        ",d"  'dante-diagnose)
       (when (configuration-layer/package-usedp 'attrap)
         (spacemacs/set-leader-keys-for-major-mode mode
           "r/"  'attrap-attrap)))
@@ -46,7 +41,7 @@
   (spacemacs|use-package-add-hook flycheck
     :post-init
     (when (configuration-layer/package-usedp 'haskell-mode)
-      (dolist (mode haskell-modes) (spacemacs/add-flycheck-hook mode))
+      (dolist (mode haskell-modes) (spacemacs/enable-flycheck mode))
       (spacemacs/add-to-hooks
        (lambda ()
          (dolist (checker '(haskell-ghc haskell-stack-ghc))
@@ -72,8 +67,4 @@
                  'before-save-hook
                  'haskell-mode-before-save-handler
                  t))
-              t)
-    ;; DESIGN: Though Dante's completion is not great, none of the standard
-    ;; completion backends work well with either Dante or Cabal new-builds.
-    (remove-hook 'haskell-mode-local-vars-hook
-                 #'spacemacs-haskell//setup-completion-backend)))
+              t)))

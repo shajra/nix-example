@@ -1,9 +1,9 @@
-- [About Recommended Developer Tools for Nix](#org15666bf)
-- [Quick Start with Spacemacs+Direnv](#orgc446a35)
+- [About Recommended Developer Tools for Nix](#org42639ba)
+- [Quick Start with Spacemacs+Direnv](#org1956b66)
 
 
 
-<a id="org15666bf"></a>
+<a id="org42639ba"></a>
 
 # About Recommended Developer Tools for Nix
 
@@ -18,7 +18,7 @@ Subdirectories here have Nix-sensitive configuration as follows:
 -   **[`oh-my-zsh`](./oh-my-zsh/README.md):** Direnv integration with Zsh
 
 
-<a id="orgc446a35"></a>
+<a id="org1956b66"></a>
 
 # Quick Start with Spacemacs+Direnv
 
@@ -31,7 +31,7 @@ So here we'll just cover the steps to install and configuration everything excep
 We'll assume you don't have any conficting configuration. Please be careful.
 
 1.  We'll assumed you've [installed Git](https://git-scm.com/downloads), cloned the repository, and changed to this directory:
-    
+
     ```shell
     git clone https://github.com/shajra/example-nix
     cd example-nix/tools
@@ -42,32 +42,32 @@ We'll assume you don't have any conficting configuration. Please be careful.
 3.  [Install Direnv.](https://github.com/direnv/direnv#install)
 
 4.  Copy or link provided Direnv configuration:
-    
+
     ```shell
     cp direnv/direnvrc ~/.config/direnv/direnvrc
     ```
 
 5.  [Install Spacemacs.](https://github.com/syl20bnr/spacemacs/blob/master/doc/BEGINNERS_TUTORIAL.org#install)
-    
+
     ```shell
-    git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d~
+    git clone --branch develop https://github.com/syl20bnr/spacemacs ~/.emacs.d~
     ```
 
 6.  Copy or link all layers into Spacemacs:
-    
+
     ```shell
     cp -r spacemacs/private/* ~/.emacs.d/private
     ```
 
 7.  Copy or link provided Spacemacs configuration:
-    
+
     ```shell
     cp spacemacs/dotfile.spacemacs.el ~/.spacemacs
     cp spacemacs/dotfile.spacemacs.static.el ~/.spacemacs.static.el
     ```
 
 8.  Go into two tutorials and enable the Direnv `.envrc` files there:
-    
+
     ```shell
     ( cd ../tutorials/2-haskell; direnv allow )
     ( cd ../tutorials/2-python; direnv allow )

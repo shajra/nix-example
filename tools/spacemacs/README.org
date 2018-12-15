@@ -39,12 +39,13 @@
   clone the Spacemacs repository with Git to be your Emacs configuration:
 
   #+BEGIN_SRC shell :eval no
-     git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d
+     git clone --branch develop https://github.com/syl20bnr/spacemacs ~/.emacs.d
   #+END_SRC
 
-  Note that the "master" branch is not updated nearly as frequently as the
-  "develop" branch. However, the configuration described here only works with
-  "master" for now.
+  The configuration provided only works with the more cutting edge "develop"
+  branch of Spacemacs. The "master" branch, though the official stable branch,
+  has not been released in some time and is missing a lot of useful
+  improvements.
 
   If you do have an Emacs configuration already, save/move it off to a
   temporary location first.

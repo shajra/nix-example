@@ -1,18 +1,18 @@
-- [About Nix-configuration for Spacemacs](#orgc816008)
-  - [A Small Pitch](#org8b62355)
-- [Installation](#org2383a77)
-- [Configuration](#org5c64b7b)
+- [About Nix-configuration for Spacemacs](#org4df9a20)
+  - [A Small Pitch](#orgfa2e26c)
+- [Installation](#org394ecd5)
+- [Configuration](#orgd66f0a5)
 
 
 
-<a id="orgc816008"></a>
+<a id="org4df9a20"></a>
 
 # About Nix-configuration for Spacemacs
 
 This is an editor configuration some of us have used professionally for a while now, so we feel it's vetted enough to share. There may be other ways to configure other editors. This is just the best way we've found.
 
 
-<a id="org8b62355"></a>
+<a id="orgfa2e26c"></a>
 
 ## A Small Pitch
 
@@ -23,7 +23,7 @@ Most importantly, Spacemacs code is well-factored. When first picking up Emacs, 
 Because Spacemacs code is modular, it makes it easier to share our Emacs configuration in a pluggable way that's more declarative and plays into the design decisions of the Spacemacs project that we like.
 
 
-<a id="org2383a77"></a>
+<a id="org394ecd5"></a>
 
 # Installation
 
@@ -34,17 +34,17 @@ Install Emacs with a package manager (Brew, Apt, Nix, etc.) apropos for your ope
 Then, assuming you don't yet have an Emacs configuration under `~/.emacs.d`, clone the Spacemacs repository with Git to be your Emacs configuration:
 
 ```shell
-git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d
+git clone --branch develop https://github.com/syl20bnr/spacemacs ~/.emacs.d
 ```
 
-Note that the "master" branch is not updated nearly as frequently as the "develop" branch. However, the configuration described here only works with "master" for now.
+The configuration provided only works with the more cutting edge "develop" branch of Spacemacs. The "master" branch, though the official stable branch, has not been released in some time and is missing a lot of useful improvements.
 
 If you do have an Emacs configuration already, save/move it off to a temporary location first.
 
 You can now invoke `emacs` and get the default Spacemacs experience.
 
 
-<a id="org5c64b7b"></a>
+<a id="orgd66f0a5"></a>
 
 # Configuration
 

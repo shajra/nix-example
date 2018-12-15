@@ -53,7 +53,7 @@
   5. [[spacemacs-install][Install Spacemacs.]]
 
      #+BEGIN_SRC shell :eval no
-     git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d~
+     git clone --branch develop https://github.com/syl20bnr/spacemacs ~/.emacs.d~
      #+END_SRC
 
   6. Copy or link all layers into Spacemacs:
