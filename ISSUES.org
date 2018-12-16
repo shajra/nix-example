@@ -6,7 +6,7 @@
 There are a few issues in this project that would be wonderful to improve, but
 are probably fine for most contexts:
 
-- he license report may often be incomplete.
+- the license report may often be incomplete.
 - For Haskell, automation of Cabal2nix is fragile.
 
 The following discussion assumes some deeper knowledge of using Nix and
