@@ -199,6 +199,7 @@
   (dolist
       (item
        '((projectile-tags-backend . xref)
+         (projectile-tags-command . "codex update")
          (projectile-tags-command . "nix-tags-haskell -e")))
     (add-to-list 'safe-local-variable-values item))
 
