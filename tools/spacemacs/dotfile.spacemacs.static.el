@@ -148,7 +148,6 @@
    face-remapping-alist '((helm-xref-file-name :foreground "#2aa198"))
    fill-column 79
    flycheck-check-syntax-automatically '(mode-enabled save)
-   haskell-indent-spaces 4
    haskell-process-auto-import-loaded-modules t
    haskell-compile-cabal-build-command "cd %s && cabal new-build --ghc-option=-ferror-spans"
    haskell-cabal-commands '("new-build"
