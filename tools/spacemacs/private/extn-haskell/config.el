@@ -1,5 +1,5 @@
 (defvar extn-haskell/dante-exclude-regexes
-  '("/\\.haskdogs/" "/\\.codex/" "/^\/run\/user\//")
+  '("/\\.haskdogs/" "/\\.codex/" "/\\.stack/" "/^\/run\/user\//")
   "Regular expressions to exclude matching buffers from ‘dante-mode’.
 
 Source code doesn't always have well-formed project files, which prevents Dante
