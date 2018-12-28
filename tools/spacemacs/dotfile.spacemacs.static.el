@@ -15,9 +15,11 @@
      (haskell :variables haskell-completion-backend 'dante)
      html
      java
+     javascript
      latex
      markdown
      python
+     ruby
      scala
      shell-scripts
      sql
