@@ -40,6 +40,17 @@ This is useful for defining functions for a custom function for
          (when found (funcall f found))))
      files))
 
+  (file-name-base "a/b/c.ext")
+
+  (defun extn-haskell/dante-target-guess ()
+    "If ROOT is a cabal file, we use it's file name as the guessed target,
+which can be overridden with `dante-target'."
+    (or dante-target
+        (let ((cabal-file (dante-cabal-find-file)))
+          (if (equal "cabal" (file-name-extension cabal-file))
+              (file-name-base cabal-file)
+            nil))))
+
   ;;; private
 
   (defun extn-haskell//setq-default-dante-repl (list)
@@ -61,7 +72,8 @@ This is useful for defining functions for a custom function for
   (defun extn-haskell//dante-repl-bare-new ()
     `(bare-new
       . ,(lambda (root)
-           '("cabal" "new-repl" dante-target
+           `("cabal" "new-repl"
+             ,(extn-haskell/dante-target-guess)
              "--builddir=dist-newstyle/dante"
              "--ghc-options=-ignore-dot-ghci"))))
 
@@ -72,7 +84,8 @@ This is useful for defining functions for a custom function for
             root
             '("cabal.project")
             (lambda (cabal-project)
-              '("cabal" "new-repl" dante-target
+              `("cabal" "new-repl"
+                ,(extn-haskell/dante-target-guess)
                 "--builddir=dist-newstyle/dante"
                 "--ghc-options=-ignore-dot-ghci"))))))
 
@@ -83,8 +96,8 @@ This is useful for defining functions for a custom function for
             root
             '("stack.yaml")
             (lambda (stack-yaml)
-              '("stack" "repl"
-                dante-target
+              `("stack" "repl"
+                ,(extn-haskell/dante-target-guess)
                 "--ghci-options=-ignore-dot-ghci"))))))
 
   (defun extn-haskell//dante-repl-nix-multi ()
@@ -97,7 +110,7 @@ This is useful for defining functions for a custom function for
               `("nix-shell" "--pure" "--run"
                 ,(concat
                   "cabal new-repl "
-                  (or dante-target "")
+                  (or (extn-haskell/dante-target-guess) "")
                   " --builddir=dist-newstyle/dante"
                   " --ghc-options=-ignore-dot-ghci"
                   )
