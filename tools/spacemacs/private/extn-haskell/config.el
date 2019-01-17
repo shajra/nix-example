@@ -29,7 +29,7 @@ may want to try out \"-fdefer-typed-holes\" or \"-fdefer-type-errors\".")
   '(nix stack styx mafia new-build bare)
   "Priority order of ways to try to run GHCi for ‘dante-mode’.
 
-This improves upon setting ‘dante-repl-command-line-methods-alist’ directly.
+This improves upon setting ‘dante-methods-alist’ directly.
 
 Allowed values include a set of symbols (described below) or custom function.
 
@@ -41,7 +41,7 @@ So you don't have to write as many functions, you can alternatively use symbols
 as aliases for built-in functions.
 
 The following symbols alias functions from the default setting of
-‘dante-repl-command-line-methods-alist’:
+‘dante-methods-alist’:
 
     ‘bare’: run cabal repl unconditionally
 
@@ -65,15 +65,15 @@ in the package root, but in one of its ancestors.
 
 The follow symbols alias additional built-in functions address these problem:
 
-    ‘bare-new’: like ‘bare’, but call cabal new-repl
+    ‘bare-new-guess’: like ‘bare’, but call cabal new-repl
 
-    ‘cabal-multi’: run cabal new-repl if a \"cabal.project\" file is found in an
+    ‘cabal-new-guess’: run cabal new-repl if a \"cabal.project\" file is found in an
     ancestor of the root
 
-    ‘nix-multi’: run cabal new-repl in a nix-shell if a \"shell.nix\" file is
+    ‘nix-new-guess’: run cabal new-repl in a nix-shell if a \"shell.nix\" file is
     found in an ancestor of the root.
 
-    ‘stack-multi’: run stack repl in a nix-shell if a \"stack.yaml\" file is
+    ‘stack-guess’: run stack repl in a nix-shell if a \"stack.yaml\" file is
     found in an ancestor of the root.")
 
 

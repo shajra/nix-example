@@ -1,16 +1,16 @@
-- [About Extn-Haskell Spacemacs Layer](#orgde43710)
-- [Installation](#org4d20ecc)
-  - [Dependencies](#orgf575c71)
-  - [Enabling the layer](#org4beb92f)
-- [Features/Configuration](#org99220a2)
-  - [Layer configuration](#orged52193)
-  - [Key bindings](#org2f80e2e)
-    - [From the `haskell` Spacemacs layer](#orgd625886)
-    - [From this layer](#orgef06a95)
+- [About Extn-Haskell Spacemacs Layer](#orgf1f8121)
+- [Installation](#orgca89d30)
+  - [Dependencies](#orga836c8f)
+  - [Enabling the layer](#org5c80cfc)
+- [Features/Configuration](#org0284ece)
+  - [Layer configuration](#org3f2ae29)
+  - [Key bindings](#org05341e0)
+    - [From the `haskell` Spacemacs layer](#org4eb343f)
+    - [From this layer](#org2ab8dd3)
 
 
 
-<a id="orgde43710"></a>
+<a id="orgf1f8121"></a>
 
 # About Extn-Haskell Spacemacs Layer
 
@@ -26,13 +26,13 @@ Here's a summary of the features provided by this layer:
 
 -   simplified layer-based configuration of Dante including:
     -   easier configuration of Dante project types and detection
-    
+
     -   Flycheck Hlint integration
-    
+
     -   control to enable/disable Dante's Xref backend
-    
+
     -   exclusion of Dante from buffers matching a regular expression
-    
+
     -   GHC flags for the GHCi sessions Dante spawns
 
 -   [emacs-direnv](https://github.com/wbolster/emacs-direnv)/[Direnv](https://direnv.net/) integration for per-project discovery of Cabal/GHC binaries.
@@ -53,12 +53,12 @@ Finally, here's a few things that are lacking that hopefully might improve in th
 -   Emacs-based debugging support is fragile/broken, especially with newer GHC versions
 
 
-<a id="org4d20ecc"></a>
+<a id="orgca89d30"></a>
 
 # Installation
 
 
-<a id="orgf575c71"></a>
+<a id="orga836c8f"></a>
 
 ## Dependencies
 
@@ -75,7 +75,7 @@ We want our development experiences to be stable and portable from machine to ma
 Otherwise, you can install these dependencies using Cabal, Stack, or an OS package manager like Nix.
 
 
-<a id="org4beb92f"></a>
+<a id="org5c80cfc"></a>
 
 ## Enabling the layer
 
@@ -90,19 +90,19 @@ Then enable it in your `~/.spacemacs`:
    dotspacemacs-configuration-layers
      '( ; ... other layers
        (extn-haskell :variables
-	;; layer settings in pairs; for example...
-	extn-haskell/dante-flycheck-hlint-enable t
-	extn-haskell/dante-repl-types '(cabal-multi stack-multi bare-new)
-	extn-haskell/dante-xref-enable nil))))
+        ;; layer settings in pairs; for example...
+        extn-haskell/dante-flycheck-hlint-enable t
+        extn-haskell/dante-repl-types '(cabal-new-guess stack-guess bare-new-guess)
+        extn-haskell/dante-xref-enable nil))))
 ```
 
 
-<a id="org99220a2"></a>
+<a id="org0284ece"></a>
 
 # Features/Configuration
 
 
-<a id="orged52193"></a>
+<a id="org3f2ae29"></a>
 
 ## Layer configuration
 
@@ -118,19 +118,19 @@ The follow layer settings are supported with the `:variables` keyword when enabl
 See [their definitions/docstrings](./config.el) for more details on these options.
 
 
-<a id="org2f80e2e"></a>
+<a id="org05341e0"></a>
 
 ## Key bindings
 
 
-<a id="orgd625886"></a>
+<a id="org4eb343f"></a>
 
 ### From the `haskell` Spacemacs layer
 
 Many keys bind from the ~haskell= layer. Rather than redocument those bindings here, see the [documentation for that layer](https://github.com/syl20bnr/spacemacs/tree/master/layers/+lang/haskell#key-bindings). Note that because this layer disables Intero and ghc-mod support, key bindings for those won't be available.
 
 
-<a id="orgef06a95"></a>
+<a id="org2ab8dd3"></a>
 
 ### From this layer
 

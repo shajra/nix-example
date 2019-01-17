@@ -24,7 +24,8 @@
       (spacemacs/set-leader-keys-for-major-mode mode
         ",\"" 'dante-eval-block
         ",."  'dante-info
-        ",,"  'spacemacs-haskell//dante-insert-type
+        ",,"  'dante-type-at
+        ",i"  'spacemacs-haskell//dante-insert-type
         ",r"  'extn-haskell/dante-restart
         "sr"  'extn-haskell/dante-restart
         ",d"  'dante-diagnose)

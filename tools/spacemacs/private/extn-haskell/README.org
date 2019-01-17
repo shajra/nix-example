@@ -97,7 +97,7 @@
             (extn-haskell :variables
              ;; layer settings in pairs; for example...
              extn-haskell/dante-flycheck-hlint-enable t
-             extn-haskell/dante-repl-types '(cabal-multi stack-multi bare-new)
+             extn-haskell/dante-repl-types '(cabal-new-guess stack-guess bare-new-guess)
              extn-haskell/dante-xref-enable nil))))
    #+END_SRC
 

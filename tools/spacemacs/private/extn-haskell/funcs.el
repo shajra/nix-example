@@ -51,70 +51,64 @@ which can be overridden with `dante-target'."
               (file-name-base cabal-file)
             nil))))
 
+  (defun extn-haskell/dante-cabal-alt (d)
+    (and (locate-dominating-file d "cabal.project")
+         (directory-files d t ".cabal$")))
+
+  (defun extn-haskell/dante-stack-alt (d)
+    (and (locate-dominating-file d "stack.yaml")
+         (directory-files d t ".cabal$")))
+
   ;;; private
 
   (defun extn-haskell//setq-default-dante-repl (list)
     (setq-default
-     dante-repl-command-line-methods-alist (extn-haskell//dante-repl-alist list)
-     dante-repl-command-line-methods list))
+     dante-methods-alist (extn-haskell//dante-repl-alist list)
+     dante-methods list))
 
   (defun extn-haskell//dante-repl-alist (list)
     (let*
-        ((alist-old dante-repl-command-line-methods-alist)
+        ((alist-old dante-methods-alist)
          (alist-new (append
-                     `(,(extn-haskell//dante-repl-cabal-multi)
-                       ,(extn-haskell//dante-repl-stack-multi)
-                       ,(extn-haskell//dante-repl-nix-multi)
-                       ,(extn-haskell//dante-repl-bare-new))
+                     `(,(extn-haskell//dante-repl-new-alt)
+                       ,(extn-haskell//dante-repl-stack-alt)
+                       ,(extn-haskell//dante-repl-nix-alt)
+                       ,(extn-haskell//dante-repl-bare-cabal-alt))
                      alist-old)))
       (seq-map (lambda (elem) (or (assoc elem alist-new) elem)) list)))
 
-  (defun extn-haskell//dante-repl-bare-new ()
-    `(bare-new
-      . ,(lambda (root)
-           `("cabal" "new-repl"
-             ,(extn-haskell/dante-target-guess)
-             "--builddir=dist-newstyle/dante"
-             "--ghc-options=-ignore-dot-ghci"))))
+  (defun extn-haskell//dante-repl-new-alt ()
+    `(new-alt
+      extn-haskell/dante-cabal-alt
+      ("cabal" "new-repl"
+       dante-target
+       "--builddir=dist-newstyle/dante"
+       "--ghc-options=-ignore-dot-ghci")))
 
-  (defun extn-haskell//dante-repl-cabal-multi ()
-    `(cabal-multi
-      . ,(lambda (root)
-           (extn-haskell/dante-repl-if-file-upward
-            root
-            '("cabal.project")
-            (lambda (cabal-project)
-              `("cabal" "new-repl"
-                ,(extn-haskell/dante-target-guess)
-                "--builddir=dist-newstyle/dante"
-                "--ghc-options=-ignore-dot-ghci"))))))
+  (defun extn-haskell//dante-repl-stack-alt ()
+    `(stack-alt
+      extn-haskell/dante-stack-alt
+      ("stack" "repl"
+       (extn-haskell/dante-target-guess)
+       "--ghci-options=-ignore-dot-ghci")))
 
-  (defun extn-haskell//dante-repl-stack-multi ()
-    `(stack-multi
-      . ,(lambda (root)
-           (extn-haskell/dante-repl-if-file-upward
-            root
-            '("stack.yaml")
-            (lambda (stack-yaml)
-              `("stack" "repl"
-                ,(extn-haskell/dante-target-guess)
-                "--ghci-options=-ignore-dot-ghci"))))))
+  (defun extn-haskell//dante-repl-nix-alt ()
+    `(nix-alt
+      "shell.nix"
+      ("nix-shell" "--pure" "--run"
+       (concat
+         "cabal new-repl "
+         (or dante-target "")
+         " --builddir=dist-newstyle/dante"
+         " --ghc-options=-ignore-dot-ghci"))))
 
-  (defun extn-haskell//dante-repl-nix-multi ()
-    `(nix-multi
-      . ,(lambda (root)
-           (extn-haskell/dante-repl-if-file-upward
-            root
-            '("shell.nix")
-            (lambda (shell-nix)
-              `("nix-shell" "--pure" "--run"
-                ,(concat
-                  "cabal new-repl "
-                  (or (extn-haskell/dante-target-guess) "")
-                  " --builddir=dist-newstyle/dante"
-                  " --ghc-options=-ignore-dot-ghci"
-                  )
-                ,shell-nix))))))
+  (defun extn-haskell//dante-repl-bare-cabal-alt ()
+    `(bare-cabal-alt
+      ,(lambda (d) (directory-files d t ".cabal$"))
+      ("cabal" "new-repl"
+       dante-target
+       "--builddir=dist-newstyle/dante"
+       "--ghc-options=-ignore-dot-ghci")))
 
   (defun extn-haskell//hook-if-not-regex (hook)
     (extn-haskell//hook-regex-guarded '-none? hook))
