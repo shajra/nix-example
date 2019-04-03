@@ -54,7 +54,10 @@
      spell-checking
      syntax-checking
      themes-megapack
-     version-control
+     (version-control
+      :variables
+      version-control-diff-side 'left
+      version-control-global-margin t)
      (vinegar :variables vinegar-reuse-dired-buffer t)
 
      ;; private
