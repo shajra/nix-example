@@ -1,3 +1,12 @@
+(let ((f "~/.spacemacs.local.el"))
+  (if (file-readable-p f) (load-file f)))
+
+
+(defun dotspacemacs//call-local-if-bound (name)
+  (let ((n (intern (concat "dotspacemacs/" name "/local"))))
+    (if (fboundp n) (funcall n))))
+
+
 (defun dotspacemacs/layers ()
   (setq-default
    dotspacemacs-distribution 'spacemacs
@@ -63,7 +72,8 @@
    '(auto-package-update column-enforce-mode helm-xref)
    dotspacemacs-frozen-packages '()
    dotspacemacs-excluded-packages '()
-   dotspacemacs-install-packages 'used))
+   dotspacemacs-install-packages 'used)
+  (dotspacemacs//call-local-if-bound "layers"))
 
 
 (defun dotspacemacs/init ()
@@ -130,12 +140,23 @@
    dotspacemacs-icon-title-format nil
    dotspacemacs-whitespace-cleanup 'trailing
    dotspacemacs-zone-out-when-idle nil
-   dotspacemacs-pretty-docs nil))
+   dotspacemacs-pretty-docs nil)
+  (dotspacemacs//call-local-if-bound "init"))
+
+
+(defun dotspacemacs/user-env ()
+  (spacemacs/load-spacemacs-env)
+  (dotspacemacs//call-local-if-bound "user-env"))
 
 
 (defun dotspacemacs/user-init ()
   (setq-default
-   fci-rule-color "#93a1a1"))
+   fci-rule-color "#93a1a1")
+  (dotspacemacs//call-local-if-bound "user-init"))
+
+
+(defun dotspacemacs/user-load ()
+  (dotspacemacs//call-local-if-bound "user-local"))
 
 
 (defun dotspacemacs/user-config ()
@@ -208,4 +229,6 @@
   (add-to-list 'face-ignored-fonts "Linux Libertine")
   ;;
   ;; the dialog verifying a large tag table breaks automated selection
-  (add-to-list 'spacemacs-large-file-modes-list 'tags-table-mode))
+  (add-to-list 'spacemacs-large-file-modes-list 'tags-table-mode)
+
+  (dotspacemacs//call-local-if-bound "user-config"))
