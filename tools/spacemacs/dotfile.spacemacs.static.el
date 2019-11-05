@@ -21,7 +21,6 @@
      c-c++
      emacs-lisp
      graphviz
-     (haskell :variables haskell-completion-backend 'dante)
      html
      java
      javascript
