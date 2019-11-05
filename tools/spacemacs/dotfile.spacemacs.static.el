@@ -201,7 +201,7 @@
    haskell-process-log t
    haskell-process-suggest-remove-import-lines t
    haskell-process-type 'cabal-new-repl
-   haskell-stylish-on-save t
+   haskell-stylish-on-save nil
    helm-xref-candidate-formatting-function 'helm-xref-format-candidate-long
    indent-tabs-mode nil
    tab-width 4
