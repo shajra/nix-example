@@ -218,6 +218,9 @@
   (global-fci-mode)
   (require 'helm-xref)
 
+  ;; disable annoying tooltip mode
+  (flycheck-pos-tip-mode -1)
+
   ;; safe local settings
   (dolist
       (item
