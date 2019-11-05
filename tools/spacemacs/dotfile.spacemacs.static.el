@@ -26,7 +26,6 @@
      javascript
      latex
      markdown
-     python
      ruby
      scala
      shell-scripts
