@@ -139,7 +139,7 @@
    dotspacemacs-server-socket-dir nil
    dotspacemacs-persistent-server t
    dotspacemacs-search-tools '("rg" "ag" "pt" "ack" "grep")
-   dotspacemacs-frame-title-format "%I@%S"
+   dotspacemacs-frame-title-format "%a <%t>"
    dotspacemacs-icon-title-format nil
    dotspacemacs-whitespace-cleanup 'trailing
    dotspacemacs-zone-out-when-idle nil
@@ -209,9 +209,6 @@
    whitespace-line-column 79
    x-gtk-use-system-tooltips nil
    xref-show-xrefs-function 'helm-xref-show-xrefs)
-
-  ;; abbreviate title
-  (extn-spacemacs/setq-default-frame-title-format-enhanced)
 
   ;; enable non-layer packages
   (auto-package-update-maybe)

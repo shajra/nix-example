@@ -1,13 +1,5 @@
 ;;; public
 
-(defun extn-spacemacs/setq-default-frame-title-format-enhanced ()
-  "Set a ‘frame-title-format’ that abbreviates file names. The main
-abbreviation is turning \"/home/username/\" to just \"~\".
-
-It's not much of an enhancement for now, but it could be extended later."
-  (setq-default
-   frame-title-format (extn-spacemacs//frame-title-format-enhanced-eval)))
-
 (when (configuration-layer/package-usedp 'fill-column-indicator)
   (define-globalized-minor-mode global-fci-mode fci-mode
     (lambda ()
