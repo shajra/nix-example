@@ -172,7 +172,9 @@
    ensime-startup-notification nil
    face-remapping-alist '((helm-xref-file-name :foreground "#2aa198"))
    fill-column 79
-   flycheck-check-syntax-automatically '(mode-enabled save)
+   flycheck-check-syntax-automatically '(save mode-enabled)
+   flymake-no-changes-timeout nil
+   flymake-start-syntax-check-on-newline nil
    haskell-process-auto-import-loaded-modules t
    haskell-compile-cabal-build-command "cd %s && cabal new-build --ghc-option=-ferror-spans"
    haskell-cabal-commands '("new-build"
