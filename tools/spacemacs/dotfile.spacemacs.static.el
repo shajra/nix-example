@@ -204,7 +204,6 @@
    haskell-stylish-on-save t
    helm-xref-candidate-formatting-function 'helm-xref-format-candidate-long
    indent-tabs-mode nil
-   org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id
    tab-width 4
    whitespace-line-column 79
    x-gtk-use-system-tooltips nil
