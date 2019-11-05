@@ -47,6 +47,7 @@
      ;; other
      auto-completion
      helm
+     ivy  ; TODO: org-mode acting up with out this (2019-11-04)
      multiple-cursors
      neotree
      (org :variables org-enable-github-support t)
