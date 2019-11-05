@@ -60,7 +60,6 @@
      (vinegar :variables vinegar-reuse-dired-buffer t)
 
      ;; private
-     attrap
      direnv
      (extn-haskell
       :variables

@@ -160,3 +160,7 @@ which can be overridden with `dante-target'."
                (not (string= (file-truename directory) parent-dir))
                (< (length parent-dir) (length (file-truename directory))))
           (extn-haskell//file-search-upward parent-dir file))))))
+
+(defun extn-haskell//mode-hooks ()
+  '(haskell-mode-local-vars-hook
+    literate-haskell-mode-local-vars-hook))
