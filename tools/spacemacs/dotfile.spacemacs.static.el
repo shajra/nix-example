@@ -49,7 +49,7 @@
      helm
      ivy  ; TODO: org-mode acting up with out this (2019-11-04)
      multiple-cursors
-     neotree
+     treemacs
      (org :variables org-enable-github-support t)
      restclient
      spell-checking
@@ -83,13 +83,13 @@
 (defun dotspacemacs/init ()
   (setq-default
    dotspacemacs-enable-emacs-pdumper nil
-   dotspacemacs-emacs-pdumper-executable-file "emacs-27.0.50"
+   dotspacemacs-emacs-pdumper-executable-file "emacs"
    dotspacemacs-emacs-dumper-dump-file "spacemacs.pdmp"
    dotspacemacs-elpa-https t
    dotspacemacs-elpa-timeout 5
    dotspacemacs-gc-cons '(100000000 0.1)
    dotspacemacs-use-spacelpa nil
-   dotspacemacs-verify-spacelpa-archives nil
+   dotspacemacs-verify-spacelpa-archives t
    dotspacemacs-check-for-update nil
    dotspacemacs-elpa-subdirectory 'emacs-version
    dotspacemacs-editing-style 'vim
