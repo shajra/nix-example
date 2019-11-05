@@ -6,11 +6,11 @@
   This layer extends what's already in Emacs and Spacemacs without bringing in
   any new packages.
 
-  The following features are provided
+  The following features are provided:
 
-  - A global fill-column-indicator mode that skips special Emacs buffers
-  - A small function to abbreviate titles slightly
-  - A hack for enabling multiple Xref backends simultaneously.
+  - a global fill-column-indicator mode that skips special Emacs buffers
+  - functions to specify directory-local variables programmatically
+  - a hack for enabling multiple Xref backends simultaneously.
 
 * Installation
 
@@ -50,17 +50,10 @@
        (global-fci-mode))
    #+END_SRC
 
-** Title abbreviation
+** Setting directory-local variables programmatically
 
-   The window titles of buffers can get long, and it's nice to abbrevate things
-   like “/home/$USER/” to just “~”. You can do that with the following
-   configuration in =~/.spacemacs=:
-
-   #+BEGIN_SRC emacs-lisp :eval no
-     (defun dotspacemacs/user-config ()
-       ;; ... other configuration ...
-       (extn-spacemacs/setq-default-frame-title-format-enhanced))
-   #+END_SRC
+   See the Emacs docstring for ~extn-spacemacs/set-dir-locals~ and
+   ~extn-spacemacs/set-dirs-locals~ for more information.
 
 ** Multiple Xref backend simultaneously
 

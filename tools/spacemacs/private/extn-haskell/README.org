@@ -37,6 +37,9 @@
   - [[emacs-direnv][emacs-direnv]]/[[direnv][Direnv]] integration for per-project discovery of Cabal/GHC
     binaries.
 
+  - function to allow specifying useful directory-local variables like
+    ~dante-target~.
+
   Some features come from the Spacemacs =haskell= layer this layer extends
   including:
 
@@ -97,7 +100,7 @@
             (extn-haskell :variables
              ;; layer settings in pairs; for example...
              extn-haskell/dante-flycheck-hlint-enable t
-             extn-haskell/dante-repl-types '(cabal-new-guess stack-guess bare-new-guess)
+             extn-haskell/dante-repl-types '(new-alt stack-alt bare-cabal-alt)
              extn-haskell/dante-xref-enable nil))))
    #+END_SRC
 
@@ -135,16 +138,8 @@
     | ~SPC m , "~ | ~dante-eval-block~           | evaluate comment line of the form “-- >>> expr” |
     | ~SPC m , .~ | ~dante-info~                 | GHCi :info for the expression at the point      |
     | ~SPC m , ,~ | ~dante-type-at~              | GHCi :type for the expression at the point      |
+    | ~SPC m , f~ | ~dante-auto-fix~             | attempt to repair a Haskell defect at the point |
     | ~SPC m , r~ | ~extn-haskell/dante-restart~ | restart Dante GHCi process                      |
     | ~SPC m , d~ | ~dante-diagnose~             | diagnose Dante in =*Help*= buffer               |
 
     See the [[dante][Dante documentation]] for more information.
-
-    Additionally, since some Dante repairs are supported by the [[attrap][Attrap Emacs
-    package]] the following key binding is made available:
-
-    | Key Binding | Command         | Description                                     |
-    |-------------+-----------------+-------------------------------------------------|
-    | ~SPC m r /~ | ~attrap-attrap~ | attempt to repair a Haskell defect at the point |
-
-    You can enable Attrap with the [[../attrap/README.org][=attrap= layer provided by this project]].
