@@ -75,7 +75,7 @@
    dotspacemacs-additional-packages
    '(auto-package-update column-enforce-mode helm-xref)
    dotspacemacs-frozen-packages '()
-   dotspacemacs-excluded-packages '()
+   dotspacemacs-excluded-packages '(smartparens)
    dotspacemacs-install-packages 'used)
   (dotspacemacs//call-local-if-bound "layers"))
 
