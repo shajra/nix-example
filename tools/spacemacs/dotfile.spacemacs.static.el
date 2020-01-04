@@ -45,7 +45,7 @@
      ;; other
      auto-completion
      helm
-     ivy  ; TODO: org-mode acting up with out this (2019-11-04)
+     ;ivy  ; TODO: org-mode acting up without this (2019-11-04)
      multiple-cursors
      treemacs
      (org :variables org-enable-github-support t)
