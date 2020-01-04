@@ -54,7 +54,7 @@ This is useful for defining functions for a custom function for
 ‘extn-haskell/dante-repl-types’."
     (cl-some
      (lambda (file)
-       (let ((found (extn-haskell//file-search-upward root file)))
+       (let ((found (locate-dominating-file root file)))
          (when found (funcall f found))))
      files))
 
@@ -145,21 +145,6 @@ which can be overridden with `dante-target'."
                      extn-haskell/dante-exclude-regexes))
          (funcall hook)))
      `((g . ,g) (hook . ,hook))))
-
-  (defun extn-haskell//file-search-upward (directory file)
-    (let
-        ((parent-dir
-          (file-truename (concat (file-name-directory directory) "../")))
-         (current-path
-          (if (not (string= (substring directory (- (length directory) 1)) "/"))
-              (concat directory "/" file)
-            (concat directory file))))
-      (if (file-exists-p current-path)
-          current-path
-        (when (and
-               (not (string= (file-truename directory) parent-dir))
-               (< (length parent-dir) (length (file-truename directory))))
-          (extn-haskell//file-search-upward parent-dir file))))))
 
 (defun extn-haskell//mode-hooks ()
   '(haskell-mode-local-vars-hook
