@@ -69,13 +69,9 @@ which can be overridden with `dante-target'."
               (file-name-base cabal-file)
             nil))))
 
-  (defun extn-haskell/dante-cabal-alt (d)
-    (and (locate-dominating-file d "cabal.project")
-         (directory-files d t ".cabal$")))
-
   (defun extn-haskell/dante-stack-alt (d)
     (and (locate-dominating-file d "stack.yaml")
-         (directory-files d t ".cabal$")))
+         (directory-files d t "\\.cabal$")))
 
   ;;; private
 
@@ -88,20 +84,11 @@ which can be overridden with `dante-target'."
     (let*
         ((alist-old dante-methods-alist)
          (alist-new (append
-                     `(,(extn-haskell//dante-repl-new-alt)
-                       ,(extn-haskell//dante-repl-stack-alt)
-                       ,(extn-haskell//dante-repl-nix-alt)
-                       ,(extn-haskell//dante-repl-bare-cabal-alt))
+                     `(,(extn-haskell//dante-repl-stack-alt)
+                       ,(extn-haskell//dante-repl-new-alt)
+                       ,(extn-haskell//dante-repl-nix-alt))
                      alist-old)))
       (seq-map (lambda (elem) (or (assoc elem alist-new) elem)) list)))
-
-  (defun extn-haskell//dante-repl-new-alt ()
-    `(new-alt
-      extn-haskell/dante-cabal-alt
-      ("cabal" "new-repl"
-       dante-target
-       "--builddir=dist-newstyle/dante"
-       "--ghc-options=-ignore-dot-ghci")))
 
   (defun extn-haskell//dante-repl-stack-alt ()
     `(stack-alt
@@ -109,6 +96,14 @@ which can be overridden with `dante-target'."
       ("stack" "repl"
        (extn-haskell/dante-target-guess)
        "--ghci-options=-ignore-dot-ghci")))
+
+  (defun extn-haskell//dante-repl-new-alt ()
+    `(new-alt
+      ,(lambda (d) (directory-files d t "\\.cabal$"))
+      ("cabal" "new-repl"
+       dante-target
+       "--builddir=dist-newstyle/dante"
+       "--ghc-options=-ignore-dot-ghci")))
 
   (defun extn-haskell//dante-repl-nix-alt ()
     `(nix-alt
@@ -119,14 +114,6 @@ which can be overridden with `dante-target'."
          (or dante-target "")
          " --builddir=dist-newstyle/dante"
          " --ghc-options=-ignore-dot-ghci"))))
-
-  (defun extn-haskell//dante-repl-bare-cabal-alt ()
-    `(bare-cabal-alt
-      ,(lambda (d) (directory-files d t ".cabal$"))
-      ("cabal" "new-repl"
-       dante-target
-       "--builddir=dist-newstyle/dante"
-       "--ghc-options=-ignore-dot-ghci")))
 
   (defun extn-haskell//hook-if-not-regex (hook)
     (extn-haskell//hook-regex-guarded '-none? hook))

@@ -100,7 +100,7 @@
             (extn-haskell :variables
              ;; layer settings in pairs; for example...
              extn-haskell/dante-flycheck-hlint-enable t
-             extn-haskell/dante-repl-types '(new-alt stack-alt bare-cabal-alt)
+             extn-haskell/dante-repl-types '(stack-alt new-alt)
              extn-haskell/dante-xref-enable nil))))
    #+END_SRC
 
