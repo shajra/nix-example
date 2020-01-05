@@ -33,6 +33,7 @@
 #+LINK: hello https://www.gnu.org/software/hello/
 #+LINK: hydra https://nixos.org/hydra/
 #+LINK: intero https://commercialhaskell.github.io/intero/
+#+LINK: niv https://github.com/nmattia/niv
 #+LINK: nix-buffer https://github.com/shlevy/nix-buffer
 #+LINK: nix https://nixos.org/nix
 #+LINK: nix-install https://nixos.org/nix/manual/#chap-installation
@@ -55,9 +56,9 @@
 #+LINK: pip-editable https://pip.pypa.io/en/stable/reference/pip_install/#editable-installs
 #+LINK: projectile http://projectile.readthedocs.io
 #+LINK: python https://www.python.org/
+#+LINK: spacemacs-haskell-bindings https://github.com/syl20bnr/spacemacs/tree/master/layers/+lang/haskell#key-bindings
 #+LINK: spacemacs http://spacemacs.org
 #+LINK: spacemacs-install https://github.com/syl20bnr/spacemacs/blob/master/doc/BEGINNERS_TUTORIAL.org#install
-#+LINK: spacemacs-haskell-bindings https://github.com/syl20bnr/spacemacs/tree/master/layers/+lang/haskell#key-bindings
 #+LINK: spacemacs-python-bindings https://github.com/syl20bnr/spacemacs/tree/master/layers/+lang/python#key-bindings
 #+LINK: spacemacs-python https://github.com/syl20bnr/spacemacs/tree/master/layers/+lang/python
 #+LINK: stack http://haskellstack.org

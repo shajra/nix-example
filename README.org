@@ -71,7 +71,7 @@
       intrinsically) the primary way to install Nix on another operating system
       is by running Nix's install script:
 
-      #+BEGIN_SRC shell
+      #+BEGIN_SRC shell :eval no
         curl https://nixos.org/nix/install | sh
       #+END_SRC
 
