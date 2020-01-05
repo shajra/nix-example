@@ -1,10 +1,12 @@
 let
 
+    sourceMetadata = builtins.fromJSON
+        (builtins.readFile ../support/nix/sources.json);
+
     base = {
 
-        # git describe: 18.09-beta-4191-g8070a6333f3
-        nixpkgsRev = "895874d2145862249df3f78335f4dcf62ef01626";
-        nixpkgsSha256 = "1mgagsaiky1in89vqg93brypm8n5g6ynrwi0imzlkjy5vpnq0995";
+        nixpkgsRev = sourceMetadata.nixpkgs.rev;
+        nixpkgsSha256 = sourceMetadata.nixpkgs.sha256;
 
         nixpkgsArgs.config = {
             allowUnfree = true;
