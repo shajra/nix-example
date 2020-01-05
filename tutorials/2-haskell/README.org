@@ -73,7 +73,8 @@
 
   - [[./application][=example-haskell-app=]] ::
        an executable that prints a message to the console, depending on
-       =example-haskell-lib= as well as a third-party library called Protolude.
+       =example-haskell-lib= as well as a third-party library called Protolude
+       (the usage isn't compelling, just wanted to illustrate a dependency).
 
   Here's an example run of it:
 

@@ -71,8 +71,7 @@ use_nix_gcrooted()
         local tmp="$(mktemp "${cache}.tmp-XXXXXXXX")"
         trap "rm -rf '$tmp'" EXIT
         nix-shell "$shell_file" \
-                --run "env -u shellHook -u TERM direnv dump" \
-            > "$tmp" \
+                --run "env -u shellHook -u TERM direnv dump > \"$tmp\"" \
             && mv "$tmp" "$cache" \
             || exit $?
     fi

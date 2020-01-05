@@ -8,7 +8,7 @@ defaults:
 , srcFilter ? defaults.srcFilter
 , extraSrcFilter ? defaults.extraSrcFilter
 , srcTransform ? defaults.srcTransform
-, envMoreTools ? defaults.envMoreTools nixpkgs
+, envTools ? defaults.envTools { inherit nixpkgs pyVersion; }
 , envPersists ? defaults.envPersists
 }:
 
@@ -88,13 +88,20 @@ let
         nixpkgs.stdenv.mkDerivation {
             name = "env-python";
             meta.license = lib.nix.licenses.bsd3;
-            nativeBuildInputs = envMoreTools;
+            buildInputs = [
+                pythonPackages.setuptoolsBuildHook
+                pythonPackages.pipInstallHook
+            ];
+            nativeBuildInputs = envTools;
             propagatedBuildInputs = envArg "propagatedBuildInputs";
             nativePropagatedBuildInputs =
                 envArg "nativePropagatedBuildInputs";
             passthru.withEnvTools = f: env.overrideAttrs (old: {
+                nativeBuildInputs = f { inherit nixpkgs pyVersion; };
+            });
+            passthru.withMoreEnvTools = f: env.overrideAttrs (old: {
                 nativeBuildInputs =
-                    old.nativeBuildInputs ++ f nixpkgs;
+                    old.nativeBuildInputs ++ f { inherit nixpkgs pyVersion; };
             });
             shellHook = import ./shellHook.nix {
                 inherit setupPys;

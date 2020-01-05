@@ -64,7 +64,7 @@
      (extn-haskell
       :variables
       extn-haskell/dante-flycheck-hlint-enable t
-      extn-haskell/dante-repl-types '(stack-alt new-alt)
+      extn-haskell/dante-repl-types '(alt-cabal-project alt-stack alt-cabal-bare alt-nix)
       extn-haskell/dante-xref-enable nil  ; use TAGS file instead
       )
      extn-python

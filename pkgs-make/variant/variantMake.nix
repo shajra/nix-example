@@ -70,10 +70,10 @@ let
             {
                 lib = lib.nix;
                 haskell = super.haskell // { lib = lib.haskell; };
-                haskellPackages = hs.haskellPackages;
-                pythonPackages = py.pythonPackages;
                 pkgsMake = {
                     inherit lib;
+                    haskellPackages = hs.haskellPackages;
+                    pythonPackages = py.pythonPackages;
                     pkgsChange = hs.pkgsChange;
                     call = {
                         package = callPackage;

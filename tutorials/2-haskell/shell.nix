@@ -1,1 +1,1 @@
-(import ./build.nix).env.haskell.withEnvTools (pkgs: [ pkgs.hello ])
+(import ./build.nix).env.haskell.withMoreEnvTools (args: [ args.nixpkgs.hello ])

@@ -70,6 +70,7 @@
    | ~Path<v>~     | a path that when imported yields a value of type ~v~  |
    | ~[e]~         | a list with elements of type ~e~                      |
    | ~Set<v>~      | an attribute set with values of type ~v~              |
+   | ~{ a=v; … }   | an attribute set with type ~v~ for attribute "a"      |
    | ~Function~    | a function with arbitrary input and output types      |
    | ~i -> o~      | a function inputting type ~i~, returning type ~o~     |
    | a + b         | a value either of type ~a~ or of type ~b~             |
@@ -199,7 +200,7 @@
    | ~srcFilter~                 | ~SrcFilter~        | source filter replacing defaults   |
    | ~extraSrcFilter~            | ~SrcFilter~        | source filter extending defaults   |
    | ~srcTransform~              | ~SrcTransform~     | source-to-source transformation    |
-   | ~envMoreTools~              | ~Nixpkgs -> [Drv]~ | extra env tools replacing defaults |
+   | ~envTools~                  | ~Nixpkgs -> [Drv]~ | extra env tools replacing defaults |
 
    =Override= is has the following type:
 
@@ -340,13 +341,20 @@
    Similarly, ~env.python~ does the same for Python packages. This allows us to
    get multi-package project support from Nix.
 
-   Also, both ~env.haskell~ and ~env.python~ derivations have an added
-   attribute ~withEnvTools~ of type ~Nixpkgs -> [Drv]~ for including additional
-   development tools beyond what's pulled in by dependencies.
-
-   Note that the Haskell and Python environments already include some common
+   The Haskell and Python environments already include some common
    development tools by default. You can see [[./config.nix][=config.nix=]] to see what's
    included.
+
+   Also, both ~env.haskell~ and ~env.python~ derivations have additional
+   attributes ~withEnvTools~ and ~withMoreEnvTools~ for managing development
+   tools in the environment beyond what's pulled in by dependencies and
+   included by default. ~withEnvTools~ replaces the tools included in an
+   environment. ~withMoreEnvTools~ adds to tools already included.
+
+   For Haskell ~withEnvTools~ and ~withMoreEnvTools~ both take as input a
+   function of type ~{nixpkgs=Nixpkgs; ghcVersion=String;} -> [Drv]~. And for
+   Python, these take a function of type ~{nixpkgs=Nixpkgs; pyVersion=String;}
+   -> [Drv]~.
 
 ** Haskell-specific configuration
 
@@ -359,7 +367,7 @@
 
    | ~HaskellArgs~ Attribute | Type                             | Description                                   |
    |-------------------------+----------------------------------+-----------------------------------------------|
-   | ~ghcVersion~            | ~String~                         | which compiler to use (of the form “ghc822”)  |
+   | ~ghcVersion~            | ~String~                         | which compiler to use (of the form “ghc865”)  |
    | ~pkgChanges~            | ~PkgsMakeLib -> Set<Drv -> Drv>~ | changes for packages by name                  |
    | ~changePkgs~            | ~Set<[String]>~                  | names of packages to apply changes to by name |
 

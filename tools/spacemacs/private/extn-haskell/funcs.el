@@ -69,7 +69,22 @@ which can be overridden with `dante-target'."
               (file-name-base cabal-file)
             nil))))
 
-  (defun extn-haskell/dante-stack-alt (d)
+  (defun extn-haskell/dante-cabal-nix-alt (d)
+    "Non-nil iff D has a shell.nix file, and either a Cabal or cabal.project in
+the same directory."
+    (and (directory-files d t "^shell\\.nix$")
+         (or (directory-files d t "^cabal\\.project$")
+             (directory-files d t "\\.cabal$"))))
+
+  (defun extn-haskell/dante-cabal-project (d)
+    "Non-nil iff D has a Cabal file, with a cabal.project file also in D or an
+ancestor of D."
+    (and (locate-dominating-file d "cabal.project")
+         (directory-files d t "\\.cabal$")))
+
+  (defun extn-haskell/dante-cabal-stack (d)
+    "Non-nil iff D has a Cabal file, with a stack.yaml file also in D or an
+ancestor of D."
     (and (locate-dominating-file d "stack.yaml")
          (directory-files d t "\\.cabal$")))
 
@@ -84,30 +99,39 @@ which can be overridden with `dante-target'."
     (let*
         ((alist-old dante-methods-alist)
          (alist-new (append
-                     `(,(extn-haskell//dante-repl-stack-alt)
-                       ,(extn-haskell//dante-repl-new-alt)
-                       ,(extn-haskell//dante-repl-nix-alt))
+                     `(,(extn-haskell//dante-repl-alt-stack)
+                       ,(extn-haskell//dante-repl-alt-cabal-project)
+                       ,(extn-haskell//dante-repl-alt-cabal-bare)
+                       ,(extn-haskell//dante-repl-alt-nix))
                      alist-old)))
       (seq-map (lambda (elem) (or (assoc elem alist-new) elem)) list)))
 
-  (defun extn-haskell//dante-repl-stack-alt ()
-    `(stack-alt
-      extn-haskell/dante-stack-alt
+  (defun extn-haskell//dante-repl-alt-stack ()
+    `(alt-stack
+      extn-haskell/dante-cabal-stack
       ("stack" "repl"
        (extn-haskell/dante-target-guess)
        "--ghci-options=-ignore-dot-ghci")))
 
-  (defun extn-haskell//dante-repl-new-alt ()
-    `(new-alt
-      ,(lambda (d) (directory-files d t "\\.cabal$"))
+  (defun extn-haskell//dante-repl-alt-cabal-project ()
+    `(alt-cabal-project
+      extn-haskell/dante-cabal-project
       ("cabal" "new-repl"
        dante-target
        "--builddir=dist-newstyle/dante"
        "--ghc-options=-ignore-dot-ghci")))
 
-  (defun extn-haskell//dante-repl-nix-alt ()
-    `(nix-alt
-      "shell.nix"
+  (defun extn-haskell//dante-repl-alt-cabal-bare ()
+    `(alt-cabal-project
+      (directory-files d t "\\.cabal$")
+      ("cabal" "new-repl"
+       dante-target
+       "--builddir=dist-newstyle/dante"
+       "--ghc-options=-ignore-dot-ghci")))
+
+  (defun extn-haskell//dante-repl-alt-nix ()
+    `(alt-nix
+      extn-haskell/dante-cabal-nix-alt
       ("nix-shell" "--pure" "--run"
        (concat
          "cabal new-repl "
@@ -131,7 +155,7 @@ which can be overridden with `dante-target'."
                      (lambda (regex) (string-match-p regex buffer-file-name))
                      extn-haskell/dante-exclude-regexes))
          (funcall hook)))
-     `((g . ,g) (hook . ,hook))))
+     `((g . ,g) (hook . ,hook)))))
 
 (defun extn-haskell//mode-hooks ()
   '(haskell-mode-local-vars-hook

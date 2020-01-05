@@ -10,7 +10,7 @@ defaults:
 , srcFilter ? defaults.srcFilter
 , extraSrcFilter ? defaults.extraSrcFilter
 , srcTransform ? defaults.srcTransform
-, envMoreTools ? defaults.envMoreTools nixpkgs
+, envTools ? defaults.envTools { inherit nixpkgs ghcVersion; }
 }:
 
 let
@@ -122,11 +122,14 @@ let
     env =
         (haskellPackages.shellFor {
             packages = p: envPkgs;
-            nativeBuildInputs = envMoreTools;
+            nativeBuildInputs = envTools;
         }).overrideAttrs (old1: {
             passthru.withEnvTools = f: env.overrideAttrs (old2: {
+                nativeBuildInputs = f { inherit nixpkgs ghcVersion; };
+            });
+            passthru.withMoreEnvTools = f: env.overrideAttrs (old2: {
                 nativeBuildInputs =
-                    old2.nativeBuildInputs ++ f nixpkgs;
+                    old2.nativeBuildInputs ++ f { inherit nixpkgs ghcVersion; };
             });
         });
 
