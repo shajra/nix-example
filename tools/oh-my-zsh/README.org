@@ -1,5 +1,5 @@
 #+TITLE: Direnv Oh-My-ZSH Integration
-#+SETUPFILE: ../../internal/setup.org
+#+SETUPFILE: ../../support/setup.org
 
 * About Direnv Oh-My-ZSH Integration
 

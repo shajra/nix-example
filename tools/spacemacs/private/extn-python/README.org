@@ -1,5 +1,5 @@
 #+TITLE: Extn-Python Spacemacs Layer
-#+SETUPFILE: ../../../../internal/setup.org
+#+SETUPFILE: ../../../../support/setup.org
 
 * About Extn-Python Spacemacs Layer
 

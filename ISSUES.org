@@ -1,5 +1,5 @@
 #+TITLE: Known Issues
-#+SETUPFILE: ./internal/setup.org
+#+SETUPFILE: ./support/setup.org
 
 *TODO*: These items will probably be moved to GitHub Issues.
 
