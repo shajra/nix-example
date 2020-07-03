@@ -68,18 +68,19 @@ use_nix_gcrooted()
 
     if ! [ -f "$cache" ]
     then
-        local tmp="$(mktemp "${cache}.tmp-XXXXXXXX")"
-        trap "rm -rf '$tmp'" EXIT
-        nix-shell "$shell_file" \
-                --run "env -u shellHook -u TERM direnv dump > \"$tmp\"" \
-            && mv "$tmp" "$cache" \
-            || exit $?
+        nix-shell --pure "$shell_file" --show-trace \
+                --run "$(join_args "$direnv" dump bash)" > "$cache"
     fi
 
+    local old_path="$PATH"
     local old_term="$TERM"
-    direnv_load cat "$cache"
+    eval $(cat "$cache")
+    export PATH="$PATH:$old_path"
     export TERM="$old_term"
+    unset old_path
     unset old_term
+    unset shellHook
+
     while read -r f
     do
         log_status "watching $f"
