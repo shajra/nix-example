@@ -4,7 +4,10 @@ eval "$(direnv hook zsh)"
 _direnv_hook()
 {
     if [ "$_direnv_hook_enabled" = "true" ]
-    then eval "$(_direnv_export_filtered)"
+    then
+        trap -- '' SIGINT
+        eval "$(_direnv_export_filtered)"
+        trap - SIGINT
     fi
 }
 
@@ -13,7 +16,7 @@ _direnv_export_filtered()
     if [ -z "$_direnv_hook_debug" ]
     then
          { direnv export zsh 3>&1 1>&2 2>&3 \
-             | grep --color=never '^direnv: load\|error'
+             | grep --color=never '^direnv: load'
          } 3>&1 1>&2 2>&3
     else direnv export zsh
     fi
@@ -42,6 +45,7 @@ direnv-freeze()
         fi
         pushd "$1" >/dev/null || return 1
         eval "$(direnv export zsh)"
+        _direnv_hook_enabled=false
         popd >/dev/null
     fi
     echo "direnv: disabling shell hook"
@@ -64,7 +68,7 @@ nix-shell()
 {
     local old_state="$_direnv_hook_enabled"
     direnv-disable
-    "$_direnv_nix_shell" "$@" || return $?
+    "$_direnv_nix_shell" "$@"
     _direnv_hook_enabled="$old_state"
 }
 if [ -z "$_direnv_nix_shell" ]
