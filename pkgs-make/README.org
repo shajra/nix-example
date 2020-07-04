@@ -1,5 +1,5 @@
 #+TITLE: Pkgs-make Library for Nix
-#+SETUPFILE: ../support/setup.org
+#+SETUPFILE: ../support/links.org
 
 * About Pkgs-make
 

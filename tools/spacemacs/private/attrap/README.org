@@ -1,5 +1,5 @@
 #+TITLE: Attrap Spacemacs Layer
-#+SETUPFILE: ../../../../support/setup.org
+#+SETUPFILE: ../../../../support/links.org
 
 * About Attrap Spacemacs Layer
 

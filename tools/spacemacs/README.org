@@ -1,5 +1,5 @@
 #+TITLE: A Nix-sensitive Spacemacs Configuration
-#+SETUPFILE: ../../support/setup.org
+#+SETUPFILE: ../../support/links.org
 
 * About Nix-configuration for Spacemacs
 

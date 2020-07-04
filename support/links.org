@@ -67,3 +67,5 @@
 #+LINK: wiegley https://www.youtube.com/watch?v=G9yiJ7d5LeI
 #+LINK: zsh https://www.zsh.org/
 #+LINK: zsh-install https://github.com/robbyrussell/oh-my-zsh/wiki/Installing-ZSH
+
+This file just has shared links for all the Org-mode files in the project

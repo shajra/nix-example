@@ -1,5 +1,5 @@
 #+TITLE: Tutorial Run Scripts
-#+SETUPFILE: ../support/setup.org
+#+SETUPFILE: ../support/links.org
 
 Three tutorials provide accompanying code that can be run as discussed in their
 respective README files:

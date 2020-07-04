@@ -1,5 +1,5 @@
 #+TITLE: Direnv Spacemacs Layer
-#+SETUPFILE: ../../../../support/setup.org
+#+SETUPFILE: ../../../../support/links.org
 
 * About Direnv Spacemacs Layer
 

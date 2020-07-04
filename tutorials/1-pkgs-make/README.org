@@ -1,5 +1,5 @@
 #+TITLE: Pkgs-make Walk-through
-#+SETUPFILE: ../../support/setup.org
+#+SETUPFILE: ../../support/links.org
 
 * Org-mode Setup                                                   :noexport:
 
