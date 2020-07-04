@@ -120,18 +120,27 @@ let
             (builtins.attrValues pkgs);
 
     env =
-        (haskellPackages.shellFor {
+        let
+            args = { inherit nixpkgs ghcVersion; };
+            extendEnv = env1: f:
+                let env2 = env1.overrideAttrs (attrs1: {
+                        nativeBuildInputs = f attrs1.nativeBuildInputs;
+                        passthru = attrs1.passthru // {
+                            withMoreEnvTools = g: extendEnv env2
+                                (inputs: inputs ++ g args);
+                        };
+                    });
+                in env2;
+        in haskellPackages.shellFor {
             packages = p: envPkgs;
             nativeBuildInputs = envTools;
-        }).overrideAttrs (old1: {
-            passthru.withEnvTools = f: env.overrideAttrs (old2: {
-                nativeBuildInputs = f { inherit nixpkgs ghcVersion; };
-            });
-            passthru.withMoreEnvTools = f: env.overrideAttrs (old2: {
-                nativeBuildInputs =
-                    old2.nativeBuildInputs ++ f { inherit nixpkgs ghcVersion; };
-            });
-        });
+            passthru.withEnvTools = f: extendEnv env
+                (_inputs: f args);
+            passthru.withAltEnvTools = extendEnv env
+                (_inputs: defaults.altEnvTools args);
+            passthru.withMoreEnvTools = f: extendEnv env
+                (inputs: inputs ++ f args);
+        };
 
 in
 

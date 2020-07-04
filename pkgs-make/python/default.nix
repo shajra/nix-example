@@ -85,7 +85,18 @@ let
             (lib.nix.unique (lib.nix.concatMap findSetupPy envPkgs));
 
     env =
-        nixpkgs.stdenv.mkDerivation {
+        let
+            args = { inherit nixpkgs pyVersion; };
+            extendEnv = env1: f:
+                let env2 = env1.overrideAttrs (attrs1: {
+                        nativeBuildInputs = f attrs1.nativeBuildInputs;
+                        passthru = attrs1.passthru // {
+                            withMoreEnvTools = g: extendEnv env2
+                                (inputs: inputs ++ g args);
+                        };
+                    });
+                in env2;
+        in nixpkgs.stdenv.mkDerivation {
             name = "env-python";
             meta.license = lib.nix.licenses.bsd3;
             buildInputs = [
@@ -96,13 +107,10 @@ let
             propagatedBuildInputs = envArg "propagatedBuildInputs";
             nativePropagatedBuildInputs =
                 envArg "nativePropagatedBuildInputs";
-            passthru.withEnvTools = f: env.overrideAttrs (old: {
-                nativeBuildInputs = f { inherit nixpkgs pyVersion; };
-            });
-            passthru.withMoreEnvTools = f: env.overrideAttrs (old: {
-                nativeBuildInputs =
-                    old.nativeBuildInputs ++ f { inherit nixpkgs pyVersion; };
-            });
+            passthru.withEnvTools = f: extendEnv env
+                (_inputs: f args);
+            passthru.withMoreEnvTools = f: extendEnv env
+                (inputs: inputs ++ f args);
             shellHook = import ./shellHook.nix {
                 inherit setupPys;
                 bootstrappedPip = pythonPackages.bootstrapped-pip;

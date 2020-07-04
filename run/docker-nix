@@ -4,7 +4,8 @@
 . "$(dirname "$0")/common.sh"
 
 
-BUILD_IMAGE="nixorg/nix:1"
+#BUILD_IMAGE="nixorg/nix:1"
+BUILD_IMAGE="nixpkgs/nix:nixos-20.03"
 VOLUME_ROOT="example-nix-home"
 VOLUME_NIX="example-nix-cache"
 
@@ -33,7 +34,7 @@ run_in_docker()
         --rm \
         --interactive \
         --tty \
-        --env PATH=/nix/var/nix/profiles/default/bin:/mnt/run \
+        --env PATH=/bin:/usr/bin:/mnt/run \
         --volume "$(abspath "$REPO_ROOT"):/mnt" \
         --volume "$VOLUME_ROOT:/root" \
         --volume "$VOLUME_NIX:/nix" \
@@ -55,7 +56,7 @@ create_volume()
     source="$2"
     do_with_header docker volume create "$volume"
     do_with_header docker run --rm -v "$volume:/mnt" "$BUILD_IMAGE" \
-        /nix/var/nix/profiles/default/bin/cp -a -T "$source" /mnt
+        cp -a -T "$source" /mnt
 )
 
 

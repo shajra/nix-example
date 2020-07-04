@@ -3,6 +3,9 @@ let
     sourceMetadata = builtins.fromJSON
         (builtins.readFile ../support/nix/sources.json);
 
+    shajra-pkgs =
+        import (import ../support/nix/sources.nix).shajra-nix-packages {};
+
     base = {
 
         nixpkgsRev = sourceMetadata.nixpkgs.rev;
@@ -27,7 +30,7 @@ let
     };
 
     haskell = {
-        ghcVersion = "ghc865";
+        ghcVersion = "ghc883";
         overrides = pkgs: self: super: {};
         extraOverrides = pkgs: self: super: {};
         srcFilter = lib: lib.nix.sources.ignoreDevHaskell;
@@ -35,10 +38,20 @@ let
         srcTransform = lib: s: s;
         pkgChanges = lib: {};
         changePkgs = {};
+        altEnvTools = {nixpkgs, ghcVersion}: [
+            (nixpkgs.callPackage (import haskell/tools/nix-tags-haskell) {})
+            (nixpkgs.callPackage (import haskell/tools/cabal-new-watch) {})
+            (shajra-pkgs.cabal2nix)
+            (shajra-pkgs.cabal-install)
+            (shajra-pkgs.ghcid)
+            (shajra-pkgs.hlint)
+            (shajra-pkgs.hoogle)
+            (shajra-pkgs.refactor)
+            (shajra-pkgs.stylish-haskell)
+        ];
         envTools = {nixpkgs, ghcVersion}: [
             (nixpkgs.callPackage (import haskell/tools/nix-tags-haskell) {})
             (nixpkgs.callPackage (import haskell/tools/cabal-new-watch) {})
-            nixpkgs.haskellPackages.apply-refact
             nixpkgs.haskellPackages.cabal2nix
             nixpkgs.haskellPackages.cabal-install
             nixpkgs.haskellPackages.ghcid
@@ -49,7 +62,7 @@ let
     };
 
     python = {
-        pyVersion = "37";
+        pyVersion = "38";
         overrides = pkgs: self: super: {};
         extraOverrides = pkgs: self: super: {};
         srcFilter = lib: lib.nix.sources.ignoreDevPython;
