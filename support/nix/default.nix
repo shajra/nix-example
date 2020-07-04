@@ -3,5 +3,5 @@ let
     nix-project-all = import sources.nix-project;
     nixpkgs = import sources.nixpkgs { config = {}; overlays = []; };
 in
-    { inherit nixpkgs; }
+    { inherit nixpkgs sources; }
     // nix-project-all

@@ -4,7 +4,7 @@ let
         (builtins.readFile ../support/nix/sources.json);
 
     shajra-pkgs =
-        import (import ../support/nix/sources.nix).shajra-nix-packages {};
+        import (import ../support/nix).sources.shajra-nix-packages {};
 
     base = {
 
