@@ -1,20 +1,15 @@
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE TypeApplications  #-}
-
-
 module Main where
 
 
-import           Prelude     (String)
-import           Protolude
+import qualified Data.Text    as T
+import qualified Data.Text.IO as T.IO
+import           Text.Printf  (printf)
 
-import           Text.Printf (printf)
-
-import           Lib         (ultimateAnswer)
+import           Lib          (ultimateAnswer)
 
 
 main :: IO ()
-main = putStrLn @String . printf template $ ultimateAnswer
+main = T.IO.putStrLn . T.pack $ printf template ultimateAnswer
     where
     template =
         "Answer to the Ultimate Question of Life,\n\

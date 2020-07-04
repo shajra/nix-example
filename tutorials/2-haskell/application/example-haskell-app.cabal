@@ -8,5 +8,5 @@ executable example-haskell
     hs-source-dirs: src
     main-is: Main.hs
     ghc-options: -threaded -rtsopts -with-rtsopts=-N
-    build-depends: base, protolude, example-haskell-lib
+    build-depends: base, text, example-haskell-lib
     default-language: Haskell2010
