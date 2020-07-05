@@ -1,5 +1,5 @@
 let
-    sources = import ./sources.nix;
+    sources = import ./sources-unified.nix;
     nix-project-all = import sources.nix-project;
     nixpkgs = import sources.nixpkgs { config = {}; overlays = []; };
 in

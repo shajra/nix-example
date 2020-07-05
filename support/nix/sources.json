@@ -5,10 +5,10 @@
         "homepage": "",
         "owner": "shajra",
         "repo": "nix-project",
-        "rev": "b651074151f5fe1066d60a8e002d719279029b40",
-        "sha256": "0knxqw379pfy2wq2ayfw66sj0q9c0rzg4sgzs8qalqzqw4chi3q2",
+        "rev": "a137b9da9bb4e1db038c8e6ad1f69548a4c23a46",
+        "sha256": "1hbhji55grrkwy2vq66bcd4vhsvh6p0ygw9vg49hqff7vra91pii",
         "type": "tarball",
-        "url": "https://github.com/shajra/nix-project/archive/b651074151f5fe1066d60a8e002d719279029b40.tar.gz",
+        "url": "https://github.com/shajra/nix-project/archive/a137b9da9bb4e1db038c8e6ad1f69548a4c23a46.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nixpkgs": {
@@ -17,10 +17,22 @@
         "homepage": "https://github.com/NixOS/nixpkgs",
         "owner": "NixOS",
         "repo": "nixpkgs-channels",
-        "rev": "9a3e34ae60130c63b93809eecf555b0d796f001c",
-        "sha256": "0azkaa2q4pp62icfs56s1hsmzpyzqafaw24v365n7qv9xffbk044",
+        "rev": "d6260a33e43a500528b2be834d3ee4ad45441a6a",
+        "sha256": "18ailgn3d8smjdg66di3mg1q1l86s2s5ch856ifzy5kc3a224ssf",
         "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs-channels/archive/9a3e34ae60130c63b93809eecf555b0d796f001c.tar.gz",
+        "url": "https://github.com/NixOS/nixpkgs-channels/archive/d6260a33e43a500528b2be834d3ee4ad45441a6a.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
+    "nixpkgs-darwin": {
+        "branch": "nixpkgs-20.03-darwin",
+        "description": "A read-only mirror of NixOS/nixpkgs tracking the released channels. Send issues and PRs to",
+        "homepage": "https://github.com/NixOS/nixpkgs",
+        "owner": "NixOS",
+        "repo": "nixpkgs-channels",
+        "rev": "afa9ca61924f05aacfe495a7ad0fd84709d236cc",
+        "sha256": "14346241lnfd93mfhxmimn87y3fyyi6a1s5ab2jw79qzk1xhi4dr",
+        "type": "tarball",
+        "url": "https://github.com/NixOS/nixpkgs-channels/archive/afa9ca61924f05aacfe495a7ad0fd84709d236cc.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "shajra-nix-packages": {
