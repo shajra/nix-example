@@ -1,8 +1,8 @@
 let
 
-    projectRoot = ../..;
+    projectRoot = pkgs.lib.cleanSource ../..;
 
-    sources = import "${projectRoot}/support/nix/sources.nix";
+    sources = import ../../support/nix/sources.nix;
 
     pkgs = import sources.nixpkgs {
         config = {};
