@@ -1,0 +1,14 @@
+#!/bin/sh -eu
+
+cd "$(dirname "$0")"
+
+exec nix run \
+    --show-trace \
+    --ignore-environment \
+    --file nix \
+    run.unified \
+    --command \
+    example-nix-run \
+    --nix \
+    "$(command -v nix)" \
+    "$@"

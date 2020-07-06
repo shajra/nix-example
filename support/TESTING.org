@@ -1,0 +1,29 @@
+#+TITLE: Testing This Project
+#+SETUPFILE: ./links.org
+
+There's some testing of this project that is automated, but currently not
+everything.  This document captures the state of both.
+
+* Automated Testing
+
+The [[./test-run][./test-run]] script builds everything in the tutorials, and
+makes sure the scripts in [[../run][../run]] work.
+
+Additionally, document generation (running [[./docs-generate][./docs-generate]]
+exercises all the code in Org-mode files.  But it's harder to assert correctness
+with generated documentation.  You have to look at the changes from previous
+documentation and make sure the changes are expected.  Most of the time, the
+only expected changes are hashes in =/nix/store=.
+
+* Manual Testing
+
+Here's important things that might break, and should be tested before releasing
+to the "master" branch:
+
+- Does =direnv-enable=, =direnv-disable=, and the rest still work in a terminal?
+- For the Haskell tutorial
+    - Does Dante fire up and respect `dante-target` dir-locals setting?
+    - Does tags generation work (currently recommending `codex` over
+      `nix-tags-haskell)?
+    - does `refactor` work with different GHCs?
+    - does `cabal-new-watch` work?

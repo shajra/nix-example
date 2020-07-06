@@ -1,10 +1,11 @@
 let
 
+    sources = (import ../support/nix).sources;
+
     sourceMetadata = builtins.fromJSON
         (builtins.readFile ../support/nix/sources.json);
 
-    shajra-pkgs =
-        import (import ../support/nix).sources.shajra-nix-packages {};
+    shajra-pkgs = import sources.shajra-nix-packages {};
 
     base = {
 
@@ -16,7 +17,7 @@ let
             cudaSupport = true;
         };
 
-        bootPkgsPath = <nixpkgs>;
+        bootPkgsPath = sources.nixpkgs;
         bootPkgs = null;
         basePkgsPath = null;
         overlay = self: super: {};
