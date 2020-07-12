@@ -10,12 +10,13 @@
 
 let
     prog_name = "run_${tutorialName}_nix-run_docker-unused";
-    desc = "Run example in \"tutorialName\" tutorial with \"nix run\"";
+    desc = "Run example in the \"${tutorialName}\" tutorial with \"nix run\"";
 in
 
 nix-project-lib.writeShellChecked prog_name desc
 ''
 set -eu
+set -o pipefail
 
 
 . "${nix-project-lib.lib-sh}/bin/lib.sh"
@@ -34,7 +35,6 @@ DESCRIPTION:
 OPTIONS:
 
     -h --help           print this help message
-    -d --docker         run command inside a Docker container
     -N --nix PATH       filepath of 'nix' executable to use
 
 EOF
@@ -43,9 +43,16 @@ EOF
 main()
 {
     parse_args "$@"
+    local attr="${executable}-app"
+
+    intro '${desc}'
     add_nix_to_path "$NIX_EXE"
-    attr="${executable}-app"
-    do_with_header exec nix run --show-trace \
+
+    log "This script illustrates commands to build and run the executable of" \
+        "the \"${tutorialName}\" tutorial. These commands are run from" \
+        "this project's root directory."
+
+    log_and_run nix run --show-trace \
         --ignore-environment \
         --file "${tutorialNixFile}" \
         "$attr" \

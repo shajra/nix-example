@@ -5,6 +5,8 @@ cd "$(dirname "$0")"
 exec nix run \
     --show-trace \
     --ignore-environment \
+    --keep LANG \
+    --keep TERM \
     --file nix \
     run.unified \
     --command \

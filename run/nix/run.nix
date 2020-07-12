@@ -1,21 +1,25 @@
 { coreutils
-, nix-project-lib
+, docker
+, less
 , nixFile
+, nix-project-lib
 }:
 
 let
-    prog_name = "run";
-    desc = "Run app from an example=nix tutorial";
+    prog_name = "example-nix-run";
+    desc = "Run an example from an example-nix tutorial";
 in
 
-nix-project-lib.writeShellChecked "example-nix-run"
+nix-project-lib.writeShellChecked prog_name
 desc
 ''
 set -eu
+set -o pipefail
 
 
-DOCKER=false
 COMMAND=nix-run
+DOCKER=false
+PAGER=true
 TUTORIAL=pkgs-make
 
 
@@ -37,6 +41,7 @@ OPTIONS:
     -d --docker         run command inside a Docker container
     -t --tutorial NAME  tutorial to run code from
     -N --nix PATH       filepath of 'nix' executable to use
+    -P --no-pager       don't pipe through a pager
 
     Tutorials must be one of the following:
 
@@ -46,7 +51,7 @@ OPTIONS:
 
 COMMANDS:
 
-    nix-run
+    nix-run (default)
         run with 'nix run'
 
     docker-image
@@ -66,6 +71,16 @@ main()
 {
     parse_args "$@"
     validate_args
+    if "$PAGER"
+    then do_work 2>&1 \
+        | ${less}/bin/less \
+        --RAW-CONTROL-CHARS --quit-if-one-screen --LONG-PROMPT
+    else do_work
+    fi
+}
+
+do_work()
+{
     add_nix_to_path "$NIX_EXE"
     local suffix=docker-unused
     if "$DOCKER"
@@ -73,6 +88,8 @@ main()
     fi
     exec nix run --show-trace \
         --ignore-environment \
+        --keep LANG \
+        --keep TERM \
         --file "${nixFile}" \
         "run.$TUTORIAL.$COMMAND.$suffix" \
         --command "run_''${TUTORIAL}_''${COMMAND}_$suffix" \
@@ -91,7 +108,9 @@ parse_args()
             ;;
         -d|--docker)
             DOCKER=true
-            exit 0
+            ;;
+        -P|--no-pager)
+            PAGER=false
             ;;
         -t|--tutorial)
             TUTORIAL="''${2:-}"
@@ -124,14 +143,20 @@ validate_args()
     nix-run|licenses)
         ;;
     docker-image|docker-tarball)
-        if "${builtins.toString nix-project-lib.isDarwin}" && ! "$DOCKER"
+        if "${if nix-project-lib.isDarwin then "true" else "false"}" && ! "$DOCKER"
         then die "'$COMMAND' on MacOS must be run with --docker"
         fi
+        validate_docker "the '$COMMAND' command"
         ;;
     *)
         die "'$COMMAND' is not a valid command"
         ;;
     esac
+
+    if "$DOCKER"
+    then validate_docker "the '--docker' switch"
+    fi
+
     case "$TUTORIAL" in
     pkgs-make|haskell|python)
         ;;
@@ -139,6 +164,13 @@ validate_args()
         die "'$TUTORIAL' is not a valid tutorial option"
         ;;
     esac
+}
+
+validate_docker()
+{
+    if ! ${docker}/bin/docker ps >/dev/null 2>&1
+    then die "Docker required for $1, but not running"
+    fi
 }
 
 

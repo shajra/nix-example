@@ -14,7 +14,6 @@ pkgsMake pkgsMakeArgs ({ call, lib, ... }: rec {
         tag = "latest";
         contents = example-python-app;
         config = {
-            ExposedPorts = { "8080/tcp" = {}; };
             Entrypoint = [ "/bin/example-python" ];
         };
     };
