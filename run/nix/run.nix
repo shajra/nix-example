@@ -1,6 +1,7 @@
 { coreutils
 , docker
 , less
+, most
 , nixFile
 , nix-project-lib
 }:
@@ -72,24 +73,25 @@ main()
     parse_args "$@"
     validate_args
     if "$PAGER"
-    then do_work 2>&1 \
-        | ${less}/bin/less \
-        --RAW-CONTROL-CHARS --quit-if-one-screen --LONG-PROMPT
-    else do_work
+    then nix_run 2>&1 \
+        | ${less}/bin/less +G \
+        --raw-control-chars --quit-if-one-screen --LONG-PROMPT
+    else nix_run
     fi
 }
 
-do_work()
+nix_run()
 {
     add_nix_to_path "$NIX_EXE"
     local suffix=docker-unused
     if "$DOCKER"
     then suffix=docker-used
     fi
-    exec nix run --show-trace \
+    exec nix -L run --show-trace \
         --ignore-environment \
         --keep LANG \
         --keep TERM \
+        --keep SSL_CERT_FILE \
         --file "${nixFile}" \
         "run.$TUTORIAL.$COMMAND.$suffix" \
         --command "run_''${TUTORIAL}_''${COMMAND}_$suffix" \

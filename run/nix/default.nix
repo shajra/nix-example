@@ -3,6 +3,7 @@ let
     projectRoot = pkgs.lib.sourceFilesBySuffices ../.. [
         ".cabal"
         "Dockerfile"
+        "example-nix-run"
         ".hs"
         ".json"
         ".lhs"
@@ -51,9 +52,9 @@ let
         (pkgs.lib.genAttrs builds (genBuild tutorial command));
 
     genBuild = tutorial: command: build:
-        if false # build == "docker-used"
-        then pkgs.callPackage (import "${projectRoot}/run/nix/run-docker.nix") {
-            inherit tutorial command;
+        if build == "docker-used"
+        then pkgs.callPackage (import "${projectRoot}/run/nix/run-docker.nix"){} {
+            inherit command tutorial projectRoot;
         }
         else pkgs.callPackage (import (commands."${command}")) {} {
             tutorialName = tutorial;

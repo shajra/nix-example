@@ -7,6 +7,7 @@ exec nix run \
     --ignore-environment \
     --keep LANG \
     --keep TERM \
+    --keep SSL_CERT_FILE \
     --file nix \
     run.unified \
     --command \

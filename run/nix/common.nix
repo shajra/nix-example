@@ -46,8 +46,15 @@ log_and_run()
 {
     log_command "$@"
     echo ' |'
-    "$@" | ${gnused}/bin/sed -e 's/^/ | /'
+    "$@" | ${gnused}/bin/sed -u -e 's/^/ | /'
     echo ' |'
+    echo
+}
+
+log_and_run_unindented()
+{
+    log_command "$@"
+    "$@"
     echo
 }
 
@@ -59,8 +66,9 @@ log_and_run_silently()
 
 prune_path()
 {
-    local without_store="''${1#/nix/store/*/}"
-    echo "''${without_store#bin/}"
+    local prune_1="''${1#/nix/store/*-example-nix/}"
+    local prune_2="''${prune_1#/nix/store/*-mnt/}"
+    echo "$prune_2"
 }
 
 ''
