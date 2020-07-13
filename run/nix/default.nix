@@ -43,7 +43,7 @@ let
         python = "example-python";
     };
 
-    builds = ["docker-used" "docker-unused"];
+    builds = ["docker-run" "docker-unused"];
 
     genCommands = tutorial: pkgs.recurseIntoAttrs
         (pkgs.lib.genAttrs (builtins.attrNames commands) (genBuilds tutorial));
@@ -52,7 +52,7 @@ let
         (pkgs.lib.genAttrs builds (genBuild tutorial command));
 
     genBuild = tutorial: command: build:
-        if build == "docker-used"
+        if build == "docker-run"
         then pkgs.callPackage (import "${projectRoot}/run/nix/run-docker.nix"){} {
             inherit command tutorial projectRoot;
         }

@@ -10,7 +10,7 @@
 }:
 
 let
-    prog_name = "run_${tutorial}_${command}_docker-used";
+    prog_name = "run_${tutorial}_${command}_docker-run";
     desc = "run \"example-nix-run ${command} -t ${tutorial}\" within Docker";
 in
 

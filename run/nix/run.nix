@@ -42,24 +42,17 @@ OPTIONS:
 
     Tutorials must be one of the following:
 
-       pkgs-make (default)
-       haskell
-       python
+        pkgs-make (default)
+        haskell
+        python
 
 COMMANDS:
 
-    nix-run (default)
-        run with 'nix run'
-
-    docker-image
-        build a Docker image with Nix and run it
-
-    docker-tarball
-        build a Docker image from a tarball built by Nix
-        and run it
-
-    licenses
-        print license report
+    nix-run (default)  run with 'nix run'
+    docker-image       build a Docker image with Nix and run it
+    docker-tarball     build a Docker image from a tarball
+                       built by Nix and run it
+    licenses           print license report
 
 EOF
 }
@@ -76,7 +69,7 @@ nix_run()
     add_nix_to_path "$NIX_EXE"
     local suffix=docker-unused
     if "$DOCKER"
-    then suffix=docker-used
+    then suffix=docker-run
     fi
     exec nix -L run --show-trace \
         --ignore-environment \
