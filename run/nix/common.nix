@@ -68,7 +68,8 @@ prune_path()
 {
     local prune_1="''${1#/nix/store/*-example-nix/}"
     local prune_2="''${prune_1#/nix/store/*-mnt/}"
-    echo "$prune_2"
+    local prune_3="''${prune_2#/nix/store/*/bin/}"
+    echo "$prune_3"
 }
 
 ''

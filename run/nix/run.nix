@@ -1,7 +1,5 @@
 { coreutils
 , docker
-, less
-, most
 , nixFile
 , nix-project-lib
 }:
@@ -20,7 +18,6 @@ set -o pipefail
 
 COMMAND=nix-run
 DOCKER=false
-PAGER=true
 TUTORIAL=pkgs-make
 
 
@@ -42,7 +39,6 @@ OPTIONS:
     -d --docker         run command inside a Docker container
     -t --tutorial NAME  tutorial to run code from
     -N --nix PATH       filepath of 'nix' executable to use
-    -P --no-pager       don't pipe through a pager
 
     Tutorials must be one of the following:
 
@@ -72,12 +68,7 @@ main()
 {
     parse_args "$@"
     validate_args
-    if "$PAGER"
-    then nix_run 2>&1 \
-        | ${less}/bin/less +G \
-        --raw-control-chars --quit-if-one-screen --LONG-PROMPT
-    else nix_run
-    fi
+    nix_run
 }
 
 nix_run()
@@ -110,9 +101,6 @@ parse_args()
             ;;
         -d|--docker)
             DOCKER=true
-            ;;
-        -P|--no-pager)
-            PAGER=false
             ;;
         -t|--tutorial)
             TUTORIAL="''${2:-}"

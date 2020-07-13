@@ -56,7 +56,7 @@ main()
 
     create_volume_if_missing "$VOLUME_ROOT" /root
     create_volume_if_missing "$VOLUME_NIX" /nix
-    run_in_docker example-nix-run ${command} --tutorial ${tutorial} --no-pager
+    run_in_docker example-nix-run ${command} --tutorial ${tutorial}
 }
 
 create_volume_if_missing()

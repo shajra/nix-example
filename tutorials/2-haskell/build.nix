@@ -31,7 +31,6 @@ pkgsMake pkgsMakeArgs ({ call, lib, ... }: rec {
         tag = "latest";
         contents = example-haskell-app;
         config = {
-            ExposedPorts = { "8081/tcp" = {}; };
             Entrypoint = [ "/bin/example-haskell" ];
         };
     };
