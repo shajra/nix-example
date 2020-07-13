@@ -28,6 +28,7 @@ BUILD_IMAGE="nixpkgs/nix:nixos-20.03"
 VOLUME_ROOT="example-nix-home"
 VOLUME_NIX="example-nix-cache"
 REPO_ROOT="${projectRoot}"
+NIX_EXE="$(command -v nix || true)"
 
 
 print_usage()

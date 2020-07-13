@@ -16,12 +16,13 @@ set -eu
 set -o pipefail
 
 
+. "${nix-project-lib.lib-sh}/bin/lib.sh"
+
+
 COMMAND=nix-run
 DOCKER=false
 TUTORIAL=pkgs-make
-
-
-. "${nix-project-lib.lib-sh}/bin/lib.sh"
+NIX_EXE="$(command -v nix || true)"
 
 
 print_usage()

@@ -23,6 +23,9 @@ set -o pipefail
 . "${common-sh}/bin/common.sh"
 
 
+NIX_EXE="$(command -v nix || true)"
+
+
 print_usage()
 {
     ${coreutils}/bin/cat - <<EOF
