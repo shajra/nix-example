@@ -10,7 +10,7 @@
 }:
 
 let
-    prog_name = "run_${tutorialName}_docker-tarball_docker-unused";
+    prog_name = "run_${tutorialName}_docker-tarball_docker-run-unused";
     desc = "Build tarball for \"${tutorialName}\" tutorial and run with Docker";
 in
 

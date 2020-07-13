@@ -10,7 +10,7 @@
 }:
 
 let
-    prog_name = "run_${tutorialName}_docker-image_docker-unused";
+    prog_name = "run_${tutorialName}_docker-image_docker-run-unused";
     desc = "Run Docker image built for the \"${tutorialName}\" tutorial";
 in
 

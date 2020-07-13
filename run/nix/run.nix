@@ -68,9 +68,9 @@ main()
 nix_run()
 {
     add_nix_to_path "$NIX_EXE"
-    local suffix=docker-unused
+    local suffix=docker-run-unused
     if "$DOCKER"
-    then suffix=docker-run
+    then suffix=docker-run-used
     fi
     exec nix -L run --show-trace \
         --ignore-environment \

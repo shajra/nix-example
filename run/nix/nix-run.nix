@@ -9,7 +9,7 @@
 }:
 
 let
-    prog_name = "run_${tutorialName}_nix-run_docker-unused";
+    prog_name = "run_${tutorialName}_nix-run_docker-run-unused";
     desc = "Run example in the \"${tutorialName}\" tutorial with \"nix run\"";
 in
 
