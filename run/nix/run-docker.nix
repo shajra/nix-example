@@ -55,6 +55,16 @@ main()
     intro '${desc}'
     add_nix_to_path "$NIX_EXE"
 
+    log "This script reruns itself in a Docker container, executing the" \
+	"requested \"${command}\" command for the \"${tutorial}\" tutorial." \
+	"The \"$BUILD_IMAGE\" Docker image we'll use has Nix already on it," \
+	"so you don't need Nix installed on your host machine (though you do" \
+        "need Docker installed)."
+
+    log "Nix caches builds in /nix/store, but Docker containers discard" \
+	"changes within images unless you use Docker volumes. We'll first" \
+        "set up two volumes, one for /root, and another for /nix."
+
     create_volume_if_missing "$VOLUME_ROOT" /root
     create_volume_if_missing "$VOLUME_NIX" /nix
     run_in_docker example-nix-run ${command} --tutorial ${tutorial}
@@ -65,12 +75,19 @@ create_volume_if_missing()
     volume="$1"
     source="$2"
     if ! volume_exists "$volume"
-    then create_volume "$volume" "$source"
+    then
+        create_volume "$volume" "$source"
+    else
+	log "It looks like the \"$volume\" volume for $source is already" \
+            "created, so we'll reuse that."
     fi
 )
 
 run_in_docker()
 {
+    log "We can finally use Docker to rerun this script within a container." \
+	"We'll mount a copy of the example-nix project to /mnt and make the" \
+        "same example-nix-run call, but without the --docker flag:"
     log_and_run_unindented ${docker}/bin/docker run \
         --rm \
         --interactive \
@@ -95,8 +112,11 @@ create_volume()
 {
     local volume="$1"
     local source="$2"
+    log "Here's the commands to create a volume called \"$volume\" and" \
+	"prepopulate it with the $source directory of the \"$BUILD_IMAGE\"" \
+        "image:"
     log_and_run ${docker}/bin/docker volume create "$volume"
-    log_and_run ${docker}/bin/docker run \
+    log_and_run_silently ${docker}/bin/docker run \
         --rm -v "$volume:/mnt" "$BUILD_IMAGE" \
         cp -a -T "$source" /mnt
 }

@@ -63,7 +63,7 @@ main()
 
     log "This script illustrates commands to build with Nix a Docker image" \
         "for the example executable of the \"${tutorialName}\" tutorial." \
-	"This image is not built directly with Nix.  Instead we build a" \
+	"This image is not built directly with Nix. Instead we build a" \
         "tarball with Nix and then use Docker to make an image from it." \
         "We then run this image as a Docker container."
 
@@ -79,7 +79,7 @@ main()
     log_and_run nix path-info --file "${tutorialNixFile}" "$attr"
 
     log "The tutorial includes a Dockerfile we can use to build a Docker" \
-        "image from this tarball.  We'll do this in a temporary directory:"
+        "image from this tarball. We'll do this in a temporary directory:"
     log_and_run_silently ${coreutils}/bin/mkdir --parents "$context"
 
     log "We'll copy the Dockerfile and tarball into this temporary directory:"
