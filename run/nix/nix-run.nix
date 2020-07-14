@@ -51,9 +51,16 @@ main()
     intro '${desc}'
     add_nix_to_path "$NIX_EXE"
 
-    log "This script illustrates commands to build and run the executable of" \
-        "the \"${tutorialName}\" tutorial. These commands are run from" \
-        "this project's root directory."
+    log "This script illustrates the command to build and run the" \
+        "\"${executable}\" executable of the \"${tutorialName}\" tutorial." \
+        "This command is run from this project's root directory."
+
+    log "The 'nix run' call builds the \"$attr\" attribute of the set we get" \
+        "from evaluating the expression in the" \
+        "$(prune_path ${tutorialNixFile}) Nix file. This gives us a" \
+        "derivation for a Nix package that provides the \"${executable}\"" \
+        "executable.  The same call then puts this package's executable on
+        the PATH and runs it:
 
     log_and_run nix run --show-trace \
         --ignore-environment \

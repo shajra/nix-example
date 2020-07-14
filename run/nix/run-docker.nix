@@ -11,7 +11,7 @@
 
 let
     prog_name = "run_${tutorial}_${command}_docker-run-used";
-    desc = "run \"example-nix-run ${command} -t ${tutorial}\" within Docker";
+    desc = "Run \"example-nix-run ${command} -t ${tutorial}\" within Docker";
 in
 
 nix-project-lib.writeShellChecked prog_name desc
@@ -55,14 +55,13 @@ main()
     intro '${desc}'
     add_nix_to_path "$NIX_EXE"
 
-    log "This script reruns itself in a Docker container, executing the" \
-	"requested \"${command}\" command for the \"${tutorial}\" tutorial." \
-	"The \"$BUILD_IMAGE\" Docker image we'll use has Nix already on it," \
-	"so you don't need Nix installed on your host machine (though you do" \
-        "need Docker installed)."
+    log "This script reruns itself in a Docker container with the requested" \
+        "\"${command}\" command for the \"${tutorial}\" tutorial. Building" \
+        "within a Docker container guarantees any compilation in the build" \
+        "targets Linux, which might be useful if the host OS is not Linux."
 
     log "Nix caches builds in /nix/store, but Docker containers discard" \
-	"changes within images unless you use Docker volumes. We'll first" \
+      	"changes within images unless you use Docker volumes. We'll first" \
         "set up two volumes, one for /root, and another for /nix."
 
     create_volume_if_missing "$VOLUME_ROOT" /root

@@ -65,8 +65,8 @@ main()
     log "We can get the location of the build with 'nix path-info':"
     log_and_run nix path-info --file "${tutorialNixFile}" "$attr"
 
-    log "Here's the output of that file showing licenses for dependencies" \
-        "in a JSON format:"
+    log "Here's the output of that file showing licenses of dependencies in" \
+        "a JSON format:"
     log_and_run ${jq}/bin/jq --color-output --unbuffered . "$(
         nix path-info --file "${tutorialNixFile}" "$attr"
     )"

@@ -23,8 +23,8 @@ log()
 
 log_command()
 {
-    if [ "$(pruned_length "$*")" -lt 60 ]
-    then echo "    $(prune_path "$*")"
+    if [ "$(pruned_length "$@")" -lt 60 ]
+    then echo "    $(prune_paths "$@")"
     else
         echo "    $(prune_path "$1") \\"; shift
         while [ "$#" -gt 1 ]
@@ -64,6 +64,17 @@ log_and_run_silently()
     "$@" > /dev/null
 }
 
+prune_paths()
+{
+    printf "%s" "$(prune_path "$1")"; shift
+    while [ "$#" -gt 1 ]
+    do printf "%s" " $(prune_path "$1")"; shift
+    done
+    if [ $# -eq 1 ]
+    then echo " $(prune_path "$1")"
+    fi
+}
+
 prune_path()
 {
     local prune_1="''${1#/nix/store/*-example-nix/}"
@@ -71,5 +82,4 @@ prune_path()
     local prune_3="''${prune_2#/nix/store/*/bin/}"
     echo "$prune_3"
 }
-
 ''

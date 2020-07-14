@@ -2,18 +2,22 @@
 
 
 PROJECT_ROOT="$(dirname "$0")/.."
+LOG_DIR="$PROJECT_ROOT/support/log"
 
 
 main()
 {
-   for project in shell haskell python
-   do
-       for run in licenses docker-image docker-tarball native
-       do
-           "$PROJECT_ROOT/run/run-$run" "$project"
-           "$PROJECT_ROOT/run/docker-nix" "run-$run" "$project"
-       done
-   done
+    mkdir -p "$LOG_DIR"
+    for tutorial in pkgs-make # haskell python
+    do
+        for command in nix-run licenses docker-image docker-tarball
+        do
+            "$PROJECT_ROOT/run/example-nix-run" "$command" -t "$tutorial" \
+                | tee "$LOG_DIR/$tutorial.$command.docker-unused.log"
+            "$PROJECT_ROOT/run/example-nix-run" "$command" -t "$tutorial" --docker \
+                | ansifilter | tee "$LOG_DIR/$tutorial.$command.docker-used.log"
+        done
+    done
 }
 
 
