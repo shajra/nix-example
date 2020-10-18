@@ -11,7 +11,7 @@
 
 let
     prog_name = "run_${tutorial}_${command}_docker-run-used";
-    desc = "Run \"example-nix-run ${command} -t ${tutorial}\" within Docker";
+    desc = "Run \"nix-package-run ${command} -t ${tutorial}\" within Docker";
 in
 
 nix-project-lib.writeShellChecked prog_name desc
@@ -25,8 +25,8 @@ set -o pipefail
 
 
 BUILD_IMAGE="nixpkgs/nix:nixos-20.03"
-VOLUME_ROOT="example-nix-home"
-VOLUME_NIX="example-nix-cache"
+VOLUME_ROOT="nix-package-home"
+VOLUME_NIX="nix-package-cache"
 REPO_ROOT="${projectRoot}"
 NIX_EXE="$(command -v nix || true)"
 
@@ -66,7 +66,7 @@ main()
 
     create_volume_if_missing "$VOLUME_ROOT" /root
     create_volume_if_missing "$VOLUME_NIX" /nix
-    run_in_docker example-nix-run ${command} --tutorial ${tutorial}
+    run_in_docker nix-package-run ${command} --tutorial ${tutorial}
 }
 
 create_volume_if_missing()
@@ -85,8 +85,8 @@ create_volume_if_missing()
 run_in_docker()
 {
     log "We can finally use Docker to rerun this script within a container." \
-	"We'll mount a copy of the example-nix project to /mnt and make the" \
-        "same example-nix-run call, but without the --docker flag:"
+	"We'll mount a copy of the nix-package project to /mnt and make the" \
+        "same nix-package-run call, but without the --docker flag:"
     log_and_run_unindented ${docker}/bin/docker run \
         --rm \
         --interactive \

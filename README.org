@@ -38,7 +38,7 @@
   the first tutorial is a good place to start.
 
   If you don't have a preferred Markdown or Org-mode viewer, start with
-  Github's Markdown rendering at https://github.com/shajra/example-nix.
+  Github's Markdown rendering at https://github.com/shajra/nix-package.
 
   Hopefully the code is clean and self-documenting for those that prefer to get
   lost jumping around.

@@ -328,7 +328,7 @@ nix eval '(some/path)'
 ```
 
     "path"
-    /home/shajra/src/shajra/example-nix/tutorials/0-nix-intro/some/path
+    /home/shajra/src/shajra/nix-package/tutorials/0-nix-intro/some/path
 
 As part of a standard Nix installation, there's a special environment variable `NIX_PATH` that makes paths dynamically available to Nix expressions:
 
@@ -651,7 +651,7 @@ nix-collect-garbage 2>&1
 ```
 
     finding garbage collector roots...
-    removing stale link from '/nix/var/nix/gcroots/auto/3zvhwd2faawz9xbnnr2p4b20q1z86z81' to '/home/shajra/src/shajra/example-nix/tutorials/0-nix-intro/result'
+    removing stale link from '/nix/var/nix/gcroots/auto/3zvhwd2faawz9xbnnr2p4b20q1z86z81' to '/home/shajra/src/shajra/nix-package/tutorials/0-nix-intro/result'
     deleting garbage...
     deleting '/nix/store/trash'
     deleting unused links...

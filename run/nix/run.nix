@@ -5,8 +5,8 @@
 }:
 
 let
-    prog_name = "example-nix-run";
-    desc = "Run an example from an example-nix tutorial";
+    prog_name = "nix-package-run";
+    desc = "Run an example from an nix-package tutorial";
 in
 
 nix-project-lib.writeShellChecked prog_name

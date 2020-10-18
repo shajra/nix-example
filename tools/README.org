@@ -36,8 +36,8 @@
      to this directory:
 
      #+BEGIN_SRC shell :eval no
-     git clone https://github.com/shajra/example-nix
-     cd example-nix/tools
+     git clone https://github.com/shajra/nix-package
+     cd nix-package/tools
      #+END_SRC
 
   2. [[emacs][Install Emacs.]]

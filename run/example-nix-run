@@ -11,7 +11,7 @@ exec nix run \
     --file nix \
     run.unified \
     --command \
-    example-nix-run \
+    nix-package-run \
     --nix \
     "$(command -v nix)" \
     "$@"

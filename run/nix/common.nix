@@ -5,7 +5,7 @@
 }:
 
 nix-project-lib.writeShellChecked "common.sh"
-"Common functions for example-nix scripts"
+"Common functions for nix-package scripts"
 ''
 intro()
 {
@@ -77,7 +77,7 @@ prune_paths()
 
 prune_path()
 {
-    local prune_1="''${1#/nix/store/*-example-nix/}"
+    local prune_1="''${1#/nix/store/*-nix-package/}"
     local prune_2="''${prune_1#/nix/store/*-mnt/}"
     local prune_3="''${prune_2#/nix/store/*/bin/}"
     echo "$prune_3"

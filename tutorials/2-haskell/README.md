@@ -298,13 +298,13 @@ nix-shell --run '
     Configuring library for example-haskell-lib-0.1.0.0..
     Preprocessing library for example-haskell-lib-0.1.0.0..
     Building library for example-haskell-lib-0.1.0.0..
-    [1 of 2] Compiling FortyOne         ( src/FortyOne.lhs, /home/shajra/src/shajra/example-nix/tutorials/2-haskell/dist-newstyle/build/x86_64-linux/ghc-8.2.2/example-haskell-lib-0.1.0.0/build/FortyOne.o )
-    [2 of 2] Compiling Lib              ( src/Lib.hs, /home/shajra/src/shajra/example-nix/tutorials/2-haskell/dist-newstyle/build/x86_64-linux/ghc-8.2.2/example-haskell-lib-0.1.0.0/build/Lib.o )
+    [1 of 2] Compiling FortyOne         ( src/FortyOne.lhs, /home/shajra/src/shajra/nix-package/tutorials/2-haskell/dist-newstyle/build/x86_64-linux/ghc-8.2.2/example-haskell-lib-0.1.0.0/build/FortyOne.o )
+    [2 of 2] Compiling Lib              ( src/Lib.hs, /home/shajra/src/shajra/nix-package/tutorials/2-haskell/dist-newstyle/build/x86_64-linux/ghc-8.2.2/example-haskell-lib-0.1.0.0/build/Lib.o )
     Configuring executable 'example-haskell' for example-haskell-app-0.1.0.0..
     Preprocessing executable 'example-haskell' for example-haskell-app-0.1.0.0..
     Building executable 'example-haskell' for example-haskell-app-0.1.0.0..
-    [1 of 1] Compiling Main             ( src/Main.hs, /home/shajra/src/shajra/example-nix/tutorials/2-haskell/dist-newstyle/build/x86_64-linux/ghc-8.2.2/example-haskell-app-0.1.0.0/x/example-haskell/build/example-haskell/example-haskell-tmp/Main.o )
-    Linking /home/shajra/src/shajra/example-nix/tutorials/2-haskell/dist-newstyle/build/x86_64-linux/ghc-8.2.2/example-haskell-app-0.1.0.0/x/example-haskell/build/example-haskell/example-haskell ...
+    [1 of 1] Compiling Main             ( src/Main.hs, /home/shajra/src/shajra/nix-package/tutorials/2-haskell/dist-newstyle/build/x86_64-linux/ghc-8.2.2/example-haskell-app-0.1.0.0/x/example-haskell/build/example-haskell/example-haskell-tmp/Main.o )
+    Linking /home/shajra/src/shajra/nix-package/tutorials/2-haskell/dist-newstyle/build/x86_64-linux/ghc-8.2.2/example-haskell-app-0.1.0.0/x/example-haskell/build/example-haskell/example-haskell ...
 
 The last line shows where your Cabal-built binary can be found under `dist-new-style`. This is where most of Cabal's artifacts are placed. Deleting this directory cleans the build.
 
@@ -439,7 +439,7 @@ stack build 2>&1
     example-haskell-app-0.1.0.0: build (exe)
     example-haskell-app-0.1.0.0: copy/register
     Completed 2 action(s).
-    Log files have been written to: /home/shajra/src/shajra/example-nix/tutorials/2-haskell/.stack-work/logs/
+    Log files have been written to: /home/shajra/src/shajra/nix-package/tutorials/2-haskell/.stack-work/logs/
 
 With Stack's `--file-watch` switch, Stack will rebuild the project when files change, similarly to Ghcid.
 

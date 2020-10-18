@@ -3,7 +3,7 @@ let
     projectRoot = pkgs.lib.sourceFilesBySuffices ../.. [
         ".cabal"
         "Dockerfile"
-        "example-nix-run"
+        "nix-package-run"
         ".hs"
         ".json"
         ".lhs"

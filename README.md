@@ -32,7 +32,7 @@ We've tried hard to keep the code clean and self-documenting. Here's a survey of
 
 The links are presented in loose recommended reading order, starting with tutorials on usage, and ending with the implementation of Pkgs-make. If you don't know what Nix is or the motivation to use it over the alternatives, the first tutorial is a good place to start.
 
-If you don't have a preferred Markdown or Org-mode viewer, we recommend just using Github's Markdown rendering at <https://github.com/shajra/example-nix>.
+If you don't have a preferred Markdown or Org-mode viewer, we recommend just using Github's Markdown rendering at <https://github.com/shajra/nix-package>.
 
 # Prerequisites<a id="sec-3"></a>
 

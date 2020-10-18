@@ -94,7 +94,7 @@ let
     pkgsMakePath =
 	(import <nixpkgs> {}).fetchFromGitHub {
 	    owner = "shajra";
-	    repo = "example-nix";
+	    repo = "nix-package";
 	    rev = GIT_COMMIT_AS_STRING;
 	    sha256 = HASH_AS_STRING;
 	};
@@ -122,11 +122,11 @@ Any time we use the angle bracket syntax, we need to be extremely careful. We wa
 
 Fortunately, we can deal with this problem by only using the floating version of Nixpkgs to obtain a pinned version of our Pkgs-make library from GitHub.
 
-When using `fetchFromGitHub` as shown example usage above, you'll just have to substitute in values for the `rev` and `sha256` attributes. The `rev` attribute is the long-form Git commit ID as a string to pin the version of this `example-nix` repository. The `sha256` attribute is a parity check as a string (in case GitHub is hacked or has a bug). You can get this hash with the following command:
+When using `fetchFromGitHub` as shown example usage above, you'll just have to substitute in values for the `rev` and `sha256` attributes. The `rev` attribute is the long-form Git commit ID as a string to pin the version of this `nix-package` repository. The `sha256` attribute is a parity check as a string (in case GitHub is hacked or has a bug). You can get this hash with the following command:
 
 ```shell
 nix-prefetch-url --unpack \
-    "https://github.com/shajra/example-nix/archive/$REV.tar.gz"
+    "https://github.com/shajra/nix-package/archive/$REV.tar.gz"
 ```
 
 Alternatively, if you use Git for your projects, you could include this repository as a [Git submodule](https://git-scm.com/book/en/v2/Git-Tools-Submodules). Then Pkgs-make would be in a directory relative to your project, and your usage would look closer to what's used in this tutorial's [build.nix](./build.nix) file.

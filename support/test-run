@@ -12,9 +12,9 @@ main()
     do
         for command in nix-run licenses docker-image docker-tarball
         do
-            "$PROJECT_ROOT/run/example-nix-run" "$command" -t "$tutorial" \
+            "$PROJECT_ROOT/run/nix-package-run" "$command" -t "$tutorial" \
                 | tee "$LOG_DIR/$tutorial.$command.docker-unused.log"
-            "$PROJECT_ROOT/run/example-nix-run" "$command" -t "$tutorial" --docker \
+            "$PROJECT_ROOT/run/nix-package-run" "$command" -t "$tutorial" --docker \
                 | ansifilter | tee "$LOG_DIR/$tutorial.$command.docker-used.log"
         done
     done

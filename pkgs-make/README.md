@@ -42,10 +42,10 @@ There's a few paths we can import in this repository:
 
 | Path                          | Variant |
 |----------------------------- |------- |
-| `example-nix`                 | plain   |
-| `example-nix/pkg-make`        | plain   |
-| `example-nix/variant/curated` | curated |
-| `example-nix/variant/plain`   | plain   |
+| `nix-package`                 | plain   |
+| `nix-package/pkg-make`        | plain   |
+| `nix-package/variant/curated` | curated |
+| `nix-package/variant/plain`   | plain   |
 
 Sometimes changes haven't gotten into Nixpkgs. As an experiment, the Pkgs-make contributors curate a set of overrides for Nixpkgs. In particular, many of these overrides help keep some machine learning libraries more up-to-date.
 

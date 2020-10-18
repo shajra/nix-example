@@ -33,8 +33,8 @@ We'll assume you don't have any conficting configuration. Please be careful.
 1.  We'll assumed you've [installed Git](https://git-scm.com/downloads), cloned the repository, and changed to this directory:
 
     ```shell
-    git clone https://github.com/shajra/example-nix
-    cd example-nix/tools
+    git clone https://github.com/shajra/nix-package
+    cd nix-package/tools
     ```
 
 2.  [Install Emacs.](https://www.gnu.org/software/emacs)
