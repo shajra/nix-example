@@ -150,7 +150,7 @@
    This way, things like temporary/intermediate files left behind by editors
    and other tools don't invalidate Nix's caching and trigger a new build.
 
-   You can modify this filtering with three attributes: ~srcFilter,
+   You can modify this filtering with three attributes: ~srcFilter~,
    ~extraSrcFilter~, and ~srcTransform~. These attributes have values of types
    ~SrcFilter~ and ~SrcTransform~.
 
@@ -403,7 +403,7 @@
    The returned ~env.python~ derivation, designed for use with =nix-shell= has
    a Nixpkgs “shellHook” that senses local Python projects built by Pkgs-make
    and installs them locally in [[pip-editable][=pip='s “editable” mode]]. This sets up the
-   ~PATH~ and ~PYTHONPATH~ to not only have pinned version of third-party
+   =PATH= and ~PYTHONPATH~ to not only have pinned version of third-party
    Python libraries, but also references to the local unpinned projects under
    development
 
@@ -420,11 +420,9 @@
   |--------------------+----------------------------------------|
   | [[./haskell][haskell/]]           | Haskell-specific Nix expressions       |
   | [[./haskell/overrides][haskell/overrides/]] | curated Haskell package overrides      |
-  | [[./haskell/tools][haskell/tools/]]     | Haskell-specific Nix development tools |
   | [[./lib][lib/]]               | platform-agnostic functions            |
   | [[./python][python/]]            | Python-specific Nix expressions        |
   | [[./python/overrides][python/overrides/]]  | curated Python package overrides       |
   | [[./top/overrides][top/overrides/]]     | curated top-level package overrides    |
   | [[./config.nix][config.nix]]         | configuration defaults                 |
   | [[./default.nix][default.nix]]        | top-level entry point for convenience  |
-  | [[./tools.nix][tools.nix]]          | stand-alone tools                      |

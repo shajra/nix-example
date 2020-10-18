@@ -3,55 +3,78 @@
 
 * Org-mode Setup                                                   :noexport:
 
-  # This snippet is just used by Emacs's org-mode to crop down results
+  This snippet is just used by Emacs's org-mode to crop down results:
+
   #+NAME: crop
-  #+BEGIN_SRC emacs-lisp :var text="" :var first-n=5 :var last-n=5 :results silent :exports none
-  (let* ((ls       (split-string text "\n"))
-         (first-ls (string-join (-take first-n ls) "\n"))
-         (last-ls  (string-join (-take-last (+ 1 last-n) ls) "\n")))
-    (concat first-ls "\n…\n" last-ls))
+  #+BEGIN_SRC emacs-lisp :var text="" :var first-n=5 :var last-n=5 :results silent
+    (let* ((ls         (split-string text "\n"))
+           (first-ls   (-take first-n ls))
+           (rest-first (-drop first-n ls))
+           (rest-last  (-drop-last (+ 1 last-n) rest-first))
+           (last-ls    (-take-last (+ 1 last-n) rest-first)))
+      (string-join
+       (if rest-last
+           (append first-ls '("…") last-ls)
+         (append first-ls last-ls))
+       "\n"))
   #+END_SRC
 
-  # cleans directory for run
-  #+BEGIN_SRC shell :results silent :exports none
-  rm -f result*
-  nix-env -e hello
-  nix-collect-garbage -d
+  Cleans directory for run:
+
+  #+NAME: nix-init
+  #+BEGIN_SRC shell :eval no
+    export NIX_PROFILE=$(pwd)/nix-profile
+    export NIX_PATH=nixpkgs=$(nix eval --file ../../support/nix nixpkgs.path);
+  #+END_SRC
+
+  #+BEGIN_SRC shell :results silent :noweb yes
+    <<nix-init>>
+    nix-env -e hello
+    rm -f result*
+    rmdir -rf /tmp/some.d
+    mkdir --parents "$NIX_PROFILE"
   #+END_SRC
 
 * Introduction to Nix
 
   This tutorial illustrates some basic operation of Nix. We'll introduce some
-  some concepts, terminology, and command-line utilities. That will provide
-  some setup for building our own projects with Pkgs-make in later tutorials.
+  concepts, terminology, and command-line utilities. Later tutorials will
+  illustrate how to build your own projects with Nix and a library provided by
+  this project called Pkgs-make.
 
-* Motivation For Nix
+* Motivation for Nix
 
-  Nix at its heart is a package manager that can build from source arbitrary
-  packages written in a variety of languages, and also manage concurrent
-  per-user installations.
+  Nix at its core is a package manager that can build from source arbitrary
+  packages written in a variety of languages.
 
   Every programming language ecosystem has its particular set of tools for
   building and managing libraries (for instance, Python has PIP/Conda and Ruby
   has Gems). Reaching for a tool like the Nix package manager may at first seem
-  redundant. For us, two central benefits of Nix are
+  redundant. Two central benefits of Nix are
 
-  - ease to integrate artifacts from a variety of languages ecosystems
   - extreme build/deployment reproducibility.
+  - ease to compose artifacts from a variety of languages ecosystems
 
   Many languages use FFI wrapper libraries over native C libraries. Or they
   require oddly-compiled external dependencies for compilation or runtime.
-  Furthermore, some domains like machine learning require the integration of
-  different applications developed in languages like C/C++, R, or Python.
+  Projects often don't make clear how to install and configure these
+  dependencies reliably.
 
-  To maintain reproducibility while integrating such heterogeneous builds, we
-  could use something like [[docker][Docker]]. But most of these solutions involve opaque
-  artifacts that are hard to trust. For instance, when we use a “debian:8.7”
-  image from Docker Hub, it's not clear how to reproduce it if we have to. We
-  just trust the community to have created a reasonable image which is then
-  frozen with a version identifier “8.7” and published on Docker Hub.
-  Furthermore, Docker makes no guarantee that two images created from the same
-  Dockerfile will be equivalent.
+  Furthermore, some domains like machine learning require the integration of
+  different libraries and tools developed in languages like C/C++, R, or
+  Python. To maintain reproducibility while integrating such heterogeneous
+  builds, we could use something like [[docker][Docker]]. With Docker's Dockerfiles, we
+  maintain a script of all the things we need to do to manage dependencies, and
+  use that to build an image for development. But Docker introduces a few
+  problems.
+
+  One problem with Docker is that Docker images are hard to trust. For
+  instance, when we use a “debian:8.7” image from Docker Hub, it's not clear
+  how to reproduce it if we have to. We just trust the community to have
+  created a reasonable image from some Dockerfile, which is then frozen with a
+  version identifier “8.7” and published on Docker Hub. Furthermore, Docker
+  makes no guarantee that two images created from the same Dockerfile will be
+  equivalent.
 
   The Nix package manager provides a better architecture for reproducible
   builds by treating the build process as a mathematical function. In Nix,
@@ -60,12 +83,24 @@
   on different machines (just as we trust ~1 + 1~ to evaluate to ~2~ on any
   machine at any time).
 
-  This allows us to reference and cache results with far more precision and
-  resolution than we can with Docker's Dockerfiles. The Nix ecosystem even goes
-  further by patching compilers to make compiled artifacts bit-for-bit
-  reproducible. And because Nix is based on mathematical functions, there's
-  lots of composition (as in ~f°g~), which you can use to mix your C, R,
-  Haskell, and so forth.
+  To underscore how repeatable and precise Nix builds are, it helps to know
+  that Nix uniquely identifies packages by a hash derived from the hashes of
+  requisite dependencies and configuration. This is a recursive hash
+  calculation that assures that the smallest change to even a distant
+  transitive dependency changes the hash. When dependencies are downloaded,
+  they are checked against the expected hash. Most Nix projects (this one
+  included) are careful to pin dependencies to specific versions/hashes.
+  Because of this, when building the same project with Nix on two different
+  systems, we get an extremely high confidence we will get the same output,
+  often bit-for-bit. This is a profound degree of precision relative to other
+  popular package managers.
+
+  Because builds are so deterministic, we can cache them with far more
+  precision and resolution than we can with Docker's Dockerfiles. And because
+  Nix is based on mathematical functions, there's lots of composition (as in
+  ~f°g~), which you can use to mix your C, R, Haskell, and so forth. The
+  expressiveness of this composition far exceeds what we can do with
+  Dockerfiles.
 
   Central to Nix is a special Git repository hosted on GitHub called [[nixpkgs][Nix
   Packages (Nixpkgs)]], which is a large tree of Nix expressions for all kinds of
@@ -77,11 +112,12 @@
   abandoning a principled architecture.
 
   Nix is not without its problems, as [[gonzalez-critique][Gabriel Gonzalez points out]]. Nix could
-  use more documentation and tools to ease adoption. Also it takes a lot of
-  work to curate all of Nixpkgs, so you may occasionally find yourself writing
-  your own Nix expressions, or contributing back to the Nix ecosystem.
-  Fortunately, Nix expressions for a particular library or package can be
-  compact.
+  use more documentation and tools to ease adoption. Also though Nix has a
+  healthy community of contributors, it still takes a lot of work to curate all
+  of Nixpkgs, so you may occasionally find yourself writing your own Nix
+  expressions, or contributing back to the Nix ecosystem. Fortunately, once
+  you know what you're doing, many Nix expressions are compact and easy to
+  modify or override.
 
   For many of us the benefits of Nix outweigh the inconveniences. Hopefully,
   projects and tutorials like this can help tip the balance further.
@@ -93,21 +129,36 @@
 
   For non-NixOS installations of Nix, if you deleted =/nix=, you would be very
   close to a clean uninstallation. Beyond files in =/nix= an installation may
-  also include:
+  also include
 
-  - a few symlinks in users' home directory
+  - a few dot-files and symlinks in the home directory of both the root and
+    your user account
 
-  - a “nix-daemon” service installed into systemd (Linux) or launchd (Mac).
+  - a few Nix-related configuration files under =/etc/nix= for configuring Nix
 
-  And naturally, and if you run any programs, they might also leave behind
-  application-specific data.
+  - depending on your OS, a script like =/etc/profile.d/nix.sh= or
+    =/etc/bashrc= to have interactive shells set up with environment variables
+    useful for Nix commands.
+
+  - depending on you OS, files under =/etc/system.d/= (Linux's systemd) or
+    =/Library/LaunchDaemons=including (MacOS's launchd) to start up a
+    “nix-daemon” service used by Nix commands.
+
+  If you reran the installation script, it would stop if it detected any of
+  these files from a previous installation, and would instruct you on how to
+  remove them. There's no official uninstallation script, but a huge percentage
+  of the installation really is under =/nix=.
 
   There are two directories under =/nix=:
 
-  - =/nix/store=: where programs are installed
+  - =/nix/store=: where builds are cached and installed
 
   - =/nix/var=: where mutable metadata, symlinks, caching, and indexing is
     managed.
+
+  Because builds in Nix are expected to be precise and reproducible, when a
+  build ends up in =/nix/store=, it is never mutated (though later we'll see
+  that it can be removed when detected as no longer used).
 
   Typically, you'll never manage files under =/nix= directly. Instead you'll
   use the Nix command-line tools. To get packages into =/nix/store= we first
@@ -117,19 +168,19 @@
 * The Nix Language
 
   To better discuss the Nix command-line tools and also Nixpkgs, we'll
-  introduce the Nix language a little. This is no substitute for the [[nix-language][official
-  Nix language documentation]], which is surprisingly not that long for a
-  programming language; Nix does not have much syntax relative to other
-  general-purpose programming languages.
+  introduce the Nix language first. This is no substitute for the [[nix-language][official Nix
+  language documentation]], which is surprisingly not that long for a programming
+  language. Nix does not have much syntax relative to other general-purpose
+  programming languages.
 
-** Numeric literals
+** Primitive literals
 
    We can play around with the Nix language with the =nix eval= command. As
    with many languages, we can use Nix as a simple calculator by passing Nix
    expressions to it:
 
    #+BEGIN_SRC shell :results output :exports both
-    nix eval '(1 + 1)'
+     nix eval '(1 + 1)'
    #+END_SRC
 
    #+RESULTS:
@@ -138,20 +189,27 @@
    Note, the parentheses are necessary with =nix eval= when passing expressions
    directly on the command-line. The single-quotes are to pass the whole
    parenthesized expression as one argument in a shell invocation. If you want
-   less boilerplate, you can also use the =nix repl= command for an interactive
-   session.
+   less boilerplate (just ~1 + 1~, for example), you can use the =nix repl=
+   command for an interactive session.
 
    Nix supports a variety of types you'd expect for a programming language, and
    we get some literal syntax for typical primitives:
 
    #+BEGIN_SRC shell :results output :exports both
-    nix eval '(builtins.typeOf 1)'
-    nix eval '(builtins.typeOf 1.0)'
+     nix eval '(builtins.typeOf 1)'
+     nix eval '(builtins.typeOf 1.0)'
+     nix eval '(builtins.typeOf true)'
    #+END_SRC
 
    #+RESULTS:
    : "int"
    : "float"
+   : "bool"
+
+   Though not covered here in great detail, primitives support the typical
+   operations one would expect. For instance, we have =||=, =&&=, and =!= for
+   boolean values. Numeric values have typical arithmetic operators of =+=,
+   =-=, =/=, and =*=. And all values can be compared with ====.
 
 ** Strings
 
@@ -159,8 +217,7 @@
    the conventional double quote syntax:
 
    #+BEGIN_SRC shell :results output :exports both
-     nix eval '(builtins.typeOf "hello")'
-   #+END_SRC
+   nix eval '(builtins.typeOf "hello")' #+END_SRC
 
    #+RESULTS:
    : "string"
@@ -168,12 +225,7 @@
    Nix also supports multi-line strings with two consecutive single quotes:
 
    #+BEGIN_SRC shell :results output :exports both
-     nix eval "(''
-         line 1
-           line 2
-        line 3
-     '')"
-   #+END_SRC
+   nix eval "('' line 1 line 2 line 3 '')" #+END_SRC
 
    #+RESULTS:
    : " line 1\n   line 2\nline 3\n"
@@ -182,11 +234,10 @@
    above, this is “line 3”. Beyond these strings, Nix does not have
    syntactically significant whitespace.
 
-   We concatenate strings with the ~+~ operator:
+   We concatenate strings with the =+= operator:
 
    #+BEGIN_SRC shell :results output :exports both
-     nix eval '("a" + "b")'
-   #+END_SRC
+   nix eval '("a" + "b")' #+END_SRC
 
    #+RESULTS:
    : "ab"
@@ -202,7 +253,7 @@
    /let-expressions/:
 
    #+BEGIN_SRC shell :results output :exports both
-    nix eval '(let a = 1; b = 2; in a + b)'
+     nix eval '(let a = 1; b = 2; in a + b)'
    #+END_SRC
 
    #+RESULTS:
@@ -219,16 +270,28 @@
    following syntax:
 
    #+BEGIN_SRC shell :results output :exports both
-    nix eval '(
-        let foo = "Foo";
-            bar = "Bar";
-        in "${foo + bar} is a terrible name")'
+     nix eval '(
+         let foo = "Foo";
+             bar = "Bar";
+         in "${foo + bar} is a terrible name")'
    #+END_SRC
 
    #+RESULTS:
    : "FooBar is a terrible name"
 
    String interpolation is supported by both normal and multi-line strings.
+
+   You can only interpolate strings into strings. For instance, interpolating
+   an integer won't work:
+
+   #+BEGIN_SRC shell :results output :exports both
+     nix eval '(
+         let a_number = 42;
+         in "${a_number} is a terrible number")' 2>&1 || true
+   #+END_SRC
+
+   #+RESULTS:
+   : error: cannot coerce an integer to a string, at (string):3:9
 
    Note that unlike shell scripts, the curly braces are not optional for string
    interpolation in Nix. This works out in our favor if we're writing shell
@@ -244,24 +307,29 @@
    function. Furthermore, Nix uses whitespace for function application:
 
    #+BEGIN_SRC shell :results output :exports both
-    nix eval '(builtins.typeOf (a: a + 1))'
-    nix eval '((a: a + 1) 2)'
+     nix eval '(builtins.typeOf (a: a + 1))'
+     nix eval '((a: a + 1) 2)'
    #+END_SRC
 
    #+RESULTS:
    : "lambda"
    : 3
 
-   Since functions take only one argument at a time, they are naturally curried,
-   and we encode functions taking multiple arguments with functions returning
-   functions:
+   Since functions take only one argument at a time, we encode n-ary functions
+   with functions returning functions:
 
    #+BEGIN_SRC shell :results output :exports both
-    nix eval '((a: b: a + b) 1 2)'
+     nix eval '((a: b: a + b) 1 2)'
    #+END_SRC
 
    #+RESULTS:
    : 3
+
+   In this case, when we apply ~1~ to ~a: b: a + b~, we get another function.
+   When we apply ~2~ to this resultant function, we finally get our answer ~3~.
+
+   If you've heard of /currying a function/ in other languages with n-ary
+   functions, you may recognize this technique.
 
 ** Lists
 
@@ -269,20 +337,30 @@
    whitespace-delimited:
 
    #+BEGIN_SRC shell :results output :exports both
-    nix eval '(builtins.typeOf [1 2 3 4 5])'
+     nix eval '(builtins.typeOf [1 2 3 4 5])'
    #+END_SRC
 
    #+RESULTS:
    : "list"
 
-   We can append lists together with the ~++~ operator:
+   We can append lists together with the =++= operator:
 
    #+BEGIN_SRC shell :results output :exports both
-    nix eval '([1 2] ++ [3 4])'
+     nix eval '([1 2] ++ [3 4])'
    #+END_SRC
 
    #+RESULTS:
    : [ 1 2 3 4 ]
+
+   The elements of a list in Nix do not have to be the same type, and lists can
+   be nested:
+
+   #+BEGIN_SRC shell :results output :exports both
+     nix eval '([1 "hello" [true]])'
+   #+END_SRC
+
+   #+RESULTS:
+   : [ 1 "hello" [ true ] ]
 
 ** Attribute sets
 
@@ -299,12 +377,12 @@
    : "set"
    : 2
 
-   Note, ~builtins~ is just an attribute set that is in scope by default. And
-   ~typeOf~ is just an attribute that maps to a function that returns a string
+   Note, =builtins= is just an attribute set that is in scope by default. And
+   =typeOf= is just an attribute that maps to a function that returns a string
    indicating the type of the argument.
 
    Often used in Nix expressions, we can overlay sets on top of each other with
-   the ~//~ operator:
+   the =//= operator:
 
    #+BEGIN_SRC shell :results output :exports both
      nix eval '({ foo = 1; bar = 2; } // { bar = 3; baz = 4; })'
@@ -313,7 +391,7 @@
    #+RESULTS:
    : { bar = 3; baz = 4; foo = 1; }
 
-   Additionally, we can prefix set literals with the ~rec~ keyword to get
+   Additionally, we can prefix set literals with the =rec= keyword to get
    recursive sets. Recursive sets allow values in a set to reference attributes
    by name:
 
@@ -324,7 +402,7 @@
    #+RESULTS:
    : 2
 
-   Without the ~rec~ keyword, we'd get an error:
+   Without the =rec= keyword, we'd get an error:
 
    #+BEGIN_SRC shell :results output :exports both
      nix eval '({ foo = bar; bar = 2; }.foo)' 2>&1 || true
@@ -343,7 +421,7 @@
    #+RESULTS:
    : 3
 
-   This basic pattern syntax is strict, and we can't pass in a attribute set
+   This basic pattern syntax is rigid, and we can't pass in a attribute set
    with attributes that don't match the pattern:
 
    #+BEGIN_SRC shell :results output :exports both
@@ -353,7 +431,8 @@
    #+RESULTS:
    : error: anonymous function at (string):1:3 called with unexpected argument 'bar', at (string):1:2
 
-   If we want to accept sets with other attributes we can use a “...” form:
+   If we want to relax the destructuring to accept sets with other attributes
+   we can use a “...” form:
 
    #+BEGIN_SRC shell :results output :exports both
      nix eval '(({ foo, ...}: foo + 2 ) { foo = 3; bar = 4; })'
@@ -362,7 +441,7 @@
    #+RESULTS:
    : 5
 
-   When destructuring, we can still bind the whole set to a name if we want
+   When destructuring, we can still bind the whole set to a name if we want to
    using a “@” form.
 
    #+BEGIN_SRC shell :results output :exports both
@@ -384,7 +463,7 @@
    : { a = 3; }
 
    Rather than worrying about spelling the same name correctly both sides of
-   the ‘=’ for an attribute setting, we can use the ~inherit~ key word:
+   the ‘=’ for an attribute setting, we can use the =inherit= keyword:
 
    #+BEGIN_SRC shell :results output :exports both
      nix eval '(let a = 3; in { inherit a; })'
@@ -395,59 +474,98 @@
 
 ** Paths
 
-   Because the Nix language is domain-specific for building packages, it also
-   has a /path/ type, which is indicated by an identifier with a slash:
+   Because the Nix language is domain-specific for building packages, paths
+   come up frequently in Nix expressions. Nix conveniently has a /path/ type,
+   which is indicated by identifiers with at least one slash:
 
    #+BEGIN_SRC shell :results output :exports both
-    nix eval '(builtins.typeOf some/path)'
-    nix eval '(some/path)'
+     nix eval '(builtins.typeOf /some/filepath)'
+     nix eval '(/some/filepath)'
    #+END_SRC
 
    #+RESULTS:
    : "path"
-   : /home/shajra/src/shajra/example-nix/tutorials/0-nix-intro/some/path
+   : /some/filepath
 
    As part of a standard Nix installation, there's a special environment
-   variable ~NIX_PATH~ that makes paths dynamically available to Nix
-   expressions:
+   variable =NIX_PATH= that makes paths dynamically available to Nix
+   expressions.
+
+   As with =PATH=, the settings within =NIX_PATH= are colon-delimited, with
+   earlier settings taking precedence over later ones. There are two forms for
+   setting =NIX_PATH=:
+
+   - ~<name>=<filepath>~
+   - ~<filepath>~
+
+   In a Nix expression, we can use an angle bracket syntax to search =NIX_PATH=
+   for an existent file path. Here's an example of using =NIX_PATH= to set the
+   name “temporary” to =/tmp=, which we then access with ~<temporary>~:
 
    #+BEGIN_SRC shell :results output :exports both
-    env | grep NIX_PATH
+     NIX_PATH=temporary=/tmp nix eval '(<temporary>)'
    #+END_SRC
 
    #+RESULTS:
-   : NIX_PATH=nixpkgs=/home/shajra/.nix-defexpr/channels/nixpkgs
+   : /tmp
 
-   The setting of ~NIX_PATH~ shown above maps the user local path
-   =~/.nix-defexpr/channels/nixpkgs= to the identifier ~nixpkgs~, which can be
-   accessed in a Nix expression using an angle bracket syntax:
+   If we create some directories there:
+
+   #+BEGIN_SRC shell :results silent
+     mkdir --parents /tmp/some.d/path
+   #+END_SRC
+
+   Then we can access them using our name as a path prefix in our angle
+   brackets:
 
    #+BEGIN_SRC shell :results output :exports both
-    nix eval '(<nixpkgs>)'
+     NIX_PATH=temporary=/tmp nix eval '(<temporary/some.d/path>)'
    #+END_SRC
 
    #+RESULTS:
-   : /home/shajra/.nix-defexpr/channels/nixpkgs
+   : /tmp/some.d/path
+
+   If we use the second form for =NIX_PATH=, we can specify directories without
+   a name. These directories are then used as candidate prefixes until an
+   existent path if found. For example, we can consider =/tmp= as a path prefix
+   when looking up =some.d/path= to find =/tmp/some.d/path=:
+
+   #+BEGIN_SRC shell :results output :exports both
+     NIX_PATH=/tmp nix eval '(<some.d/path>)'
+   #+END_SRC
+
+   #+RESULTS:
+   : /tmp/some.d/path
 
    Remember that a major motivation for using Nix is for deterministic builds.
-   We have to be extremely careful when using angle brackets to access
-   ~NIX_PATH~ because this can make the same Nix expression evaluate differently
-   on different systems.
+   The angle bracket syntax threatens to break reproducibility from system to
+   system (we can't control what =NIX_PATH= will be set to in arbitrary
+   environments). So if we use angle brackets at all, we have to be careful.
 
-   If you inspect =~/.nix-defexpr/channels/nixpkgs= you'll notice it's a symlink
-   pointing to a snapshot of Nixpkgs in =/nix/store=. This symlink is set up
-   during Nix installation, and can be upgraded with a call to =nix-channel
-   --update=.
+   The Nix installation normally configures =NIX_PATH= for shells (for
+   instance, via =/etc/profile.d/nix.sh= for systems with =/etc/profile.d=).
+   This configuration should allow you to access a snapshot of Nixpkgs with
+   ~<nixpkgs>~. For example, you might see =NIX_PATH= set up for use like this:
+
+   #+BEGIN_SRC shell :eval no
+     env | grep NIX_PATH
+     nix eval '(<nixpkgs>)'
+   #+END_SRC
+
+   #+RESULTS:
+   : NIX_PATH=/nix/var/nix/profiles/per-user/root/channels
+   : /nix/var/nix/profiles/per-user/root/channels/nixpkgs
 
 ** Importing
 
    We can import paths. If the path is a file, it's loaded as a Nix expression.
-   If it's a directory, a file called “default.nix” is loaded within it. A
-   snapshot of Nixpkgs, for example, has a =default.nix= file at its root, so
-   we can import the path directly:
+   If it's a directory, a file called “default.nix” is loaded within it.
+
+   The Nixpkgs source code, for example, has a =default.nix= file at its root,
+   so we can import a path directly to it:
 
    #+BEGIN_SRC shell :results output :exports both
-    nix eval '(builtins.typeOf (import <nixpkgs>))'
+     nix eval '(builtins.typeOf (import <nixpkgs>))'
    #+END_SRC
 
    #+RESULTS:
@@ -457,6 +575,9 @@
    the Nixpkgs function next.
 
 * Nixpkgs and Building
+
+  As mentioned earlier, Nixpkgs is a repository of useful Nix expressions
+  broadly referenced by expressions in the Nix ecosystem.
 
   Nixpkgs is a function that takes an attribute set as configuration and
   returns a nested attribute set containing thousands of packages and
@@ -470,8 +591,8 @@
   #+RESULTS:
   : "set"
 
-  One of the packages in Nixpkgs is the [[hello][GNU Hello]] program, mapped to the
-  attribute ~hello~:
+  One of the packages in Nixpkgs is the [[hello][GNU Hello]] program. The Nix expression
+  that builds it is mapped to the attribute =hello=:
 
   #+BEGIN_SRC shell :results output :exports both
     nix eval '(builtins.typeOf (import <nixpkgs> {}).hello)'
@@ -484,8 +605,10 @@
   there's a special schema for attributes in a set that allow various Nix
   command-line utilities to recognize the set as a /derivation/ for a package.
 
-  For instance, we can use the ~nix show-derivation~ to view some metadata
-  about how Hello will be built:
+  For these derivation sets, we can use the =nix show-derivation= command to
+  view some metadate about how it's respective package will be built.
+  For instance, here we use =nix show-derivation= to inspect Nixpkg's
+  derivation for GNU Hello:
 
   #+BEGIN_SRC shell :results output :exports both :post crop(text=*this*)
     nix show-derivation '((import <nixpkgs> {}).hello)'
@@ -547,7 +670,7 @@
   will be different. This is what gives us confidence that the artifacts built
   by Hydra are more or less the same as what we'd have built locally.
 
-  ~nix build~ leaves behind a “result” symlink in the current directory for our
+  =nix build= leaves behind a “result” symlink in the current directory for our
   convenience so we don't have to figure out how to find our build in
   =/nix/store=:
 
@@ -566,101 +689,174 @@
   :
   : 5 directories, 1 file
 
-  ~nix build~ also supports a ~--no-link~ switch if we want to build without
+  =nix build= also supports a =--no-link= switch if we want to build without
   leaving behind this “result” symlink.
 
 * Calling =nix=
 
-  We've shown thus far that Nix expressions can be passed to the =nix= utility
-  but must be surrounded by parentheses.
+  We've shown thus far that Nix expressions can be passed to some commands of
+  the =nix= utility but must be surrounded by parentheses. Such commands
+  include =nix eval=, =nix show-direction=, and =nix build=. These commands
+  accept /installables/ as positional arguments. Installables are either Nix
+  expressions (in which case they are surrounded by parentheses), or they are
+  attribute paths to select a derivation from an attribute set. By default,
+  this set for selecting from is built from an interpretation of =NIX_PATH=.
+  We'll next discuss the nature of that interpretation.
 
-  When we call =nix= with an argument not parenthesized, the argument is
-  interpreted as an attribute of an attribute set, which is by default built
-  from ~NIX_PATH~.
+  As discussed earlier in the tutorial, =NIX_PATH= can have entries of two
+  forms:
 
-  Consider the following setting of the ~NIX_PATH~ environment variable:
+  - ~<name>=<filepath>~
+  - ~<filepath>~
+
+  Consider the following setting of the =NIX_PATH= with the first form of an
+  explicitly named path:
 
   #+BEGIN_SRC shell :eval no
-    NIX_PATH=nixpkgs=/home/shajra/.nix-defexpr/channels/nixpkgs
+    NIX_PATH=nixpkgs=/path/to/some-nixpkgs-clone
   #+END_SRC
 
-  With this setting of ~NIX_PATH~, the set that =nix= would choose an attribute
-  from would be:
+  With this setting of =NIX_PATH=, the set that =nix= would use to select an
+  installable from would be:
 
   #+BEGIN_SRC nix :eval no
     {
-        nixpkgs = import /home/shajra/.nix-defexpr/channels/nixpkgs {};
+      nixpkgs =
+        let p = import /path/to/some-nixpkgs-clone
+        in
+          if builtins.typeOf p == "lambda"
+          then p {}
+          else p;
     }
   #+END_SRC
 
   Note that =nix= automatically applies the empty set to any function that's
   detected when imported.
 
-  So we instead of building GNU Hello with this invocation:
+  Now consider if =NIX_PATH= were set with the second form of just a path as
+  follows:
 
-  #+BEGIN_SRC shell :results silent
-    nix build '((import <nixpkgs> {}).hello)'
+  #+BEGIN_SRC shell :eval no
+    NIX_PATH=/some/path
   #+END_SRC
 
-  we could just invoke =nix= with:
+  This path would be interpreted as a nonempty set only if both the files
+  =/some/path/manifest.nix= and =/some/path/nixpkgs/default.nix= exist:
+
+  #+BEGIN_EXAMPLE
+    /some/path
+    ├── manifest.nix
+    └── nixpkgs
+        └── default.nix
+  #+END_EXAMPLE
+
+  Then =NIX_PATH= would be interpreted as the following set:
+
+  #+BEGIN_SRC nix :eval no
+    {
+      nixpkgs =
+        let p = import /some/path/nixpkgs/default.nix
+        in
+          if builtins.typeOf p == "lambda"
+          then p {}
+          else p;
+    }
+  #+END_SRC
+
+  If =NIX_PATH= has multiple values (colon-delimited), then each setting is
+  considered in order until one provides an installable to be selected.
+
+  If you feel this algorithm seems somewhat confusing, you're not alone, and
+  it's going to change in a yet-unreleased 2.4 version of Nix. The current way
+  that =NIX_PATH= is used to build a set for selecting installables differs
+  from how =NIX_PATH= is used to look up paths with the angle bracket syntax in
+  a Nix expression. This incongruence can be confusing.
+
+  Complexities aside, now that we know how some =nix= commands select
+  installables from =NIX_PATH=, we can select out a derivation to build with
+  the following concise call:
 
   #+BEGIN_SRC shell :results silent
     nix build nixpkgs.hello
   #+END_SRC
 
-  Additionally, if we don't want the attribute set built implicitly from
-  ~NIX_PATH~, we can use the ~--file~ switch for =nix= to specify explicitly a
-  path to be imported and select attributes from.
+  The installation of Nix by default sets up =NIX_PATH= to enable this concise
+  call (the interpreted set should have at least a "nixpkgs" attribute).
+  This concision is hopefully an appreciated an improvement over selecting
+  installables using the angle bracket syntax in an expression:
+
+  #+BEGIN_SRC shell :results silent
+    nix build '((import <nixpkgs> {}).hello)'
+  #+END_SRC
+
+  For =nix= commands that select installables, If we don't want to select them
+  from =NIX_PATH= at all, we can use the =--file= switch to specify explicitly
+  a path to be imported and select attributes from.
 
 * Finding Packages
 
-  We took for granted above that Nixpkgs had a package on the ~hello~
+  We took for granted above that Nixpkgs had a package on the =hello=
   attribute.
 
-  We can find programs in Nix with a ~nix search~ invocation:
+  We can find programs in Nix with a =nix search= invocation:
 
   #+BEGIN_SRC shell :eval no
-     nix search hello
+    nix search --update-cache hello
   #+END_SRC
 
-  # This is just to remove ANSI coloring
-  #+BEGIN_SRC shell :results output :exports results
-     nix search --update-cache hello | sed "s,\x1B\[[0-9;]*m,,g"
+  #+BEGIN_SRC shell :results output :exports results :noweb strip-export
+    <<nix-init>> nix search --no-cache hello | ansifilter
   #+END_SRC
 
   #+RESULTS:
   #+begin_example
-  Attribute name: nixpkgs.gnome3.iagno
-  Package name: iagno
-  Version: 3.28.0
-  Description: Computer version of the game Reversi, more popularly called Othello
+  ,* nixpkgs.gnome3.iagno (iagno-3.34.5)
+    Computer version of the game Reversi, more popularly called Othello
 
-  Attribute name: nixpkgs.javaPackages.mavenHello_1_0
-  Package name: maven-hello
-  Version: 1.0
-  Description: Maven Hello World
+  ,* nixpkgs.hello (hello)
+    A program that produces a familiar, friendly greeting
 
-  Attribute name: nixpkgs.javaPackages.mavenHello_1_1
-  Package name: maven-hello
-  Version: 1.1
-  Description: Maven Hello World
+  ,* nixpkgs.hello-unfree (example-unfree-package-1.0)
+    An example package with unfree license (for testing)
 
-  Attribute name: nixpkgs.hello
-  Package name: hello
-  Version: 2.10
-  Description: A program that produces a familiar, friendly greeting
+  ,* nixpkgs.javaPackages.mavenHello_1_0 (maven-hello)
+    Maven Hello World
 
-  Attribute name: nixpkgs.hello-unfree
-  Package name: example-unfree-package
-  Version: 1.0
-  Description: An example package with unfree license (for testing)
+  ,* nixpkgs.javaPackages.mavenHello_1_1 (maven-hello)
+    Maven Hello World
+
   #+end_example
+
+  The output of =nix search= is formatted as
+
+  #+BEGIN_EXAMPLE
+    ,* attribute-name (name-of-package)
+      Short description of package
+  #+END_EXAMPLE
+
+  By default, =nix search= searches =NIX_PATH= to find all the attribute paths
+  that can be selected as an installable as described in the previous section.
+  This can take a while, so =nix search= by default uses a cache. This cache
+  starts out empty, so at first =nix search= will return no results. But we can
+  use the =--update-cache= flag to populate the cache, which might take a some
+  time. After that we can stop using the =--update-cache= flag to quickly
+  search cached results. If the cache gets stale, we can update it again.
+
+  =nix search= also supports a =--file= option to search a single Nix
+  expression, rather than everything in =NIX_PATH=. But if you use this option
+  you may be surprised when you get results from what's cache instead of the
+  Nix file specified. So usage of =--file= is recommended to be paired with
+  =--no-cache=, which bypasses the cache. Often times searching a single Nix
+  expression with =--file= is much faster than searching all of =NIX_PATH=.
+  It's recommended to reserve the cache for just caching your =NIX_PATH=
+  searches, rather than using =--file= and =--update-cache= together to cache
+  the search results of a single Nix file.
 
 * Running
 
   If you've never run the GNU Hello program, it's not too interesting. It's
   just a small C program useful for tutorials like this. We can run it using
-  the “result” symlink left behind by an invocation of ~nix build~:
+  the “result” symlink left behind by an invocation of =nix build=:
 
   #+BEGIN_SRC shell :results output :exports both
     result/bin/hello
@@ -669,7 +865,7 @@
   #+RESULTS:
   : Hello, world!
 
-  Or we can also run it directly without the symlink using ~nix run~:
+  Or we can also run it directly without the symlink using =nix run=:
 
   #+BEGIN_SRC shell :results output :exports both
     nix run nixpkgs.hello --command hello
@@ -678,22 +874,101 @@
   #+RESULTS:
   : Hello, world!
 
-  This invocation makes an environment in which we have the ~nixpkgs.hello~
-  package on our path (we can put other packages as well), and then we run the
-  command after the ~--command~ switch. See ~nix run --help~ for more information.
+  This invocation makes an environment in which we have the =bin= directory of
+  the =nixpkgs.hello= package on our path (we can put other packages as well).
+  The call then runs the command after the =--command= switch. See ~nix run
+  --help~ for more information.
 
-* Installing
+* Installing and Uninstalling Programs
+
+  We've seen that we can build programs with =nix build= and then execute
+  programs using the "result" symlink (=result/bin/*=). Additionally, we've
+  seen that you can run programs with =nix run=. But these additional steps
+  and switches/arguments can feel extraneous. It would be nice if we could
+  just have the programs on our =PATH=. This is what =nix-env= is for.
+
+  =nix-env= maintains a symlink tree, called a /profile/, of installed
+  programs. The active profile is pointed to by a symlink at =~/.nix-profile=.
+  By default, this profile points to
+  =/nix/var/nix/profiles/per-user/$USER/profile=. But you can point your
+  =~/.nix-profile= to any writable location with the =--switch-profile=
+  switch:
+
+  #+BEGIN_SRC shell :eval no
+    nix-env --switch-profile /nix/var/nix/profiles/per-user/$USER/another-profile
+  #+END_SRC
+
+  This way, you can just put =~/.nix-profile/bin= on your =PATH=, and any
+  programs installed in your currently active profile will be available for
+  interactive use or scripts.
+
+  We can query what's installed in the active profile with the =--query=
+  switch:
+
+  #+BEGIN_SRC shell :eval no
+    nix-env --query
+  #+END_SRC
+
+  Presuming Nixpkgs is set up on our =NIX_PATH=, we can install the
+  =nixpkgs.hello= installable with the =--install= switch:
+
+  #+BEGIN_SRC shell :results output :exports both :noweb strip-export
+    <<nix-init>> nix-env --install --attr nixpkgs.hello 2>&1
+  #+END_SRC
+
+  #+RESULTS:
+  : installing 'hello-2.10'
+  : building '/nix/store/a8nhy6xm3jybv323nrirzkpbbgmc2shp-user-environment.drv'...
+  : created 2 symlinks in user environment
+
+  We can see this installation by querying what's been installed:
+
+  #+BEGIN_SRC shell :results output :exports both :noweb strip-export
+    <<nix-init>> nix-env --query
+  #+END_SRC
+
+  #+RESULTS:
+  : hello-2.10
+
+  And if we want to uninstall a program from our active profile, we do so by
+  its name, in this case "hello-2.10", or we could use its short name of just
+  "hello".
+
+  #+BEGIN_SRC shell :results output :exports both :noweb yes
+    <<nix-init>> nix-env --uninstall hello 2>&1
+  #+END_SRC
+
+  #+RESULTS:
+  : uninstalling 'hello-2.10'
+
+  Note that we've installed GNU Hello using its installable name
+  =nixpkgs.hello=, but uninstalled it with it's package name
+
+  =nixpkgs.hello=
+  ({{{package-attr}}}) within the referenced Nix expression. But we uninstall
+  it using the package name ({{{package-name}}}), which may or may not be the
+  same as the attribute name. When a package is installed, Nix keeps no
+  reference to the expression that evaluated to the derivation of the
+  installed package. The attribute name is only relevant to this expression.
+  In fact, two different expressions could evaluate to the exact same
+  derivation, but use different attribute names. This is why we uninstall
+  packages by their package name.
+
+  See the [[nix-env][documentation for =nix-env=]] for more details.
+
+
+  # TODO: Probably delete everything below in this section
 
   =~/.nix-profile= is a symlink that follows to a /profile/ under
   =/nix/var/nix/profiles= managed by =nix-env=. The profile furthermore points
   to an aggregated symlink tree of various programs installed into the profile
   by =nix-env=, often called an /environment/ (though a very overloaded term).
   Programs installed by =nix-env= are made available to us by putting
-  =~/.nix-profile/bin= on our ~PATH~.
+  =~/.nix-profile/bin= on our =PATH=.
 
-  For example, with our ~PATH~ set up the following invocation of =nix-env=
+  For example, with our =PATH= set up the following invocation of =nix-env=
   installs the Hello application so we can call it directly, rather than
-  calling it via a “result” symlink or a ~nix run~ invocation:
+  calling it via a “result” symlink or a =nix run= invocation:
 
   #+BEGIN_SRC shell :results output :exports both
     nix-env --install --attr nixpkgs.hello 2>&1
@@ -723,7 +998,7 @@
   Every time we install an application with =nix-env= a new environment symlink
   tree is created in =/nix/store=. For posterity, =nix-env= keeps references to
   old versions under =/nix/var/nix/profiles=. You can use switches like
-  ~--rollback~ with =nix-env= to revert back to previous states. See =nix-env
+  =--rollback= with =nix-env= to revert back to previous states. See =nix-env
   --help= for more.
 
 * Uninstalling
@@ -763,7 +1038,7 @@
   Also, without this clear and reliable method to detect dependencies, garbage
   collection wouldn't know how to keep needed dependencies around.
 
-  If we're curious about all the dependencies, we can use ~nix path-info~ to
+  If we're curious about all the dependencies, we can use =nix path-info= to
   list them out.
 
   #+BEGIN_SRC shell :results output :exports both
@@ -772,11 +1047,13 @@
   #+END_SRC
 
   #+RESULTS:
-  : /nix/store/fg4yq8i8wd08xg3fy58l6q73cjy8hjr2-glibc-2.27	   25010512
-  : /nix/store/58r35bqb4f3lxbnbabq718svq9i2pda3-hello-2.10	   25208040
+  : /nix/store/dp7i2xjbmmgn5r69jh7iiw57z54nnn6h-libunistring-0.9.10     1634416
+  : /nix/store/fwrhy0xaxzm2fp3fh29939n529vi7dxz-libidn2-2.3.0           1857088
+  : /nix/store/aqq6367snc1zh3fs1pc4j4zm5h80vkkz-glibc-2.31             32966032
+  : /nix/store/rg0pr6ddfsigm516lc2i1xwg5ksg12ff-hello-2.10             33172000
 
-  Hello doesn't rely on much, just the standard glibc library. In real-world
-  programs the dependencies can add up.
+  Hello doesn't rely on much. In real-world programs the dependencies can add
+  up.
 
 * Cleaning Up
 
@@ -786,7 +1063,7 @@
   are symlinks under =/nix/var/nix/gcroots=. These come in a few flavors
   including:
 
-  - indirect links to the “result*” links invocations like ~nix build~ may
+  - indirect links to the “result*” links invocations like =nix build= may
     leave on our system
 
   - links to the currently active =nix-env= environment, as well as all previous
@@ -824,7 +1101,7 @@
   : note: currently hard linking saves -17.39 MiB
   : 0 store paths deleted, 0.00 MiB freed
 
-  Now with the ~--delete-generations~ switch of =nix-env= we can delete old
+  Now with the =--delete-generations= switch of =nix-env= we can delete old
   generations of our environment:
 
   #+BEGIN_SRC shell :results output :exports both
@@ -861,7 +1138,7 @@
 * Developing with =nix-shell=
 
   When Nix builds a derivation, it sets up a clean and controlled environment
-  in which to do the build. Thus far, we've not inspected how ~nix build~
+  in which to do the build. Thus far, we've not inspected how =nix build=
   works. Nix comes with a =nix-shell= utility that allows us to get the
   environment variables that would be set up for a build. For instance, to get
   into the environment used to build Hello, we could use =nix-shell= as
@@ -872,8 +1149,8 @@
   #+END_SRC
 
   This drops us into a bash shell we can use interactively. We can also use
-  nix-shell with a ~--run~ switch to run a single command non-interactively
-  Additionally, we can use the ~--pure~ switch to throw away the previous
+  nix-shell with a =--run= switch to run a single command non-interactively
+  Additionally, we can use the =--pure= switch to throw away the previous
   environment variables rather than overlay changes on top of them.
 
   Here's a small example:
@@ -897,7 +1174,7 @@
   _=/nix/store/wm8va53fh5158ipi0ic9gir64hrvqv1z-coreutils-8.29/bin/env
   #+end_example
 
-  We're using ~--expr~ to pass expressions directly to the command line.
+  We're using =--expr= to pass expressions directly to the command line.
   Without this switch, =nix-shell= looks for a =shell.nix= file to import in
   the current working directory. If that's not found, it looks for
   =default.nix=. Otherwise, a file can be passed as a positional parameter.
@@ -917,10 +1194,14 @@
 
 * Org-mode Cleanup                                                 :noexport:
 
-  # cleans directory for run
-  #+BEGIN_SRC shell :results silent :exports none
-  rm -f result*
-  nix-env -e hello
+  Cleans directory for run
+
+  #+BEGIN_SRC shell :results silent :noweb yes
+    <<nix-init>>
+    nix-env -e hello
+    rm -f result*
+    rm -rf /tmp/some.d
+    rm -rf "$NIX_PROFILE"
   #+END_SRC
 
   # Local Variables:

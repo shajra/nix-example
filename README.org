@@ -4,24 +4,23 @@
 * About This Project
 
   This project illustrates using [[nix][the Nix package manager]] for programming
-  heterogeneous, multi-module projects. Notably, it provides [[./pkgs-make/README.org][a Nix library
-  called Pkgs-make]] to save some the boilerplate we might have to write when
-  using Nix for managing a software lifecycle. Pkgs-make currently directly
-  supports [[haskell][Haskell]] and [[python][Python]] development, but has the potential to support
-  other language platforms.
+  multi-module projects that may integrate code written in a variety official
+  programming languages. The project also provides [[./pkgs-make/README.org][a Nix library called
+  Pkgs-make]] to save some the boilerplate we might have to write when using Nix
+  for managing a software lifecycle. Pkgs-make currently directly supports
+  [[haskell][Haskell]] and [[python][Python]] development, but has the potential to support other
+  language platforms.
 
   Use this project to learn and explore what's possible. It's set up for
-  pedagogy, but you should be able to use Pkgs-make in real projects (a group
-  of us does). There are many ways to organize code, and the beauty of Nix is
-  that it's very flexible. So use Pkgs-make if you can, but be aware that
-  there's many ways to achieve the same goal, and your needs will determine
-  what's best.
+  pedagogy, but you should be able to use Pkgs-make in real projects. There are
+  many ways to organize code, and the beauty of Nix is that it's very flexible.
+  So use Pkgs-make if you can, but be aware that there's many ways to achieve
+  the same goal, and your needs will determine what's best.
 
 * Navigating This Repository
 
-  We've tried hard to keep the code clean and self-documenting. Here's a survey
-  of the project's layout with some links, each with their own README files
-  explaining more:
+  Here's a survey of the project's layout with some links, each with their own
+  README files explaining more:
 
   | File/Directory         | Description                                        |
   |------------------------+----------------------------------------------------|
@@ -31,15 +30,18 @@
   | [[./tutorials/2-python][tutorials/2-python/]]    | tutorial of Python example using Pkgs-make         |
   | [[./tools][tools/]]                 | tool configuration for a nice developer experience |
   | [[./run][run/]]                   | scripts to illustrate this project                 |
-  | [[./pkgs-make][pkgs-make/]]             | Pkgs-make, the Nix library driving this project    |
+  | [[./pkgs-make][pkgs-make/]]             | Pkgs-make, a Nix library to reduce boilerplate     |
 
-  The links are presented in loose recommended reading order, starting with
-  tutorials on usage, and ending with the implementation of Pkgs-make. If you
-  don't know what Nix is or the motivation to use it over the alternatives, the
-  first tutorial is a good place to start.
+  The links are presented in a loose recommended reading order, starting with
+  tutorials on usage, and ending with reference documentation for Pkgs-make. If
+  you don't know what Nix is or the motivation to use it over the alternatives,
+  the first tutorial is a good place to start.
 
-  If you don't have a preferred Markdown or Org-mode viewer, we recommend just
-  using Github's Markdown rendering at https://github.com/shajra/example-nix.
+  If you don't have a preferred Markdown or Org-mode viewer, start with
+  Github's Markdown rendering at https://github.com/shajra/example-nix.
+
+  Hopefully the code is clean and self-documenting for those that prefer to get
+  lost jumping around.
 
 * Prerequisites
 
@@ -47,18 +49,19 @@
 
    We've tried to make this project explanatory enough that you don't need to
    read external references first. But covering Nix in its entirety is beyond
-   the scope of this project, so it's really good to have the official
-   documentation available for reference:
+   the scope of this project, so it's really good to have the [[nix-learn][official
+   documentation]] available for reference. From this documentation, two good
+   starting points are
 
-   - [[nix-manual][Nix Manual]]
-   - [[nixpkgs-manual][Nixpkgs Manual]]
+   - [[nix-manual][the Nix Manual]]
+   - [[nixpkgs-manual][the Nixpkgs Manual]].
 
-   There are also [[nix-tutorials][many good tutorials]]. Here are few that some of us have found
-   useful personally:
+   There are also many good tutorials to supplement the tutorials in this
+   project. Here's a few to consider:
 
+   - [[nix-dev][Nix.dev tutorials]]
    - [[haskell-nix][Gabriel Gonzalez's haskell-nix]]
    - [[nix-pills][Luca Bruno's "pill" series]]
-   - [[wiegley][John Wiegley's Haskell/Nix talk]]
 
 ** Technology
 

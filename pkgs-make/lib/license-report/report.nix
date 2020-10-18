@@ -19,16 +19,27 @@ let
         echo "]" >> "$out"
         '';
 
+    shortName = string: lib.pipe string [
+        builtins.unsafeDiscardStringContext
+        (x: builtins.elemAt (builtins.match "\\.*(.*)" x) 0)
+        (builtins.split "[^[:alnum:]+._?=-]+")
+        (lib.strings.concatMapStrings (s: if lib.isList s then "-" else s))
+        (x: lib.strings.substring (lib.max (lib.strings.stringLength x - 207) 0) (-1) x)
+        (x: if lib.strings.stringLength x == 0 then "unknown" else x)
+    ];
+
     dependentDerivations' = acc: worklist:
         let h = builtins.head worklist;
             t = builtins.tail worklist;
+            has = d: builtins.hasAttr (shortName d);
+            set = d: a: a // { "${shortName d}" = d; };
             nextAcc =
-                if lib.isDerivation h && ! (builtins.elem h acc)
-                then [ h ] ++ acc
+                if lib.isDerivation h && ! (has h acc)
+                then set h acc
                 else acc;
             filtered =
                 builtins.filter (x:
-                    lib.isDerivation x && (! builtins.elem x nextAcc));
+                    lib.isDerivation x && ! (has x nextAcc));
             filteredH =
                 lib.filterAttrs (n: v:
                     n == "buildInputs"
@@ -38,10 +49,10 @@ let
             nextWork = filtered (lib.flatten (lib.attrValues filteredH));
         in
         if worklist == []
-        then acc
+        then builtins.attrValues acc
         else dependentDerivations' nextAcc (nextWork ++ t);
 
-    dependentDerivations = dependentDerivations' [] [ drv ];
+    dependentDerivations = dependentDerivations' {} [ drv ];
 
     runtimeDependencies =
         import (stdenv.mkDerivation {

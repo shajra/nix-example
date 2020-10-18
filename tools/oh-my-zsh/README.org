@@ -8,7 +8,7 @@
 
   Direnv provides a nice way to manage environment variables by project
   directory. By just changing into a directory in a terminal, your environment
-  variables can automatically change, including things like ~PATH~ and language
+  variables can automatically change, including things like =PATH= and language
   specific paths like ~PYTHONPATH~ (Direnv is very flexible and can be scripted
   for almost anything).
 

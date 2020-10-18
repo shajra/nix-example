@@ -46,7 +46,6 @@ let
             hs = import ../haskell defaults.haskell (haskellArgs // commonArgs);
             py = import ../python defaults.python (pythonArgs // commonArgs);
             lib = import ../lib super;
-            tools = import ../tools.nix super.callPackage;
             filterSource = lib.nix.sources.filterSource
                 (lib.nix.sources.allFilters [
                     (extraSrcFilter lib)
@@ -84,7 +83,7 @@ let
                     };
                     env = { haskell = hs.env; python = py.env; };
                 };
-            } // tools // pkgs;
+            } // pkgs;
 
     args = {
         lib = nixpkgs.pkgsMake.lib;

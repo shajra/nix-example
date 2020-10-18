@@ -1,8 +1,10 @@
 module Lib where
 
 
-import           FortyOne (fortyOne)
+import qualified FortyOne as F
 
 
 ultimateAnswer :: Int
-ultimateAnswer = 1 + fortyOne
+ultimateAnswer = foo + F.fortyOne
+    where
+    foo = 1

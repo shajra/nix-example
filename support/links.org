@@ -34,13 +34,16 @@
 #+LINK: hydra https://nixos.org/hydra/
 #+LINK: intero https://commercialhaskell.github.io/intero/
 #+LINK: niv https://github.com/nmattia/niv
-#+LINK: nix-buffer https://github.com/shlevy/nix-buffer
 #+LINK: nix https://nixos.org/nix
+#+LINK: nix-buffer https://github.com/shlevy/nix-buffer
+#+LINK: nix-dev https://nix.dev
 #+LINK: nix-install https://nixos.org/nix/manual/#chap-installation
 #+LINK: nix-language https://nixos.org/nix/manual/#ch-expression-language
+#+LINK: nix-learn https://nixos.org/learn.html
 #+LINK: nix-manual https://nixos.org/nix/manual
-#+LINK: nixos https://nixos.org/nixos
+#+LINK: nix-path https://nixos.org/nix/manual/#env-NIX_PATH
 #+LINK: nix-pills http://lethalman.blogspot.com/2014/07/nix-pill-1-why-you-should-give-it-try.html
+#+LINK: nixos https://nixos.org/nixos
 #+LINK: nixpkgs-dockertools https://nixos.org/nixpkgs/manual/#sec-pkgs-dockerTools
 #+LINK: nixpkgs-haskell https://nixos.org/nixpkgs/manual/#users-guide-to-the-haskell-infrastructure
 #+LINK: nixpkgs-haskell-lib https://github.com/NixOS/nixpkgs/blob/master/pkgs/development/haskell-modules/lib.nix
@@ -50,7 +53,6 @@
 #+LINK: nixpkgs-manual https://nixos.org/nixpkgs/manual
 #+LINK: nixpkgs-python https://nixos.org/nixpkgs/manual/#python
 #+LINK: nixpkgs-sources https://github.com/NixOS/nixpkgs/blob/master/lib/sources.nix
-#+LINK: nix-tutorials https://www.google.com/search?q=nix+tutorial
 #+LINK: ohmyzsh https://ohmyz.sh
 #+LINK: ohmyzsh-install https://github.com/robbyrussell/oh-my-zsh#manual-installation
 #+LINK: pip-editable https://pip.pypa.io/en/stable/reference/pip_install/#editable-installs
@@ -64,7 +66,6 @@
 #+LINK: stack http://haskellstack.org
 #+LINK: stack-nix https://docs.haskellstack.org/en/stable/nix_integration/
 #+LINK: stylish-haskell https://github.com/jaspervdj/stylish-haskell
-#+LINK: wiegley https://www.youtube.com/watch?v=G9yiJ7d5LeI
 #+LINK: zsh https://www.zsh.org/
 #+LINK: zsh-install https://github.com/robbyrussell/oh-my-zsh/wiki/Installing-ZSH
 

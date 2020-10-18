@@ -21,9 +21,28 @@ Here's important things that might break, and should be tested before releasing
 to the "master" branch:
 
 - Does =direnv-enable=, =direnv-disable=, and the rest still work in a terminal?
-- For the Haskell tutorial
-    - Does Dante fire up and respect `dante-target` dir-locals setting?
-    - Does tags generation work (currently recommending `codex` over
-      `nix-tags-haskell)?
-    - does `refactor` work with different GHCs?
-    - does `cabal-new-watch` work?
+
+- Test Doom Emacs configuration against Haskell tutorial
+  - [ ] formatter should be easy to set/use
+  - [ ] should work with and without Nix
+  - [ ] should work with both Cabal and Stack
+  - [ ] hopping to /nix/store source shouldn't start LSP or Dante server
+  - [ ] dante: can add custom flags like -Wall (extn-haskell/dante-load-flags-extra)
+  - [ ] dante: can navigate to TAGS references
+  - [ ] dante: can restart service to pick up new direnv
+  - [ ] dante: dir-locals setting of =dante-target=
+  - [ ] dante: ~-- >>>~ evaluation
+  - [ ] dante: hs: haskell-dante flycheck
+  - [ ] dante: hs: hlint flycheck
+  - [ ] dante: lhs: haskell-dante flycheck
+  - [ ] dante: lhs: hlint flycheck
+  - [ ] dante: refactoring with =refactor=
+  - [ ] lsp: can navigate to LSP-provided references (not TAGS.local)
+  - [ ] lsp: can navigate to TAGS references
+  - [ ] lsp: can restart service to pick up new direnv
+  - [ ] lsp: ~-- >>>~ evaluation
+  - [ ] lsp: hs: haskell-dante flycheck
+  - [ ] lsp: hs: hlint flycheck (may have to explicitly switch)
+  - [ ] lsp: lhs: haskell-dante flycheck
+  - [ ] lsp: lhs: hlint flycheck (may have to explicitly switch)
+  - [ ] lsp: refactoring

@@ -381,11 +381,9 @@ If you'd like to follow the implementation, this project is organized as follows
 |----------------------------------------- |-------------------------------------- |
 | [haskell/](./haskell)                     | Haskell-specific Nix expressions       |
 | [haskell/overrides/](./haskell/overrides) | curated Haskell package overrides      |
-| [haskell/tools/](./haskell/tools)         | Haskell-specific Nix development tools |
 | [lib/](./lib)                             | platform-agnostic functions            |
 | [python/](./python)                       | Python-specific Nix expressions        |
 | [python/overrides/](./python/overrides)   | curated Python package overrides       |
 | [top/overrides/](./top/overrides)         | curated top-level package overrides    |
 | [config.nix](./config.nix)                | configuration defaults                 |
 | [default.nix](./default.nix)              | top-level entry point for convenience  |
-| [tools.nix](./tools.nix)                  | stand-alone tools                      |

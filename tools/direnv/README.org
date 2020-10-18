@@ -33,7 +33,7 @@
    standard with Direnv:
 
    1. If we invoke =nix-collect-garbage=, the files under =/nix/store= that
-   various environment settings use (like ~PATH~ or ~PYTHONPATH~) can be
+   various environment settings use (like =PATH= or ~PYTHONPATH~) can be
    deleted.
 
    2. ~use_nix~ calls =nix-shell= every time we ask Direnv what the environment

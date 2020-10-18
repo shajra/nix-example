@@ -6,7 +6,7 @@
   This layer provides [[emacs-direnv][emacs-direnv]]/[[direnv][Direnv]] integration for managing different
   sets of environment variables for different directories.
 
-  This allows, for example, the executables on the ~PATH~ for one Emacs buffer
+  This allows, for example, the executables on the =PATH= for one Emacs buffer
   to be different from another one. One project might use one version of a
   compiler. Another one might use another installed elsewhere.
 
@@ -22,7 +22,7 @@
 
 ** Dependencies
 
-   You need the =direnv= executable on your ~PATH~. There are [[direnv-install][many ways to get
+   You need the =direnv= executable on your =PATH=. There are [[direnv-install][many ways to get
    it]].
 
 ** Enabling the layer

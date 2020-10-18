@@ -1,14 +1,38 @@
 {
+    "nix-haskell-tags": {
+        "branch": "master",
+        "description": "Generate a tags file for Haskell projects with Nix",
+        "homepage": null,
+        "owner": "shajra",
+        "repo": "nix-haskell-tags",
+        "rev": "bb2e5ac8a5eedb15c3d93e96a07349fc196efb1f",
+        "sha256": "1fzq7815waczi49008fcqrqdq28xmzjw0740mlbcb3km9ndiq1ax",
+        "type": "tarball",
+        "url": "https://github.com/shajra/nix-haskell-tags/archive/bb2e5ac8a5eedb15c3d93e96a07349fc196efb1f.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
+    "nix-hls": {
+        "branch": "master",
+        "description": "Nix builds of Haskell Language Server",
+        "homepage": null,
+        "owner": "shajra",
+        "repo": "nix-hls",
+        "rev": "7f8ef16bd4963fadd5af9443014d52810a21110d",
+        "sha256": "07nm57j3gk1zihxx7ja4x77121lyh3ig5ml1ri3930mk9pdw5xh5",
+        "type": "tarball",
+        "url": "https://github.com/shajra/nix-hls/archive/7f8ef16bd4963fadd5af9443014d52810a21110d.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
     "nix-project": {
         "branch": "master",
         "description": "Tools to manage a Nix-based project",
         "homepage": "",
         "owner": "shajra",
         "repo": "nix-project",
-        "rev": "a137b9da9bb4e1db038c8e6ad1f69548a4c23a46",
-        "sha256": "1hbhji55grrkwy2vq66bcd4vhsvh6p0ygw9vg49hqff7vra91pii",
+        "rev": "bea9121f075d0eb97529a2a6fc6e79d4eb73e629",
+        "sha256": "13a9s396q0bhanawr7yx3v9qj8achhwxls5fyrfzmb6wwxi6im9x",
         "type": "tarball",
-        "url": "https://github.com/shajra/nix-project/archive/a137b9da9bb4e1db038c8e6ad1f69548a4c23a46.tar.gz",
+        "url": "https://github.com/shajra/nix-project/archive/bea9121f075d0eb97529a2a6fc6e79d4eb73e629.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nixpkgs": {
@@ -16,11 +40,11 @@
         "description": "A read-only mirror of NixOS/nixpkgs tracking the released channels. Send issues and PRs to",
         "homepage": "https://github.com/NixOS/nixpkgs",
         "owner": "NixOS",
-        "repo": "nixpkgs-channels",
-        "rev": "d6260a33e43a500528b2be834d3ee4ad45441a6a",
-        "sha256": "18ailgn3d8smjdg66di3mg1q1l86s2s5ch856ifzy5kc3a224ssf",
+        "repo": "nixpkgs",
+        "rev": "067d8e6c9f4ad3df62d4c9359865747aedea8853",
+        "sha256": "16lgiy1zn3nms17xhgp28a8vpfjpw9kcpi95hfdax1zj94fkcvaa",
         "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs-channels/archive/d6260a33e43a500528b2be834d3ee4ad45441a6a.tar.gz",
+        "url": "https://github.com/NixOS/nixpkgs/archive/067d8e6c9f4ad3df62d4c9359865747aedea8853.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nixpkgs-darwin": {
@@ -28,11 +52,23 @@
         "description": "A read-only mirror of NixOS/nixpkgs tracking the released channels. Send issues and PRs to",
         "homepage": "https://github.com/NixOS/nixpkgs",
         "owner": "NixOS",
-        "repo": "nixpkgs-channels",
-        "rev": "afa9ca61924f05aacfe495a7ad0fd84709d236cc",
-        "sha256": "14346241lnfd93mfhxmimn87y3fyyi6a1s5ab2jw79qzk1xhi4dr",
+        "repo": "nixpkgs",
+        "rev": "08d429920bcb2dba1d47c93e5ed30d0f92838c89",
+        "sha256": "0rzf3ln6gmn1dxjz2xx4bkzqhjsdpj54vssablvhq9k9d71hz0fz",
         "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs-channels/archive/afa9ca61924f05aacfe495a7ad0fd84709d236cc.tar.gz",
+        "url": "https://github.com/NixOS/nixpkgs/archive/08d429920bcb2dba1d47c93e5ed30d0f92838c89.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
+    "nixpkgs-unstable": {
+        "branch": "nixpkgs-unstable",
+        "description": "A read-only mirror of NixOS/nixpkgs tracking the released channels. Send issues and PRs to",
+        "homepage": "https://github.com/NixOS/nixpkgs",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "502845c3e31ef3de0e424f3fcb09217df2ce6df6",
+        "sha256": "0fcqpsy6y7dgn0y0wgpa56gsg0b0p8avlpjrd79fp4mp9bl18nda",
+        "type": "tarball",
+        "url": "https://github.com/NixOS/nixpkgs/archive/502845c3e31ef3de0e424f3fcb09217df2ce6df6.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "shajra-nix-packages": {
@@ -41,10 +77,10 @@
         "homepage": null,
         "owner": "shajra",
         "repo": "shajra-nix-packages",
-        "rev": "9fe59c90cfa696032fedca64b197ba6bb7bb913d",
-        "sha256": "1fiqbzs2ww18a4hax6svvacll2nk2slgkvm5bmbhz0qynsnxp8yh",
+        "rev": "206c2ff940df7e9273266b81e354b58ccac9ed7e",
+        "sha256": "18fdy6n5sazaa5m9zc5blfyy71yb9z0s8f3sx5gwlhl0rqmgzah3",
         "type": "tarball",
-        "url": "https://github.com/shajra/shajra-nix-packages/archive/9fe59c90cfa696032fedca64b197ba6bb7bb913d.tar.gz",
+        "url": "https://github.com/shajra/shajra-nix-packages/archive/206c2ff940df7e9273266b81e354b58ccac9ed7e.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     }
 }

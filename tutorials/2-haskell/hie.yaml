@@ -1,0 +1,7 @@
+cradle:
+  cabal:
+    - path: "application/src/Main.hs"
+      component: "example-haskell-app:exe:example-haskell"
+
+    - path: "library/src"
+      component: "lib:example-haskell-lib"

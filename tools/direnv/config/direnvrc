@@ -1,0 +1,233 @@
+# shellcheck shell=bash
+
+# DESIGN: Differences with prior art
+#
+# This script is very similar to two other projects [nix-direnv] and [nixify].
+# With some coordination, perhaps this script can unify with one of these other
+# projects.  For now, there's some differences between all three:
+#
+# Replacing the stock use_nix function:
+#
+#    Both nix-direnv and nixify overwrite the stock use_nix functions are full
+#    replacements.  use_nix_gcrooted by design doesn't, just to give people the
+#    option of using the the stock use_nix function if they prefer.
+#
+# Ability to specify extra files to watch:
+#
+#     nix-direnv hardcodes the files it watches (shell.nix, default.nix, .envrc,
+#     etc).  use_nix_gcrooted and nixify allow the specification of extra files
+#     to watch with a "-w" switch.
+#
+# Cache invalidation:
+#
+#     nixify uses a hash calculation of watched files to decide if a cached
+#     environment should be invalidated.  use_nix_gcrooted and nix-direnv use
+#     modification timestamps of the watched files.  nix-direnv also invalidates
+#     the cache every time '<nixpkgs>' is upgraded to a new version.
+#
+# It seems kind of excessive to invalidate caches across all projects, just
+# because <nixpkgs> changes.  Projects that work hard to have no dependence on
+# '<nixpkgs>' should not be penalized.
+#
+# The Nixify style reusing the cache only if the content hashing of a watched
+# file changes has some merits, but it swings the other direction as nix-direnv.
+# Now to trigger a recalculation of the environment, you have to modify a file,
+# possibly with just whitespace, which would be needed for Nix expressions that
+# are impure (for instance, rely on <nixpkgs>).  For impure Nix expressions,
+# it's ergonomically easier to invalidate our cache by just touching a watched
+# file.  So the Nixify style works, but it pushes us to explicitly list out all
+# files with the -w parameter, and also to not have impure Nix expressions.
+#
+# Using a content hash to determine if a file has changed is only slightly
+# better than looking at the modification time stamp.  How many times do we
+# touch a file accidentally without changing it's contents?  And even when
+# looking at a file's contents, we're still not differentiating between comments
+# and true semantic changes.
+#
+# [nix-direnv]: https://github.com/nix-community/nix-direnv/blob/master/direnvrc
+# [nixify]: https://github.com/kalbasit/nur-packages/blob/master/pkgs/nixify/envrc
+
+# IDEA: It seems what we might want is something like a special file in .direnv
+# that can be touched to force a build trigger.  And then use switches on
+# whether to invalidate the cache with modification times or content hashing.
+
+use_nix_gcrooted()
+{
+    local ignore_cache="false"
+    local files_to_watch=(".envrc")
+    local shell_file=""
+
+    local gcroots_dir; gcroots_dir="$(direnv_layout_dir)/gcroots"
+    local env_cache; env_cache="$(direnv_layout_dir)/env.sh"
+    local derivation="$gcroots_dir/shell.drv"
+
+    _nixgc_parse_args ignore_cache files_to_watch shell_file "$@"
+
+    _nixgc_validate_options  "$shell_file"
+    files_to_watch+=("$shell_file")
+
+    _nixgc_watch_direnv_conf files_to_watch
+
+    mkdir -p "$gcroots_dir"
+
+    if _nixgc_rebuild_needed \
+        "$ignore_cache" "$env_cache" "${files_to_watch[@]}"
+    then _nixgc_rebuild \
+        "$shell_file" "$derivation" "$gcroots_dir" "$env_cache"
+    else
+        log_status "using cached environment"
+    fi
+
+    _nixgc_import_env "$env_cache"
+
+    for f in "$shell_file" "${files_to_watch[@]}"
+    do
+        log_status "watching $f"
+        watch_file "$f"
+    done
+}
+
+_nixgc_parse_args()
+{
+    local -n _ignore_cache="$1"
+    local -n to_watch="$2"
+    local -n _shell_file="$3"
+    shift 3
+
+    local default_shell_file=shell.nix
+    if ! [ -f "$default_shell_file" ]
+    then default_shell_file=default.nix
+    fi
+
+    while getopts Cw: opt
+    do
+        case $opt in
+        C)  _ignore_cache=true ;;
+        w)  to_watch+=("$OPTARG") ;;
+        :)  _nixgc_fail "bad argument: $OPTARG requires an argument" ;;
+        \?) _nixgc_fail "illegal switch: $OPTARG" ;;
+        esac
+    done
+    shift "$((OPTIND - 1))"
+    _shell_file="${1:-${default_shell_file}}"
+}
+
+_nixgc_validate_options()
+{
+    local shell_file="$1"
+    if ! [ -f "$shell_file" ]
+    then _nixgc_fail "not found: $shell_file"
+    fi
+}
+
+_nixgc_watch_direnv_conf()
+{
+    local -n to_watch="$1"
+
+    # DESIGN: $direnv_config_dir comes from direnv
+    # shellcheck disable=SC2154
+    for f in \
+        ":$HOME/.direnvrc" \
+        "$direnv_config_dir/direnvrc" \
+        "$direnv_config_dir/lib/"*.sh
+    do
+        if [ -f "$f" ]
+        then to_watch+=("$f")
+        fi
+    done
+}
+
+_nixgc_rebuild_needed()
+{
+    local ignore_cache="$1"; shift
+    local env_cache="$1"; shift
+    local files_to_watch=("$@")
+    if "$ignore_cache" || ! [ -f "$env_cache" ]
+    then return 0
+    fi
+    for f in "${files_to_watch[@]}"
+    do
+        if [ "$f" -nt "$env_cache" ]
+        then return 0
+        else log_status "$f older than $env_cache"
+        fi
+    done
+    return 1
+}
+
+_nixgc_rebuild()
+{
+    local shell_file="$1"
+    local derivation="$2"
+    local gcroots_dir="$3"
+    local env_cache="$4"
+
+    log_status "rebuilding with nix-shell"
+    rm --recursive --force "$gcroots_dir"
+    rm --force "$derivation"
+    rm --force "$env_cache"
+    mkdir -p "$gcroots_dir"
+
+    IN_NIX_SHELL=1 nix-instantiate \
+        --add-root "$derivation" --indirect \
+        "$shell_file" >/dev/null \
+        || _nixgc_fail "derivation not instantiable for $shell_file"
+    mapfile -t deps \
+        < <(nix-store --query --references "$derivation")
+    nix-store \
+        --realise \
+        "${deps[@]}" \
+        --add-root "$gcroots_dir/dep" --indirect >/dev/null \
+        || _nixgc_fail "dependencies of $derivation failed to cache"
+
+    # DESIGN: $direnv comes from direnv
+    # shellcheck disable=SC2154
+    nix-shell --pure "$shell_file" --show-trace \
+        --run "$(join_args "$direnv" dump bash)" > "$env_cache" \
+        || _nixgc_fail "could not generate environment for $shell_file"
+}
+
+_nixgc_import_env()
+{
+    local env_cache="$1"
+
+    local old_path="${PATH:-}"
+    local old_term="${TERM:-__UNSET__}"
+    local old_tmpdir="${TMPDIR:-__UNSET__}"
+    local old_ssl_cert_file="${SSL_CERT_FILE:-__UNSET__}"
+    local old_nix_ssl_cert_file="${NIX_SSL_CERT_FILE:-__UNSET__}"
+
+    eval $(cat "$env_cache")
+
+    # `nix-shell --pure` sets invalid ssl certificate paths
+    if [ "${SSL_CERT_FILE:-}" = /no-cert-file.crt ]
+    then _nixgc_export_or_unset SSL_CERT_FILE "$old_ssl_cert_file"
+    fi
+
+    if [ "${NIX_SSL_CERT_FILE:-}" = /no-cert-file.crt ]
+    then _nixgc_export_or_unset NIX_SSL_CERT_FILE "$old_nix_ssl_cert_file"
+    fi
+
+    export PATH=$PATH${old_path:+":"}$old_path
+    _nixgc_export_or_unset TEMPDIR "$old_tmpdir"
+    _nixgc_export_or_unset TERM "$old_term"
+
+    # misleading since we are in an impure shell now
+    export IN_NIX_SHELL=impure
+}
+
+_nixgc_export_or_unset()
+{
+    local key="$1"
+    local value="$2"
+    if [ "$value" = __UNSET__ ]
+    then unset "$key"
+    else export "$key=$value"
+    fi
+}
+
+_nixgc_fail()
+{
+    log_error "${@}"
+    exit 1
+}

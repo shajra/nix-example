@@ -6,8 +6,8 @@
 
 #BUILD_IMAGE="nixorg/nix:1"
 BUILD_IMAGE="nixpkgs/nix:nixos-20.03"
-VOLUME_ROOT="example-nix-home"
-VOLUME_NIX="example-nix-cache"
+VOLUME_ROOT="nix-package-home"
+VOLUME_NIX="nix-package-cache"
 
 REPO_ROOT="$(repository_root "$0")"
 

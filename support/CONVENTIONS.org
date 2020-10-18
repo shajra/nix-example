@@ -11,13 +11,22 @@ only one author it's easy to forget conventions, so here's a few notes:
 - be aware that on GitHub first header is effectively the title
 - [ ] use “…” in pseudocode instead of “...” to help disambiguate
 - [ ] consistency of syntax
-  - ‘~’ code
-    - variable names
-  - ‘/’ italics
-    - new concepts
-  - ‘=’ verbatim
-    - layers
-    - filepaths
-    - command line tool names
   - plain
     - official program names
+  - ‘/’ italics
+    - new concepts
+  - ‘~’ code (inlined snippets of code)
+    - primitive literals
+    - code expressions (intrinsically anonymous)
+    - usage of switches of CLI tools (intrinsically anonymous)
+  - ‘=’ verbatim (nouns with names that are code-like)
+    - keywords
+    - function names
+    - attributes of sets
+    - attribute paths
+    - command line tool names (possibly including a subcommand)
+    - variable name
+    - name of a CLI switch
+    - environment paths
+    - filepaths
+    - layers

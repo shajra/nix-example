@@ -338,7 +338,7 @@
   =/nix/store= reference for every dependency in our scripts.
 
   Sometimes this is not as convenient to do. A program may call an executable
-  that's expected to be on the ~PATH~. For consistent operation, we might want
+  that's expected to be on the =PATH=. For consistent operation, we might want
   to make sure that the executable we want is always found first.
 
   This tutorial's =build.nix= file also contains two attributes
@@ -384,7 +384,7 @@
 
   This utility makes a shell wrapper for any executable. This wrapper can do
   things like set environment variables. In our case our wrapper sets the
-  ~PATH~ to include a =/nix/store= path where a specific version of Hello can
+  =PATH= to include a =/nix/store= path where a specific version of Hello can
   can be found.
 
   This is a common technique for many derivations in Nixpkgs. Furthermore, with

@@ -59,8 +59,8 @@ main()
         "from evaluating the expression in the" \
         "$(prune_path ${tutorialNixFile}) Nix file. This gives us a" \
         "derivation for a Nix package that provides the \"${executable}\"" \
-        "executable.  The same call then puts this package's executable on
-        the PATH and runs it:
+	"executable.  The same call then puts this package's executable on" \
+        "the PATH and runs it:"
 
     log_and_run nix run --show-trace \
         --ignore-environment \

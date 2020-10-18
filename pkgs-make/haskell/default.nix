@@ -124,7 +124,7 @@ let
             args = { inherit nixpkgs ghcVersion; };
             extendEnv = env1: f:
                 let env2 = env1.overrideAttrs (attrs1: {
-                        nativeBuildInputs = f attrs1.nativeBuildInputs;
+                        buildInputs = f attrs1.buildInputs;
                         passthru = attrs1.passthru // {
                             withMoreEnvTools = g: extendEnv env2
                                 (inputs: inputs ++ g args);
@@ -132,12 +132,13 @@ let
                     });
                 in env2;
         in haskellPackages.shellFor {
+            withHoogle = false;
             packages = p: envPkgs;
-            nativeBuildInputs = envTools;
+            buildInputs = envTools;
             passthru.withEnvTools = f: extendEnv env
                 (_inputs: f args);
-            passthru.withAltEnvTools = extendEnv env
-                (_inputs: defaults.altEnvTools args);
+            passthru.withShajraEnvTools = extendEnv env
+                (_inputs: defaults.shajraEnvTools args);
             passthru.withMoreEnvTools = f: extendEnv env
                 (inputs: inputs ++ f args);
         };

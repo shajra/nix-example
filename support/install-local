@@ -1,0 +1,15 @@
+#!/bin/sh -eu
+
+cd "$(dirname "$0")/.."
+
+rsync -av \
+    tools/doom/config/ \
+    ~/.config/doom
+
+rsync -av \
+    tools/direnv/config/ \
+    ~/.config/direnv
+
+rsync -av \
+    tools/oh-my-zsh/custom/ \
+    "$ZSH_CUSTOM"

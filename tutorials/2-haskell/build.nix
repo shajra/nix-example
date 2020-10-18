@@ -44,4 +44,6 @@ pkgsMake pkgsMakeArgs ({ call, lib, ... }: rec {
 
     example-haskell-stack = call.package ./stack;
 
+    toTag = [ example-haskell-lib example-haskell-app ];
+
 })

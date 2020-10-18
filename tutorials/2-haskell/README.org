@@ -275,7 +275,7 @@
 
    You can call =nix-shell= with no arguments to enter into an interactive
    shell, or we can run commands in it non-interactively. For instance, here we
-   show that the some of discussed tools are on our ~PATH~ provided by Nix:
+   show that the some of discussed tools are on our =PATH= provided by Nix:
 
    #+BEGIN_SRC shell :results output :exports both
     nix-shell --run '
