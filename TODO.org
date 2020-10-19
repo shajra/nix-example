@@ -1,18 +1,33 @@
-#+TITLE: To Do Before Release
+#+TITLE: Things To Do
 
-* TODO Things to do
+* Prioritized
 
-- [ ] update Nixpkgs rev for run scripts
-- [ ] Python (mimic structure of Haskell)
-- [ ] technical improvements
-  - [ ] review spacemacs.static.el for settings to return to layer
-  - [ ] option for Python env to persist to non-/run/user
-  - [ ] remove ML library maintenance
-- [ ] An official release version/tag?
-  - [ ] Contributor documentation somewhere
-  - [ ] Figure out a license
+- "run" work
+  - reread/edit tutorials first for prior context
+  - amend run/README.org
+- implement unit tests with BATS
+- reread/edit all docs
+  - use no-web to set up NIX_PATH and NIX_PROFILE (less ":eval no" blocks)
+  - finish copying from nix.org
+  - pure-Nix doc-generation (remove GC in docs)
+  - switch to new nix-haskell-tags
+- Pkgs-make
+  - explain curated? Or silently ignore?
+- rename GitHub example-nix -> nix-package
+- CI/Cachix should cache env-tools
+- direnvrc
+  - special touch file for cache invalidation (.direnv/touch)
+  - optional content hashing
+  - try to get adopted by nix-direnv
+- how to make unified Haddocks in Nix?
+- Attrap
+  - does `refactor` work?
+  - is `refactor` backwards compatible with old GHC versions?
+- make a real install script?
+- Figure out a license
 
 * Ideas (not critical)
 
-- [ ] C tutorial to explain stdenv.mkDerivation?
-- [ ] break up long tutorials?
+- Contributor documentation somewhere
+- C tutorial to explain stdenv.mkDerivation?
+- break up long tutorials?

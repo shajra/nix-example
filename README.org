@@ -3,13 +3,34 @@
 
 * About This Project
 
-  This project illustrates using [[nix][the Nix package manager]] for programming
-  multi-module projects that may integrate code written in a variety official
-  programming languages. The project also provides [[./pkgs-make/README.org][a Nix library called
-  Pkgs-make]] to save some the boilerplate we might have to write when using Nix
-  for managing a software lifecycle. Pkgs-make currently directly supports
-  [[haskell][Haskell]] and [[python][Python]] development, but has the potential to support other
-  language platforms.
+  This project assists in using [[nix][the Nix package manager]] for developing
+  multi-module software projects.  Specifically, this project provides:
+
+  - a variety of tutorials to explain how to use Nix for software development
+  - a Nix library called Pkgs-make to help reduce some boilerplate
+  - a script to illustrate running code from the tutorials
+  - some recommended configuration of developer tools to help with Nix-based
+    workflows.
+
+  One target audience are developers who have heard about Nix solving
+  operational development problems in a professional setting, but would like a
+  little assistance getting started.
+
+  Nix has a unique architecture that makes it attractive to use when developing
+  software.
+
+  - Nix supports a variety of programming languages allowing us manage polyglot
+    programming projects with a the same tools.
+
+  - Nix helps us get highly reproducible builds and developer environments,
+    regardless of the language of the source code we're working with.
+
+  This =nix-package= project has an emphasis on the [[haskell][Haskell programming
+  language]].  The Pkgs-make's library support has some functionality tailored for
+  both Haskell and  [[python][Python]] development, but has the potential to support other
+  language platforms.  Pkgs-make is not a lot of code.  The Nix ecosystem
+  provides most of what we need.  Pkgs-make mostly helps us with reasonable
+  defaults for our configuration of Nix-based projects.
 
   Use this project to learn and explore what's possible. It's set up for
   pedagogy, but you should be able to use Pkgs-make in real projects. There are
@@ -29,16 +50,16 @@
   | [[./tutorials/2-haskell][tutorials/2-haskell/]]   | tutorial of Haskell example using Pkgs-make        |
   | [[./tutorials/2-python][tutorials/2-python/]]    | tutorial of Python example using Pkgs-make         |
   | [[./tools][tools/]]                 | tool configuration for a nice developer experience |
-  | [[./run][run/]]                   | scripts to illustrate this project                 |
+  | [[./run][run/]]                   | a script to illustrate this project                |
   | [[./pkgs-make][pkgs-make/]]             | Pkgs-make, a Nix library to reduce boilerplate     |
 
-  The links are presented in a loose recommended reading order, starting with
-  tutorials on usage, and ending with reference documentation for Pkgs-make. If
-  you don't know what Nix is or the motivation to use it over the alternatives,
-  the first tutorial is a good place to start.
+  The links are presented above in a loose recommended reading order, starting
+  with tutorials on usage, and ending with reference documentation for
+  Pkgs-make. If you don't know what Nix is or the motivation to use it over the
+  alternatives, the first tutorial is a good place to start.
 
-  If you don't have a preferred Markdown or Org-mode viewer, start with
-  Github's Markdown rendering at https://github.com/shajra/nix-package.
+  If you don't have a preferred Markdown or Org-mode viewer, start with Github's
+  Markdown rendering at https://github.com/shajra/nix-package.
 
   Hopefully the code is clean and self-documenting for those that prefer to get
   lost jumping around.
@@ -55,50 +76,72 @@
 
    - [[nix-manual][the Nix Manual]]
    - [[nixpkgs-manual][the Nixpkgs Manual]].
+   - [[nix-pills][Luca Bruno's "pill" series]]
 
    There are also many good tutorials to supplement the tutorials in this
    project. Here's a few to consider:
 
    - [[nix-dev][Nix.dev tutorials]]
    - [[haskell-nix][Gabriel Gonzalez's haskell-nix]]
-   - [[nix-pills][Luca Bruno's "pill" series]]
+
+   Gabriel's project has tutorials that illustrate using Nix without the
+   assistance of Pkgs-make in the context of Haskell.
 
 ** Technology
 
 *** Nix
 
-      Because this project is really about Nix, you should have [[nix-install][the Nix package
-      manager installed]].
+    #+BEGIN_QUOTE
+    *_NOTE:_* You don't need this step if you're running NixOS, which comes with
+    Nix baked in.
+    #+END_QUOTE
 
-      Unless you're running NixOS as your operating system (which provides Nix
-      intrinsically) the primary way to install Nix on another operating system
-      is by running Nix's install script:
+    Because this project is really about Nix, you should have [[nix-install][the Nix package
+    manager installed]].
 
-      #+BEGIN_SRC shell :eval no
-        curl https://nixos.org/nix/install | sh
-      #+END_SRC
+    If you don't already have Nix, the official installation script should work
+    on a variety of UNIX-like operating systems. The easiest way to run this
+    installation script is to execute the following shell command as a user
+    other than root:
 
-      Also, be aware that this project is actively tested on a GNU/Linux OS, and
-      only loosely tested on Macs. Nix support for Macs is always improving, but
-      is known to be idiosyncratic.
+    #+BEGIN_SRC shell :eval no
+      curl https://nixos.org/nix/install | sh
+    #+END_SRC
 
-      If for some reason you can't install Nix, we can still use [[docker][Docker]] to
-      build some of the projects in the tutorials. We just won't be able to
-      showcase development tools without Nix installed on the host system.
+    This script will download a distribution-independent binary tarball
+    containing Nix and its dependencies, and unpack it in =/nix=.
+
+    The Nix manual describes [[nix-install][other methods of installing Nix]] that may suit you
+    more.
+
+    Also, be aware that this project is actively tested on a GNU/Linux OS, and
+    only loosely tested on Macs. Nix support for Macs is always improving, but
+    is known to be idiosyncratic.
+
+    If for some reason you can't install Nix, we can still use [[docker][Docker]] to
+    build some of the projects in the tutorials. We just won't be able to
+    showcase development tools without Nix installed on the host system.
 
 *** Docker
 
-      This project illustrates how to build and package up applications in
-      Docker.
+    [[docker][Docker]] containers are ubiquitous these days as a way to deploy software in
+    professional settings.  You can build and distribute your projects with Nix
+    alone, but Nix can help you get your applications into Docker images as
+    well.
 
-      See the [[docker-install][Docker installation guide]] for instructions on how to install Docker
-      for your system.
+    This integration of Nix and Docker is discussed in the tutorials and
+    illustrated in the provided run script.  If you don't have Docker installed,
+    you won't be able to use this script in its entirety.
+
+    See the [[docker-install][Docker installation guide]] for instructions on how to install Docker
+    for your system.
 
 *** Additional developers tools
 
-      This project also provides some [[./tools][configuration for some developers tools]] for
-      a nice Nix-based developer experience with this project. Some of us have
-      used these tools on real projects, and we've been pleased with the results.
+    This project also provides some [[./tools][configuration for some developers tools]] for
+    a nice Nix-based developer experience with this project.  Some of us have
+    used these configurations on real projects, and we've been pleased with the
+    results.
 
 *** Things you don't need to install
 
@@ -110,13 +153,28 @@
     you might need that are more likely to vary from project to project.
     Pkgs-make can help with this.
 
-* Feedback Desired
+* Release
 
-  If you have an idea to improve this project's documentation or features,
-  please submit an issue or pull request. Otherwise, feel free to fork/modify
-  it.
+  The "master" branch of the repository on GitHub has the latest released
+  version of this code. There is currently no commitment to either forward or
+  backward compatibility.
 
-  This repository has been around for a few years, but we've not yet officially
-  released it to allow it some time to get some heavier refactoring. If you're
-  please interested, please leave an issue suggesting so, and we can take the
-  necessary steps.
+  "user/shajra" branches are personal branches that may be force-pushed to. The
+  "master" branch should not experience force-pushes and is recommended for
+  general use.
+
+* License
+
+  All files in this "nix-project" project are licensed under the terms of GPLv3
+  or (at your option) any later version.
+
+  Please see the [[./COPYING.md][./COPYING.md]] file for more details.
+
+* Contribution
+
+  Feel free to file issues and submit pull requests with GitHub.
+
+  There is only one author to date, so the following copyright covers all files
+  in this project:
+
+  Copyright © 2017 Sukant Hajra

@@ -627,8 +627,3 @@
   # cleans directory for run
   #+BEGIN_SRC shell :results silent :exports none
   #+END_SRC
-
-  # Local Variables:
-  # org-confirm-babel-evaluate: nil
-  # End:
-  .

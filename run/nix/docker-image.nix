@@ -59,8 +59,8 @@ main()
 
     log "All of these commands are run from this project's root directory."
 
-    log "To generate a compressed (tarballed) Docker image, we build the" \
-	"\"$attr\" attribute of the set we get from evaluating the expression" \
+    log "To generate a tar-compressed Docker image, we build the \"$attr\"" \
+        "attribute of the set we get from evaluating the expression" \
         "in the $(prune_path ${tutorialNixFile}) Nix file:"
     log_and_run_silently nix build --show-trace --no-link \
         --file "${tutorialNixFile}" "$attr"

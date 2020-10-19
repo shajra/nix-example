@@ -19,7 +19,8 @@
        "\n"))
   #+END_SRC
 
-  Cleans directory for run:
+  The following helps (using Noweb) set up Nix environment variables for source
+  block evaluation.
 
   #+NAME: nix-init
   #+BEGIN_SRC shell :eval no
@@ -27,12 +28,15 @@
     export NIX_PATH=nixpkgs=$(nix eval --file ../../support/nix nixpkgs.path);
   #+END_SRC
 
-  #+BEGIN_SRC shell :results silent :noweb yes
+  Next we perform some side-effects to set up the evaluation of the whole
+  document.
+
+  #+NAME: cleanup
+  #+BEGIN_SRC shell :results output silent :noweb yes
     <<nix-init>>
-    nix-env -e hello
-    rm -f result*
-    rmdir -rf /tmp/some.d
-    mkdir --parents "$NIX_PROFILE"
+    rm --force result*
+    rm --force "$NIX_PROFILE"*
+    rmdir --recursive --force /tmp/some.d
   #+END_SRC
 
 * Introduction to Nix
@@ -91,9 +95,9 @@
   they are checked against the expected hash. Most Nix projects (this one
   included) are careful to pin dependencies to specific versions/hashes.
   Because of this, when building the same project with Nix on two different
-  systems, we get an extremely high confidence we will get the same output,
-  often bit-for-bit. This is a profound degree of precision relative to other
-  popular package managers.
+  computers of the same platform architecture, we get an extremely high
+  confidence we will get the same output, often bit-for-bit. This is a profound
+  degree of precision relative to other popular package managers.
 
   Because builds are so deterministic, we can cache them with far more
   precision and resolution than we can with Docker's Dockerfiles. And because
@@ -111,13 +115,12 @@
   using Nixpkgs as a starting point. Nix can be very hackable without
   abandoning a principled architecture.
 
-  Nix is not without its problems, as [[gonzalez-critique][Gabriel Gonzalez points out]]. Nix could
-  use more documentation and tools to ease adoption. Also though Nix has a
-  healthy community of contributors, it still takes a lot of work to curate all
-  of Nixpkgs, so you may occasionally find yourself writing your own Nix
-  expressions, or contributing back to the Nix ecosystem. Fortunately, once
-  you know what you're doing, many Nix expressions are compact and easy to
-  modify or override.
+  Nix is not without its problems.  Nix could use more documentation and tools
+  to ease adoption. Also though Nix has a healthy community of contributors, it
+  still takes a lot of work to curate all of Nixpkgs, so you may occasionally
+  find yourself writing your own Nix expressions, or contributing back to the
+  Nix ecosystem. Fortunately, once you know what you're doing, many Nix
+  expressions are compact and easy to modify or override.
 
   For many of us the benefits of Nix outweigh the inconveniences. Hopefully,
   projects and tutorials like this can help tip the balance further.
@@ -138,11 +141,11 @@
 
   - depending on your OS, a script like =/etc/profile.d/nix.sh= or
     =/etc/bashrc= to have interactive shells set up with environment variables
-    useful for Nix commands.
+    useful for Nix commands
 
   - depending on you OS, files under =/etc/system.d/= (Linux's systemd) or
-    =/Library/LaunchDaemons=including (MacOS's launchd) to start up a
-    “nix-daemon” service used by Nix commands.
+    =/Library/LaunchDaemons= (MacOS's launchd) to start up a “nix-daemon”
+    service used by Nix commands.
 
   If you reran the installation script, it would stop if it detected any of
   these files from a previous installation, and would instruct you on how to
@@ -217,7 +220,8 @@
    the conventional double quote syntax:
 
    #+BEGIN_SRC shell :results output :exports both
-   nix eval '(builtins.typeOf "hello")' #+END_SRC
+     nix eval '(builtins.typeOf "hello")'
+   #+END_SRC
 
    #+RESULTS:
    : "string"
@@ -225,10 +229,14 @@
    Nix also supports multi-line strings with two consecutive single quotes:
 
    #+BEGIN_SRC shell :results output :exports both
-   nix eval "('' line 1 line 2 line 3 '')" #+END_SRC
+     nix eval "(''
+           line 1
+             line 2
+         line 3 '')"
+   #+END_SRC
 
    #+RESULTS:
-   : " line 1\n   line 2\nline 3\n"
+   : "  line 1\n    line 2\nline 3 "
 
    The left-most token in any line establishes a left margin. In the example
    above, this is “line 3”. Beyond these strings, Nix does not have
@@ -237,7 +245,8 @@
    We concatenate strings with the =+= operator:
 
    #+BEGIN_SRC shell :results output :exports both
-   nix eval '("a" + "b")' #+END_SRC
+     nix eval '("a" + "b")'
+   #+END_SRC
 
    #+RESULTS:
    : "ab"
@@ -259,15 +268,15 @@
    #+RESULTS:
    : 3
 
-   Note that semicolons are mandatory in all Nix forms that have them,
-   including let-expressions. Because of Nix's strict parsing you can neither
-   elide semicolons, nor put extra ones.
+   Note that semicolons are mandatory in all Nix forms that have them, including
+   let-expressions. Because of Nix's strict parsing you can neither elide
+   semicolons, nor put extra ones.
 
 ** String interpolation
 
-   Sometimes we build up small code snippets inline in a Nix expression, so
-   it's useful to have string interpolation support. This is done with the
-   following syntax:
+   Sometimes we build up small code snippets inline in a Nix expression, so it's
+   useful to have string interpolation support. This is done with the following
+   syntax:
 
    #+BEGIN_SRC shell :results output :exports both
      nix eval '(
@@ -302,7 +311,7 @@
 
 ** Functions
 
-   Nix has first class functions. Functions take in only one argument at a
+   Nix has first class functions. Nix's functions take in only one argument at a
    time, and use a colon to separate the parameter name from the body of the
    function. Furthermore, Nix uses whitespace for function application:
 
@@ -333,7 +342,7 @@
 
 ** Lists
 
-   Nix also has list literals which use square brackets and are
+   Nix also has list literals, which use square brackets and are
    whitespace-delimited:
 
    #+BEGIN_SRC shell :results output :exports both
@@ -369,8 +378,8 @@
    arbitrary types. It uses the following syntax:
 
    #+BEGIN_SRC shell :results output :exports both
-     nix eval '(builtins.typeOf { foo = 1; bar = 2; })'
-     nix eval '({ foo = 1; bar = 2; }.bar)'
+     nix eval '(builtins.typeOf { a = 1; b = 2; })'
+     nix eval '({ a = 1; b = 2; }.b)'
    #+END_SRC
 
    #+RESULTS:
@@ -385,18 +394,18 @@
    the =//= operator:
 
    #+BEGIN_SRC shell :results output :exports both
-     nix eval '({ foo = 1; bar = 2; } // { bar = 3; baz = 4; })'
+     nix eval '({ a = 1; b = 2; } // { b = 3; c = 4; })'
    #+END_SRC
 
    #+RESULTS:
-   : { bar = 3; baz = 4; foo = 1; }
+   : { a = 1; b = 3; c = 4; }
 
    Additionally, we can prefix set literals with the =rec= keyword to get
    recursive sets. Recursive sets allow values in a set to reference attributes
    by name:
 
    #+BEGIN_SRC shell :results output :exports both
-     nix eval '(rec { foo = bar; bar = 2; }.foo)'
+     nix eval '(rec { a = b; b = 2; }.a)'
    #+END_SRC
 
    #+RESULTS:
@@ -405,17 +414,17 @@
    Without the =rec= keyword, we'd get an error:
 
    #+BEGIN_SRC shell :results output :exports both
-     nix eval '({ foo = bar; bar = 2; }.foo)' 2>&1 || true
+     nix eval '({ a = b; b = 2; }.a)' 2>&1 || true
    #+END_SRC
 
    #+RESULTS:
-   : error: undefined variable 'bar' at (string):1:10
+   : error: undefined variable 'b' at (string):1:8
 
    If a function accepts an attribute set as an argument, we can have Nix
    destructure the set as a convenience with the following pattern syntax:
 
    #+BEGIN_SRC shell :results output :exports both
-     nix eval '(({ foo, bar }: foo + bar ) { foo = 1; bar = 2; })'
+     nix eval '(({ a, b }: a + b ) { a = 1; b = 2; })'
    #+END_SRC
 
    #+RESULTS:
@@ -425,17 +434,17 @@
    with attributes that don't match the pattern:
 
    #+BEGIN_SRC shell :results output :exports both
-     nix eval '(({ foo }: foo + 2 ) { foo = 3; bar = 4; })' 2>&1 || true
+     nix eval '(({ a }: a + 2 ) { a = 3; b = 4; })' 2>&1 || true
    #+END_SRC
 
    #+RESULTS:
-   : error: anonymous function at (string):1:3 called with unexpected argument 'bar', at (string):1:2
+   : error: anonymous function at (string):1:3 called with unexpected argument 'b', at (string):1:2
 
    If we want to relax the destructuring to accept sets with other attributes
    we can use a “...” form:
 
    #+BEGIN_SRC shell :results output :exports both
-     nix eval '(({ foo, ...}: foo + 2 ) { foo = 3; bar = 4; })'
+     nix eval '(({ a, ...}: a + 2 ) { a = 3; b = 4; })'
    #+END_SRC
 
    #+RESULTS:
@@ -445,7 +454,7 @@
    using a “@” form.
 
    #+BEGIN_SRC shell :results output :exports both
-     nix eval '((s@{ foo, bar }: foo + s.bar ) { foo = 2; bar = 3; })'
+     nix eval '((s@{ a, b }: a + s.b ) { a = 2; b = 3; })'
    #+END_SRC
 
    #+RESULTS:
@@ -474,9 +483,9 @@
 
 ** Paths
 
-   Because the Nix language is domain-specific for building packages, paths
-   come up frequently in Nix expressions. Nix conveniently has a /path/ type,
-   which is indicated by identifiers with at least one slash:
+   Because the Nix language was designed for building packages, file paths come
+   up frequently in Nix expressions. Nix conveniently has a /path/ type, which
+   is indicated by identifiers with at least one slash:
 
    #+BEGIN_SRC shell :results output :exports both
      nix eval '(builtins.typeOf /some/filepath)'
@@ -496,7 +505,7 @@
    setting =NIX_PATH=:
 
    - ~<name>=<filepath>~
-   - ~<filepath>~
+   - ~<directory>~
 
    In a Nix expression, we can use an angle bracket syntax to search =NIX_PATH=
    for an existent file path. Here's an example of using =NIX_PATH= to set the
@@ -509,7 +518,7 @@
    #+RESULTS:
    : /tmp
 
-   If we create some directories there:
+   If we create some files or folders there:
 
    #+BEGIN_SRC shell :results silent
      mkdir --parents /tmp/some.d/path
@@ -525,10 +534,10 @@
    #+RESULTS:
    : /tmp/some.d/path
 
-   If we use the second form for =NIX_PATH=, we can specify directories without
-   a name. These directories are then used as candidate prefixes until an
-   existent path if found. For example, we can consider =/tmp= as a path prefix
-   when looking up =some.d/path= to find =/tmp/some.d/path=:
+   If we use the second form for =NIX_PATH=, can specify directories without a
+   name. These directories are then used as candidate prefixes until an existent
+   path if found. For example, we can consider =/tmp= as a path prefix when
+   looking up =some.d/path= to find =/tmp/some.d/path=:
 
    #+BEGIN_SRC shell :results output :exports both
      NIX_PATH=/tmp nix eval '(<some.d/path>)'
@@ -1194,16 +1203,6 @@
 
 * Org-mode Cleanup                                                 :noexport:
 
-  Cleans directory for run
+  Cleans directory for run:
 
-  #+BEGIN_SRC shell :results silent :noweb yes
-    <<nix-init>>
-    nix-env -e hello
-    rm -f result*
-    rm -rf /tmp/some.d
-    rm -rf "$NIX_PROFILE"
-  #+END_SRC
-
-  # Local Variables:
-  # org-confirm-babel-evaluate: nil
-  # End:
+  #+CALL: cleanup()
