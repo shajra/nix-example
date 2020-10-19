@@ -66,9 +66,9 @@
 ;;
 ;; I don't think this is a problem anymore, so I've disabled the hook.
 ;;
-;; (add-hook! org-mode
-;;   (set (make-local-variable 'electric-indent-functions)
-;;        (list (lambda (_arg) 'no-indent))))
+(add-hook! org-mode
+   (set (make-local-variable 'electric-indent-functions)
+        (list (lambda (_arg) 'no-indent))))
 
 ;; DESIGN: Some configuration is more personal...
 (load! "private/config")

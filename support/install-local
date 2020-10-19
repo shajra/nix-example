@@ -2,14 +2,14 @@
 
 cd "$(dirname "$0")/.."
 
-rsync -av \
+rsync -av "$@" \
+    tools/oh-my-zsh/custom/ \
+    "$ZSH_CUSTOM"
+
+rsync -av "$@" \
     tools/doom/config/ \
     ~/.config/doom
 
-rsync -av \
+rsync -av "$@" \
     tools/direnv/config/ \
     ~/.config/direnv
-
-rsync -av \
-    tools/oh-my-zsh/custom/ \
-    "$ZSH_CUSTOM"
