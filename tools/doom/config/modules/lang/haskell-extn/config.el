@@ -5,8 +5,8 @@
 
   (defcustom +haskell-backend
     (cond
-     ((featurep! +dante) 'dante)
-     ((featurep! +lsp) 'lsp))
+     ((featurep! +lsp) 'lsp)
+     ((featurep! +dante) 'dante))
     "Backend to use for Haskell support.
 
 There's a variety of packages that support Haskell for Emacs.  There has always

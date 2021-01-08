@@ -13,7 +13,8 @@
    :repo "shajra/dante"
    :branch "user/shajra/lhs"))
 
-(package! lsp-mode :recipe
-  (:host github
-   :repo "shajra/lsp-mode"
-   :branch "user/shajra/fix-empty-check"))
+;; TODO: is this needed any more?
+;;(package! lsp-mode :recipe
+;;  (:host github
+;;   :repo "shajra/lsp-mode"
+;;   :branch "user/shajra/fix-empty-check"))

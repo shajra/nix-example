@@ -42,98 +42,154 @@ registers the HLint disablement after packages have loaded."
     (+haskell/dante-hlint-off)))
 
 ;;;###autoload
-(defun +haskell-dante-target-guess ()
-  "If ROOT is a cabal file, we use it's file name as the guessed target,
-which can be overridden with `dante-target'."
-  (or dante-target (dante-package-name) nil))
+(defun +haskell-dante-cabal (d)
+  "Non-nil iff D has a Cabal file."
+  (or
+   (directory-files d t ".\\.cabal$")
+   (directory-files d t "^package.yaml$")))
 
 ;;;###autoload
-(defun +haskell-dante-cabal-nix-alt (d)
+(defun +haskell-dante-cabal-nix (d)
   "Non-nil iff D has a shell.nix file, and either a Cabal or cabal.project in
 the same directory."
-  (and (directory-files d t "^shell\\.nix$")
-       (or (directory-files d t "^cabal\\.project$")
-           (directory-files d t "\\.cabal$"))))
+  (and (locate-dominating-file d "shell.nix")
+       (+haskell-dante-cabal d)))
 
 ;;;###autoload
-(defun +haskell-dante-cabal-project (d)
-  "Non-nil iff D has a Cabal file, with a cabal.project file also in D or an
-ancestor of D."
-  (and (locate-dominating-file d "cabal.project")
-       (directory-files d t "\\.cabal$")))
-
-;;;###autoload
-(defun +haskell-dante-cabal-stack (d)
+(defun +haskell-dante-cabal-stack-project (d)
   "Non-nil iff D has a Cabal file, with a stack.yaml file also in D or an
 ancestor of D."
   (and (locate-dominating-file d "stack.yaml")
-       (directory-files d t "\\.cabal$")))
+       (+haskell-dante-cabal d)))
 
+;;;###autoload
+(defun +haskell-dante-cabal-stack-root (d)
+  "Non-nil iff D has a Cabal file, with a stack.yaml file also in D or an
+ancestor of D."
+  (and (or
+        (locate-dominating-file (f-dirname (buffer-file-name))
+                                (lambda (dir) (directory-files dir t ".\\.cabal$")))
+        (locate-dominating-file (buffer-file-name) "package.yaml"))
+       (directory-files d t "^stack.yaml$")))
+
+;;;###autoload
+(defun +haskell-dante-cabal-stack-project-nix (d)
+  "Non-nil iff D has a shell.nix file, and either a Cabal or cabal.project in
+the same directory."
+  (and (locate-dominating-file d "shell.nix")
+       (+haskell-dante-cabal-stack-project d)))
+
+;;;###autoload
+(defun +haskell-dante-cabal-stack-root-nix (d)
+  "Non-nil iff D has a Cabal file, with a stack.yaml file also in D or an
+ancestor of D."
+  (and (locate-dominating-file (buffer-file-name) "shell.nix")
+       (+haskell-dante-cabal-stack-root d)))
 
 ;;;###autoload
 (defun +haskell--dante-methods-alist-extend ()
   (setq-default
    dante-methods-alist
    (append
-    `(,(+haskell--dante-repl-alt-stack)
-      ,(+haskell--dante-repl-alt-cabal-new-project)
-      ,(+haskell--dante-repl-alt-cabal-new-bare)
-      ,(+haskell--dante-repl-alt-cabal-v2-project)
-      ,(+haskell--dante-repl-alt-cabal-v2-bare)
-      ,(+haskell--dante-repl-alt-nix))
+    `(,(+haskell--dante-repl-alt-stack-project-nix-pure)
+      ,(+haskell--dante-repl-alt-stack-project-nix-impure)
+      ,(+haskell--dante-repl-alt-stack-project)
+      ,(+haskell--dante-repl-alt-stack-root-nix-pure)
+      ,(+haskell--dante-repl-alt-stack-root-nix-impure)
+      ,(+haskell--dante-repl-alt-stack-root)
+      ,(+haskell--dante-repl-alt-cabal-nix-pure)
+      ,(+haskell--dante-repl-alt-cabal-nix-impure)
+      ,(+haskell--dante-repl-alt-cabal))
     dante-methods-alist)))
 
 ;;;###autoload
-(defun +haskell--dante-repl-alt-stack ()
-  `(alt-stack
-    +haskell-dante-cabal-stack
-    ("stack" "repl"
-     (+haskell-dante-target-guess)
-     "--ghci-options=-ignore-dot-ghci")))
-
-;;;###autoload
-(defun +haskell--dante-repl-alt-cabal-new-project ()
-  `(alt-cabal-new-project
-    +haskell-dante-cabal-project
-    ("cabal" "new-repl"
-     (+haskell-dante-target-guess)
-     "--builddir=dist-newstyle/dante"
-     "--ghc-options=-ignore-dot-ghci")))
-
-;;;###autoload
-(defun +haskell--dante-repl-alt-cabal-new-bare ()
-  `(alt-cabal-new-bare
-    (directory-files d t "\\.cabal$")
-    ("cabal" "new-repl"
-     (+haskell-dante-target-guess)
-     "--builddir=dist-newstyle/dante"
-     "--ghc-options=-ignore-dot-ghci")))
-
-;;;###autoload
-(defun +haskell--dante-repl-alt-cabal-v2-project ()
-  `(alt-cabal-v2-project
-    +haskell-dante-cabal-project
+(defun +haskell--dante-repl-alt-cabal ()
+  `(alt-cabal
+    +haskell-dante-cabal
     ("cabal" "v2-repl"
-     (+haskell-dante-target-guess)
+     (or dante-target nil)
      "--builddir=dist-newstyle/dante"
      "--ghc-options=-ignore-dot-ghci")))
 
 ;;;###autoload
-(defun +haskell--dante-repl-alt-cabal-v2-bare ()
-  `(alt-cabal-v2-bare
-    (directory-files d t "\\.cabal$")
-    ("cabal" "v2-repl"
-     (+haskell-dante-target-guess)
-     "--builddir=dist-newstyle/dante"
-     "--ghc-options=-ignore-dot-ghci")))
-
-;;;###autoload
-(defun +haskell--dante-repl-alt-nix ()
-  `(alt-nix
-    +haskell-dante-cabal-nix-alt
-    ("nix-shell" "--pure" "--run"
+(defun +haskell--dante-repl-alt-cabal-nix-pure ()
+  `(alt-cabal-nix-pure
+    +haskell-dante-cabal-nix
+    ("nix-shell" "--pure" (+haskell--find-nix-shell) "--run"
      (concat
-      "cabal new-repl "
+      "cabal v2-repl "
       (or dante-target "")
       " --builddir=dist-newstyle/dante"
       " --ghc-options=-ignore-dot-ghci"))))
+
+;;;###autoload
+(defun +haskell--dante-repl-alt-cabal-nix-impure ()
+  `(alt-cabal-nix-impure
+    +haskell-dante-cabal-nix
+    ("nix-shell" (+haskell--find-nix-shell) "--run"
+     (concat
+      "cabal v2-repl "
+      (or dante-target "")
+      " --builddir=dist-newstyle/dante"
+      " --ghc-options=-ignore-dot-ghci"))))
+
+;;;###autoload
+(defun +haskell--dante-repl-alt-stack-project ()
+  `(alt-stack-project
+    +haskell-dante-cabal-stack-project
+    ("stack" "repl"
+     (or dante-target ".")
+     "--ghci-options=-ignore-dot-ghci")))
+
+;;;###autoload
+(defun +haskell--dante-repl-alt-stack-root ()
+  `(alt-stack-root
+    +haskell-dante-cabal-stack-root
+    ("stack" "repl"
+     (or dante-target nil)
+     "--ghci-options=-ignore-dot-ghci")))
+
+;;;###autoload
+(defun +haskell--dante-repl-alt-stack-project-nix-pure ()
+  `(alt-stack-project-nix-pure
+    +haskell-dante-cabal-stack-project-nix
+    ("nix-shell" "--pure" (+haskell--find-nix-shell) "--run"
+     (concat
+      "stack repl "
+      (or dante-target ".")
+      " --ghc-options=-ignore-dot-ghci"))))
+
+;;;###autoload
+(defun +haskell--dante-repl-alt-stack-project-nix-impure ()
+  `(alt-stack-project-nix-impure
+    +haskell-dante-cabal-stack-project-nix
+    ("nix-shell" (+haskell--find-nix-shell) "--run"
+     (concat
+      "stack repl "
+      (or dante-target ".")
+      " --ghc-options=-ignore-dot-ghci"))))
+
+;;;###autoload
+(defun +haskell--dante-repl-alt-stack-root-nix-pure ()
+  `(alt-stack-root-nix-pure
+    +haskell-dante-cabal-stack-root-nix
+    ("nix-shell" "--pure" (+haskell--find-nix-shell) "--run"
+     (concat
+      "stack repl "
+      (or dante-target "")
+      " --ghc-options=-ignore-dot-ghci"))))
+
+;;;###autoload
+(defun +haskell--dante-repl-alt-stack-root-nix-impure ()
+  `(alt-stack-root-nix-impure
+    +haskell-dante-cabal-stack-root-nix
+    ("nix-shell" (+haskell--find-nix-shell) "--run"
+     (concat
+      "stack repl "
+      (or dante-target "")
+      " --ghc-options=-ignore-dot-ghci"))))
+
+;;;###autoload
+(defun +haskell--find-nix-shell ()
+  (let ((found (locate-dominating-file (buffer-file-name) "shell.nix")))
+    (if found (concat (expand-file-name found) "shell.nix"))))

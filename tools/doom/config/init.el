@@ -28,7 +28,7 @@
  vc-gutter
  vi-tilde-fringe
  window-select
- workspaces
+ ;workspaces
 
  :editor
  (evil +everywhere)
@@ -81,9 +81,9 @@
  markdown
  nix
  (org
-  +dragndrop
-  +pandoc
-  +present)
+  ;;+pandoc
+  ;;+present
+  )
  ;;plantuml
  (python
   +lsp
