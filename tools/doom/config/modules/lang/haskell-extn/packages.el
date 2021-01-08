@@ -6,7 +6,7 @@
 (package! haskell-mode :pin "0d39c847fddddc5b76fe3c706e34ab45439760bc")
 
 (when (featurep! +dante)
-  (package! dante :pin "e2acbf6dd37818cbf479c9c3503d8a59192e34af")
+  (package! dante :pin "7b32bf21d5b9f7232c4b5c3760abf306e9ed9a0c")
   (package! attrap :pin "9c881548debcf59b8aadda0ef4abca3c9a68dd80"))
 
 (when (and (featurep! +lsp) (not (featurep! :tools lsp +eglot)))
