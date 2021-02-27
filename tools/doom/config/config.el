@@ -12,7 +12,7 @@
  haskell-hoogle-command nil
  lsp-enable-xref nil
  lsp-haskell-formatting-provider "stylish-haskell"
- lsp-haskell-server-path "haskell-language-server-wrapper-nix"
+ lsp-haskell-server-path "haskell-language-server-wrapper"
  org-src-preserve-indentation t
  whitespace-line-column 79)
 
