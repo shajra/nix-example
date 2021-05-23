@@ -1,4 +1,4 @@
 ;;; -*- lexical-binding: t; -*-
 
 
-(package! direnv :pin "381176f301dea8414a5a395c0d6546507838f6ce")
+(package! direnv :pin "4b94393a9adf677c7c037215e233eef5fbca553d")
